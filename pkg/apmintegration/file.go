@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ava-labs/apm/types"
-	"github.com/ava-labs/avalanche-cli/pkg/application"
+	"github.com/MetalBlockchain/apm/types"
+	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"gopkg.in/yaml.v3"
 )
 

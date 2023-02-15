@@ -1,6 +1,6 @@
-# Avalanche-CLI
+# Metal-CLI
 
-Avalanche CLI is a command line tool that gives developers access to everything Avalanche. This release specializes in helping developers develop and test subnets.
+Metal CLI is a command line tool that gives developers access to everything Metal. This release specializes in helping developers develop and test subnets.
 
 ## Installation
 

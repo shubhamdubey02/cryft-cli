@@ -8,8 +8,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanchego/api/info"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metalgo/api/info"
 )
 
 type StatusChecker interface {

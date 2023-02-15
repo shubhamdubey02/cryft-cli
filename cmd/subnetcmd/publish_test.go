@@ -10,17 +10,17 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/ava-labs/avalanche-cli/internal/mocks"
-	"github.com/ava-labs/avalanche-cli/pkg/application"
-	"github.com/ava-labs/avalanche-cli/pkg/binutils"
-	"github.com/ava-labs/avalanche-cli/pkg/config"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/subnet"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/ava-labs/avalanchego/version"
+	"github.com/MetalBlockchain/metal-cli/internal/mocks"
+	"github.com/MetalBlockchain/metal-cli/pkg/application"
+	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/config"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/version"
 	"github.com/go-git/go-git/v5"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -110,7 +110,7 @@ func TestNoRepoPath(t *testing.T) {
 		Name:      testSubnet,
 		Subnet:    testSubnet,
 		Networks: map[string]models.NetworkData{
-			models.Fuji.String(): {
+			models.Tahoe.String(): {
 				SubnetID:     ids.GenerateTestID(),
 				BlockchainID: ids.GenerateTestID(),
 			},
@@ -220,7 +220,7 @@ func TestCanPublish(t *testing.T) {
 		Name:   "fuji",
 		Subnet: "fuji",
 		Networks: map[string]models.NetworkData{
-			models.Fuji.String(): {
+			models.Tahoe.String(): {
 				SubnetID:     ids.GenerateTestID(),
 				BlockchainID: ids.GenerateTestID(),
 			},
@@ -244,7 +244,7 @@ func TestCanPublish(t *testing.T) {
 		Name:   "both",
 		Subnet: "both",
 		Networks: map[string]models.NetworkData{
-			models.Fuji.String(): {
+			models.Tahoe.String(): {
 				SubnetID:     ids.GenerateTestID(),
 				BlockchainID: ids.GenerateTestID(),
 			},

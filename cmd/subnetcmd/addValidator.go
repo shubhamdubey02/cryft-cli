@@ -9,14 +9,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/prompts"
-	"github.com/ava-labs/avalanche-cli/pkg/subnet"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/ids"
-	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
-	"github.com/ava-labs/avalanchego/vms/platformvm"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/ids"
+	avago_constants "github.com/MetalBlockchain/metalgo/utils/constants"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/spf13/cobra"
 )
 
@@ -73,7 +73,7 @@ func addValidator(cmd *cobra.Command, args []string) error {
 	var network models.Network
 	switch {
 	case deployTestnet:
-		network = models.Fuji
+		network = models.Tahoe
 	case deployMainnet:
 		network = models.Mainnet
 	}
@@ -81,7 +81,7 @@ func addValidator(cmd *cobra.Command, args []string) error {
 	if network == models.Undefined {
 		networkStr, err := app.Prompt.CaptureList(
 			"Choose a network to add validator to.",
-			[]string{models.Fuji.String(), models.Mainnet.String()},
+			[]string{models.Tahoe.String(), models.Mainnet.String()},
 		)
 		if err != nil {
 			return err
@@ -104,7 +104,7 @@ func addValidator(cmd *cobra.Command, args []string) error {
 	}
 
 	switch network {
-	case models.Fuji:
+	case models.Tahoe:
 		if !useLedger && keyName == "" {
 			useLedger, keyName, err = prompts.GetFujiKeyOrLedger(app.Prompt, app.GetKeyDir())
 			if err != nil {
@@ -241,7 +241,7 @@ func promptDuration(start time.Time) (time.Duration, error) {
 func getMaxValidationTime(network models.Network, nodeID ids.NodeID, startTime time.Time) (time.Duration, error) {
 	var uri string
 	switch network {
-	case models.Fuji:
+	case models.Tahoe:
 		uri = constants.FujiAPIEndpoint
 	case models.Mainnet:
 		uri = constants.MainnetAPIEndpoint

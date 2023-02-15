@@ -2,7 +2,7 @@
 // See the file LICENSE for licensing terms.
 package models
 
-import "github.com/ava-labs/avalanchego/ids"
+import "github.com/MetalBlockchain/metalgo/ids"
 
 type NetworkData struct {
 	SubnetID     ids.ID

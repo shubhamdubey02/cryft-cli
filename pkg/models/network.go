@@ -5,8 +5,8 @@ package models
 import (
 	"fmt"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	avago_constants "github.com/MetalBlockchain/metalgo/utils/constants"
 )
 
 type Network int64
@@ -14,7 +14,7 @@ type Network int64
 const (
 	Undefined Network = iota
 	Mainnet
-	Fuji
+	Tahoe
 	Local
 )
 
@@ -22,8 +22,8 @@ func (s Network) String() string {
 	switch s {
 	case Mainnet:
 		return "Mainnet"
-	case Fuji:
-		return "Fuji"
+	case Tahoe:
+		return "Tahoe"
 	case Local:
 		return "Local Network"
 	}
@@ -34,8 +34,8 @@ func (s Network) NetworkID() (uint32, error) {
 	switch s {
 	case Mainnet:
 		return avago_constants.MainnetID, nil
-	case Fuji:
-		return avago_constants.FujiID, nil
+	case Tahoe:
+		return avago_constants.TahoeID, nil
 	case Local:
 		return constants.LocalNetworkID, nil
 	}
@@ -46,8 +46,8 @@ func NetworkFromString(s string) Network {
 	switch s {
 	case Mainnet.String():
 		return Mainnet
-	case Fuji.String():
-		return Fuji
+	case Tahoe.String():
+		return Tahoe
 	case Local.String():
 		return Local
 	}
@@ -58,8 +58,8 @@ func NetworkFromNetworkID(networkID uint32) Network {
 	switch networkID {
 	case avago_constants.MainnetID:
 		return Mainnet
-	case avago_constants.FujiID:
-		return Fuji
+	case avago_constants.TahoeID:
+		return Tahoe
 	case constants.LocalNetworkID:
 		return Local
 	}

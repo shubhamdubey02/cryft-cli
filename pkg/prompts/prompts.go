@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/ids"
-	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
-	"github.com/ava-labs/avalanchego/utils/formatting/address"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/ids"
+	avago_constants "github.com/MetalBlockchain/metalgo/utils/constants"
+	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/manifoldco/promptui"
 	"golang.org/x/mod/semver"
@@ -364,8 +364,8 @@ func validatePChainFujiAddress(input string) error {
 	if err != nil {
 		return err
 	}
-	if hrp != avago_constants.FujiHRP {
-		return errors.New("this is not a fuji address")
+	if hrp != avago_constants.TahoeHRP {
+		return errors.New("this is not a tahoe address")
 	}
 	return nil
 }
@@ -396,7 +396,7 @@ func validatePChainLocalAddress(input string) error {
 
 func getPChainValidationFunc(network models.Network) func(string) error {
 	switch network {
-	case models.Fuji:
+	case models.Tahoe:
 		return validatePChainFujiAddress
 	case models.Mainnet:
 		return validatePChainMainAddress

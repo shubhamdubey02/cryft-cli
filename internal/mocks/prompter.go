@@ -5,12 +5,12 @@ package mocks
 import (
 	big "math/big"
 
-	ids "github.com/ava-labs/avalanchego/ids"
+	ids "github.com/MetalBlockchain/metalgo/ids"
 	common "github.com/ethereum/go-ethereum/common"
 
 	mock "github.com/stretchr/testify/mock"
 
-	models "github.com/ava-labs/avalanche-cli/pkg/models"
+	models "github.com/MetalBlockchain/metal-cli/pkg/models"
 
 	time "time"
 

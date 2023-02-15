@@ -9,10 +9,10 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/ava-labs/avalanche-cli/pkg/apmintegration"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/apmintegration"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

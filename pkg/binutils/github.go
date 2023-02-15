@@ -6,7 +6,7 @@ package binutils
 import (
 	"fmt"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 )
 
 const (

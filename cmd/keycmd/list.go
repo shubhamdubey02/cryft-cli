@@ -10,16 +10,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/key"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	ledger "github.com/ava-labs/avalanche-ledger-go"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/utils/formatting/address"
-	"github.com/ava-labs/avalanchego/utils/units"
-	"github.com/ava-labs/avalanchego/vms/platformvm"
-	"github.com/ava-labs/coreth/ethclient"
+	"github.com/MetalBlockchain/coreth/ethclient"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/key"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	ledger "github.com/MetalBlockchain/metal-ledger-go"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
+	"github.com/MetalBlockchain/metalgo/utils/units"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -112,7 +112,7 @@ func getClients(networks []models.Network, cchain bool) (
 	error,
 ) {
 	apiEndpoints := map[models.Network]string{
-		models.Fuji:    constants.FujiAPIEndpoint,
+		models.Tahoe:   constants.FujiAPIEndpoint,
 		models.Mainnet: constants.MainnetAPIEndpoint,
 		models.Local:   constants.LocalAPIEndpoint,
 	}
@@ -147,7 +147,7 @@ func listKeys(cmd *cobra.Command, args []string) error {
 		networks = append(networks, models.Local)
 	}
 	if testnet || all {
-		networks = append(networks, models.Fuji)
+		networks = append(networks, models.Tahoe)
 	}
 	if mainnet || all {
 		networks = append(networks, models.Mainnet)
@@ -156,7 +156,7 @@ func listKeys(cmd *cobra.Command, args []string) error {
 		// no flag was set, prompt user
 		networkStr, err := app.Prompt.CaptureList(
 			"Choose network for which to list addresses",
-			[]string{models.Mainnet.String(), models.Fuji.String(), models.Local.String()},
+			[]string{models.Mainnet.String(), models.Tahoe.String(), models.Local.String()},
 		)
 		if err != nil {
 			return err

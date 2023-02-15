@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ava-labs/avalanche-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/spf13/cobra"
 )
 
@@ -46,7 +46,7 @@ func deleteSubnet(cmd *cobra.Command, args []string) error {
 	// is an APM subnet. We can't naively delete the binary because it
 	// may be used by multiple subnets. We should delete this binary,
 	// but only if no other subnet is using it.
-	// More info: https://github.com/ava-labs/avalanche-cli/issues/246
+	// More info: https://github.com/MetalBlockchain/metal-cli/issues/246
 
 	if _, err := os.Stat(subnetDir); err == nil {
 		// exists

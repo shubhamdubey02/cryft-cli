@@ -6,9 +6,9 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/ava-labs/avalanche-cli/pkg/key"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/key"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +44,7 @@ func createKey(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		ux.Logger.PrintToUser("Key created")
-		networks := []models.Network{models.Fuji, models.Mainnet}
+		networks := []models.Network{models.Tahoe, models.Mainnet}
 		cchain := true
 		pClients, cClients, err := getClients(networks, cchain)
 		if err != nil {

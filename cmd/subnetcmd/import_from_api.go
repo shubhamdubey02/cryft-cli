@@ -8,15 +8,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanche-cli/pkg/vm"
-	"github.com/ava-labs/avalanchego/api/info"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/utils/rpc"
-	"github.com/ava-labs/avalanchego/vms/platformvm"
-	"github.com/ava-labs/coreth/core"
+	"github.com/MetalBlockchain/coreth/core"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/vm"
+	"github.com/MetalBlockchain/metalgo/api/info"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/rpc"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/ava-labs/spacesvm/chain"
 	"github.com/spf13/cobra"
 )
@@ -78,7 +78,7 @@ func importRunningSubnet(cmd *cobra.Command, args []string) error {
 	var network models.Network
 	switch {
 	case deployTestnet:
-		network = models.Fuji
+		network = models.Tahoe
 	case deployMainnet:
 		network = models.Mainnet
 	}
@@ -86,7 +86,7 @@ func importRunningSubnet(cmd *cobra.Command, args []string) error {
 	if network == models.Undefined {
 		networkStr, err := app.Prompt.CaptureList(
 			"Choose a network to import from",
-			[]string{models.Fuji.String(), models.Mainnet.String()},
+			[]string{models.Tahoe.String(), models.Mainnet.String()},
 		)
 		if err != nil {
 			return err
@@ -140,7 +140,7 @@ func importRunningSubnet(cmd *cobra.Command, args []string) error {
 
 	var pubAPI string
 	switch network {
-	case models.Fuji:
+	case models.Tahoe:
 		pubAPI = constants.FujiAPIEndpoint
 	case models.Mainnet:
 		pubAPI = constants.MainnetAPIEndpoint

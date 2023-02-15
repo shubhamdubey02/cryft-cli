@@ -13,16 +13,16 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/ava-labs/apm/types"
-	"github.com/ava-labs/avalanche-cli/pkg/binutils"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/prompts"
-	"github.com/ava-labs/avalanche-cli/pkg/subnet"
-	"github.com/ava-labs/avalanche-cli/pkg/utils"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/version"
+	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/version"
+	"github.com/MetalBlockchain/apm/types"
 	"gopkg.in/yaml.v3"
 )
 
@@ -81,8 +81,8 @@ func publish(cmd *cobra.Command, args []string) error {
 
 // isReadyToPublish currently means if deployed to fuji and/or main
 func isReadyToPublish(sc *models.Sidecar) bool {
-	if sc.Networks[models.Fuji.String()].SubnetID != ids.Empty &&
-		sc.Networks[models.Fuji.String()].BlockchainID != ids.Empty {
+	if sc.Networks[models.Tahoe.String()].SubnetID != ids.Empty &&
+		sc.Networks[models.Tahoe.String()].BlockchainID != ids.Empty {
 		return true
 	}
 	if sc.Networks[models.Mainnet.String()].SubnetID != ids.Empty &&
@@ -367,7 +367,7 @@ func getSubnetInfo(sc *models.Sidecar) (*types.Subnet, error) {
 	}
 
 	subnet := &types.Subnet{
-		ID:          sc.Networks[models.Fuji.String()].SubnetID.String(),
+		ID:          sc.Networks[models.Tahoe.String()].SubnetID.String(),
 		Alias:       sc.Name,
 		Homepage:    homepage,
 		Description: desc,

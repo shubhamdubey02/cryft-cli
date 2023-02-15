@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/ava-labs/avalanche-cli/tests/e2e/utils"
+	"github.com/MetalBlockchain/metal-cli/tests/e2e/utils"
 	"github.com/onsi/gomega"
 )
 

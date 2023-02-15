@@ -5,19 +5,19 @@ package mocks
 import (
 	context "context"
 
-	api "github.com/ava-labs/avalanchego/api"
+	api "github.com/MetalBlockchain/metalgo/api"
 
-	crypto "github.com/ava-labs/avalanchego/utils/crypto"
+	crypto "github.com/MetalBlockchain/metalgo/utils/crypto"
 
-	ids "github.com/ava-labs/avalanchego/ids"
+	ids "github.com/MetalBlockchain/metalgo/ids"
 
 	mock "github.com/stretchr/testify/mock"
 
-	platformvm "github.com/ava-labs/avalanchego/vms/platformvm"
+	platformvm "github.com/MetalBlockchain/metalgo/vms/platformvm"
 
-	rpc "github.com/ava-labs/avalanchego/utils/rpc"
+	rpc "github.com/MetalBlockchain/metalgo/utils/rpc"
 
-	status "github.com/ava-labs/avalanchego/vms/platformvm/status"
+	status "github.com/MetalBlockchain/metalgo/vms/platformvm/status"
 
 	time "time"
 )

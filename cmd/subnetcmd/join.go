@@ -12,15 +12,15 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ava-labs/avalanche-cli/cmd/flags"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/plugins"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/config"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/ava-labs/avalanchego/vms/platformvm"
+	"github.com/MetalBlockchain/metal-cli/cmd/flags"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/plugins"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/config"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/kardianos/osext"
 	"github.com/shirou/gopsutil/process"
 	"github.com/spf13/cobra"
@@ -146,7 +146,7 @@ func joinCmd(cmd *cobra.Command, args []string) error {
 	var network models.Network
 	switch {
 	case deployTestnet:
-		network = models.Fuji
+		network = models.Tahoe
 	case deployMainnet:
 		network = models.Mainnet
 	}
@@ -154,7 +154,7 @@ func joinCmd(cmd *cobra.Command, args []string) error {
 	if network == models.Undefined {
 		networkStr, err := app.Prompt.CaptureList(
 			"Choose a network to validate on (this command only supports public networks)",
-			[]string{models.Fuji.String(), models.Mainnet.String()},
+			[]string{models.Tahoe.String(), models.Mainnet.String()},
 		)
 		if err != nil {
 			return err
@@ -162,7 +162,7 @@ func joinCmd(cmd *cobra.Command, args []string) error {
 		// flag provided
 		networkStr = strings.Title(networkStr)
 		// as we are allowing a flag, we need to check if a supported network has been provided
-		if !(networkStr == models.Fuji.String() || networkStr == models.Mainnet.String()) {
+		if !(networkStr == models.Tahoe.String() || networkStr == models.Mainnet.String()) {
 			return errors.New("unsupported network")
 		}
 		network = models.NetworkFromString(networkStr)
@@ -417,7 +417,7 @@ func isNodeValidatingSubnet(subnetID ids.ID, network models.Network) (bool, erro
 
 	var api string
 	switch network {
-	case models.Fuji:
+	case models.Tahoe:
 		api = constants.FujiAPIEndpoint
 	case models.Mainnet:
 		api = constants.MainnetAPIEndpoint

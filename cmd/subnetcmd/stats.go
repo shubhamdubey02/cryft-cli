@@ -11,13 +11,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/api/info"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/vms/platformvm"
-	"github.com/ava-labs/avalanchego/vms/platformvm/api"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/api/info"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm/api"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -32,8 +32,8 @@ func newStatsCmd() *cobra.Command {
 		RunE:         stats,
 		SilenceUsage: true,
 	}
-	cmd.Flags().BoolVar(&deployTestnet, "fuji", false, "print stats on `fuji` (alias for `testnet`)")
-	cmd.Flags().BoolVar(&deployTestnet, "testnet", false, "print stats on `testnet` (alias for `fuji`)")
+	cmd.Flags().BoolVar(&deployTestnet, "tahoe", false, "print stats on `tahoe` (alias for `testnet`)")
+	cmd.Flags().BoolVar(&deployTestnet, "testnet", false, "print stats on `testnet` (alias for `tahoe`)")
 	cmd.Flags().BoolVar(&deployMainnet, "mainnet", false, "print stats on `mainnet`")
 	return cmd
 }
@@ -42,7 +42,7 @@ func stats(cmd *cobra.Command, args []string) error {
 	var network models.Network
 	switch {
 	case deployTestnet:
-		network = models.Fuji
+		network = models.Tahoe
 	case deployMainnet:
 		network = models.Mainnet
 	}
@@ -50,7 +50,7 @@ func stats(cmd *cobra.Command, args []string) error {
 	if network == models.Undefined {
 		networkStr, err := app.Prompt.CaptureList(
 			"Choose a network from which you want to get the statistics (this command only supports public networks)",
-			[]string{models.Fuji.String(), models.Mainnet.String()},
+			[]string{models.Tahoe.String(), models.Mainnet.String()},
 		)
 		if err != nil {
 			return err
@@ -58,7 +58,7 @@ func stats(cmd *cobra.Command, args []string) error {
 		// flag provided
 		networkStr = strings.Title(networkStr)
 		// as we are allowing a flag, we need to check if a supported network has been provided
-		if !(networkStr == models.Fuji.String() || networkStr == models.Mainnet.String()) {
+		if !(networkStr == models.Tahoe.String() || networkStr == models.Mainnet.String()) {
 			return errors.New("unsupported network")
 		}
 		network = models.NetworkFromString(networkStr)
@@ -299,7 +299,7 @@ func findAPIEndpoint(network models.Network) (platformvm.Client, info.Client) {
 	var url string
 	// try public APIs
 	switch network {
-	case models.Fuji:
+	case models.Tahoe:
 		url = constants.FujiAPIEndpoint
 	case models.Mainnet:
 		url = constants.MainnetAPIEndpoint
