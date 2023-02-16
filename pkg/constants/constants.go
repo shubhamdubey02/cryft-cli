@@ -15,11 +15,12 @@ const (
 	ServerRunFile      = "gRPCserver.run"
 	AvalancheCliBinDir = "bin"
 	RunDir             = "runs"
-	SuffixSeparator    = "_"
-	SidecarFileName    = "sidecar.json"
-	GenesisFileName    = "genesis.json"
-	SidecarSuffix      = SuffixSeparator + SidecarFileName
-	GenesisSuffix      = SuffixSeparator + GenesisFileName
+
+	SuffixSeparator = "_"
+	SidecarFileName = "sidecar.json"
+	GenesisFileName = "genesis.json"
+	SidecarSuffix   = SuffixSeparator + SidecarFileName
+	GenesisSuffix   = SuffixSeparator + GenesisFileName
 
 	SidecarVersion = "1.2.1"
 
@@ -80,7 +81,6 @@ const (
 	SubnetEVMInstallDir   = "subnet-evm"
 	SpacesVMInstallDir    = "spacesvm"
 
-	EVMPlugin    = "evm"
 	SubnetEVMBin = "subnet-evm"
 	SpacesVMBin  = "spacesvm"
 
@@ -92,23 +92,26 @@ const (
 	APMPluginDir          = "apm_plugins"
 
 	// #nosec G101
-	GithubAPITokenEnvVarName = "GITHUB_TOKEN"
+	GithubAPITokenEnvVarName = "AVALANCHE_CLI_GITHUB_TOKEN"
 
 	ReposDir       = "repos"
 	SubnetDir      = "subnets"
 	VMDir          = "vms"
 	ChainConfigDir = "chains"
 
-	SubnetConfigFileName = "subnet.json"
-	ChainConfigFileName  = "chain.json"
+	SubnetConfigFileName       = "subnet.json"
+	ChainConfigFileName        = "chain.json"
+	PerNodeChainConfigFileName = "per-node-chain.json"
 
 	GitRepoCommitName  = "Avalanche-CLI"
 	GitRepoCommitEmail = "info@avax.network"
 
 	AvaLabsMaintainers = "ava-labs"
 
-	NotAvailableLabel = "Not available"
-	BackendCmd        = "avalanche-cli-backend"
+	UpgradeBytesFileName      = "upgrade.json"
+	UpgradeBytesLockExtension = ".lock"
+	NotAvailableLabel         = "Not available"
+	BackendCmd                = "avalanche-cli-backend"
 
 	AvalancheGoCompatibilityVersionAdded = "v1.9.2"
 	AvalancheGoCompatibilityURL          = "https://raw.githubusercontent.com/ava-labs/avalanchego/master/version/compatibility.json"
@@ -120,4 +123,6 @@ const (
 
 	SubnetIDLabel     = "SubnetID: "
 	BlockchainIDLabel = "BlockchainID: "
+
+	PluginDir = "plugins"
 )

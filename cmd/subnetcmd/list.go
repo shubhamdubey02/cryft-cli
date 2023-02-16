@@ -9,15 +9,14 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-network-runner/utils"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/ava-labs/avalanche-cli/pkg/application"
+	"github.com/ava-labs/avalanche-cli/pkg/constants"
+	"github.com/ava-labs/avalanche-cli/pkg/models"
+	"github.com/ava-labs/avalanche-cli/pkg/subnet"
+	"github.com/ava-labs/avalanche-network-runner/utils"
+	"github.com/ava-labs/avalanchego/ids"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 )
 
 var deployed bool
@@ -37,17 +36,24 @@ func newListCmd() *cobra.Command {
 
 type subnetMatrix [][]string
 
-func (c subnetMatrix) Len() int      { return len(c) }
-func (c subnetMatrix) Swap(i, j int) { c[i], c[j] = c[j], c[i] }
+func (c subnetMatrix) Len() int {
+	return len(c)
+}
+
+func (c subnetMatrix) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
+}
 
 // Compare strings by first key of the sub-slice
-func (c subnetMatrix) Less(i, j int) bool { return strings.Compare(c[i][0], c[j][0]) == -1 }
+func (c subnetMatrix) Less(i, j int) bool {
+	return strings.Compare(c[i][0], c[j][0]) == -1
+}
 
 func listSubnets(cmd *cobra.Command, args []string) error {
 	if deployed {
 		return listDeployInfo(cmd, args)
 	}
-	header := []string{"subnet", "chain", "chainID", "vmID", "type", "from repo"}
+	header := []string{"subnet", "chain", "chainID", "vmID", "type", "vm version", "from repo"}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(header)
 	table.SetAutoMergeCellsByColumnIndex([]int{0})
@@ -87,6 +93,7 @@ func listSubnets(cmd *cobra.Command, args []string) error {
 			chainID,
 			vmID,
 			string(sc.VM),
+			sc.VMVersion,
 			strconv.FormatBool(sc.ImportedFromAPM),
 		})
 	}
@@ -130,7 +137,7 @@ func getSidecars(app *application.Avalanche) ([]*models.Sidecar, error) {
 	return cars, nil
 }
 
-func listDeployInfo(cmd *cobra.Command, args []string) error {
+func listDeployInfo(*cobra.Command, []string) error {
 	header := []string{"subnet", "chain", "vm ID", "Local Network", "Fuji (testnet)", "Mainnet"}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(header)
@@ -140,25 +147,11 @@ func listDeployInfo(cmd *cobra.Command, args []string) error {
 
 	rows := subnetMatrix{}
 
-	deployedNames := map[string]struct{}{}
-	// if the server can not be contacted, or there is a problem with the query,
-	// DO NOT FAIL, just print No for deployed status
-	cli, err := binutils.NewGRPCClient()
+	deployedNames, err := subnet.GetLocallyDeployedSubnets()
 	if err != nil {
-		app.Log.Warn("could not get connection to server", zap.Error(err))
-	}
-	if cli != nil {
-		ctx := binutils.GetAsyncContext()
-		resp, err := cli.Status(ctx)
-		if err != nil {
-			app.Log.Warn("failed to query server for status", zap.Error(err))
-		}
-
-		if resp != nil {
-			for _, chain := range resp.GetClusterInfo().CustomChains {
-				deployedNames[chain.ChainName] = struct{}{}
-			}
-		}
+		// if the server can not be contacted, or there is a problem with the query,
+		// DO NOT FAIL, just print No for deployed status
+		app.Log.Warn("problem contacting server to get deployed subnets")
 	}
 	cars, err := getSidecars(app)
 	if err != nil {
@@ -221,7 +214,6 @@ func listDeployInfo(cmd *cobra.Command, args []string) error {
 			rows = append(rows, []string{
 				sc.Subnet,
 				sc.Name,
-				vmID,
 				deployedLocal,
 				netToID[fujiKey][1],
 				netToID[mainKey][1],

@@ -68,7 +68,7 @@ in with avalanche subnet create myNewSubnet.`,
 	return rootCmd
 }
 
-func createApp(cmd *cobra.Command, args []string) error {
+func createApp(cmd *cobra.Command, _ []string) error {
 	baseDir, err := setupEnv()
 	if err != nil {
 		return err
@@ -152,6 +152,12 @@ func setupEnv() (string, error) {
 	repoDir := filepath.Join(baseDir, constants.ReposDir)
 	if err = os.MkdirAll(repoDir, os.ModePerm); err != nil {
 		fmt.Printf("failed creating the repo dir %s: %s\n", repoDir, err)
+		os.Exit(1)
+	}
+
+	pluginDir := filepath.Join(baseDir, constants.PluginDir)
+	if err = os.MkdirAll(pluginDir, os.ModePerm); err != nil {
+		fmt.Printf("failed creating the plugin dir %s: %s\n", pluginDir, err)
 		os.Exit(1)
 	}
 

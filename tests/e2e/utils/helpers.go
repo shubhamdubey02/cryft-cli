@@ -5,9 +5,11 @@ package utils
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/user"
@@ -16,20 +18,21 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/key"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	ledger "github.com/MetalBlockchain/metal-ledger-go"
-	"github.com/MetalBlockchain/metal-network-runner/client"
-	"github.com/MetalBlockchain/metalgo/ids"
-	avago_constants "github.com/MetalBlockchain/metalgo/utils/constants"
-	"github.com/MetalBlockchain/metalgo/utils/crypto/keychain"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/MetalBlockchain/metalgo/vms/components/avax"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm"
-	"github.com/MetalBlockchain/metalgo/vms/secp256k1fx"
-	"github.com/MetalBlockchain/metalgo/wallet/subnet/primary"
+	"github.com/ava-labs/avalanche-cli/pkg/binutils"
+	"github.com/ava-labs/avalanche-cli/pkg/constants"
+	"github.com/ava-labs/avalanche-cli/pkg/key"
+	"github.com/ava-labs/avalanche-cli/pkg/models"
+	"github.com/ava-labs/avalanche-network-runner/client"
+	"github.com/ava-labs/avalanchego/api/info"
+	"github.com/ava-labs/avalanchego/ids"
+	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
+	"github.com/ava-labs/avalanchego/utils/crypto/keychain"
+	ledger "github.com/ava-labs/avalanchego/utils/crypto/ledger"
+	"github.com/ava-labs/avalanchego/utils/logging"
+	"github.com/ava-labs/avalanchego/vms/components/avax"
+	"github.com/ava-labs/avalanchego/vms/platformvm"
+	"github.com/ava-labs/avalanchego/vms/secp256k1fx"
+	"github.com/ava-labs/avalanchego/wallet/subnet/primary"
 	"github.com/ava-labs/spacesvm/chain"
 	spacesvmclient "github.com/ava-labs/spacesvm/client"
 	"github.com/ava-labs/subnet-evm/ethclient"
@@ -56,6 +59,32 @@ func GetAPMDir() string {
 		panic(err)
 	}
 	return path.Join(usr.HomeDir, constants.APMDir)
+}
+
+func ChainConfigExists(subnetName string) (bool, error) {
+	cfgPath := filepath.Join(GetBaseDir(), constants.SubnetDir, subnetName, constants.ChainConfigFileName)
+	cfgExists := true
+	if _, err := os.Stat(cfgPath); errors.Is(err, os.ErrNotExist) {
+		// does *not* exist
+		cfgExists = false
+	} else if err != nil {
+		// Schrodinger: file may or may not exist. See err for details.
+		return false, err
+	}
+	return cfgExists, nil
+}
+
+func PerNodeChainConfigExists(subnetName string) (bool, error) {
+	cfgPath := filepath.Join(GetBaseDir(), constants.SubnetDir, subnetName, constants.PerNodeChainConfigFileName)
+	cfgExists := true
+	if _, err := os.Stat(cfgPath); errors.Is(err, os.ErrNotExist) {
+		// does *not* exist
+		cfgExists = false
+	} else if err != nil {
+		// Schrodinger: file may or may not exist. See err for details.
+		return false, err
+	}
+	return cfgExists, nil
 }
 
 func genesisExists(subnetName string) (bool, error) {
@@ -205,13 +234,13 @@ func DeleteConfigs(subnetName string) error {
 	}
 
 	// ignore error, file may not exist
-	os.RemoveAll(subnetDir)
+	_ = os.RemoveAll(subnetDir)
 
 	return nil
 }
 
 func RemoveAPMRepo() {
-	os.RemoveAll(GetAPMDir())
+	_ = os.RemoveAll(GetAPMDir())
 }
 
 func DeleteKey(keyName string) error {
@@ -222,7 +251,7 @@ func DeleteKey(keyName string) error {
 	}
 
 	// ignore error, file may not exist
-	os.Remove(keyPath)
+	_ = os.Remove(keyPath)
 
 	return nil
 }
@@ -235,7 +264,7 @@ func DeleteBins() error {
 	}
 
 	// ignore error, file may not exist
-	os.RemoveAll(avagoPath)
+	_ = os.RemoveAll(avagoPath)
 
 	subevmPath := path.Join(GetBaseDir(), constants.AvalancheCliBinDir, constants.SubnetEVMInstallDir)
 	if _, err := os.Stat(subevmPath); err != nil && !errors.Is(err, os.ErrNotExist) {
@@ -244,7 +273,7 @@ func DeleteBins() error {
 	}
 
 	// ignore error, file may not exist
-	os.RemoveAll(subevmPath)
+	_ = os.RemoveAll(subevmPath)
 
 	return nil
 }
@@ -252,14 +281,14 @@ func DeleteBins() error {
 func DeleteCustomBinary(vmName string) {
 	vmPath := path.Join(GetBaseDir(), constants.VMDir, vmName)
 	// ignore error, file may not exist
-	os.RemoveAll(vmPath)
+	_ = os.RemoveAll(vmPath)
 }
 
 func DeleteAPMBin(vmid string) {
 	vmPath := path.Join(GetBaseDir(), constants.AvalancheCliBinDir, constants.APMPluginDir, vmid)
 
 	// ignore error, file may not exist
-	os.RemoveAll(vmPath)
+	_ = os.RemoveAll(vmPath)
 }
 
 func stdoutParser(output string, queue string, capture string) (string, error) {
@@ -376,9 +405,11 @@ func RunHardhatScript(script string) (string, string, error) {
 	cmd := exec.Command("npx", "hardhat", "run", script, "--network", "subnet")
 	cmd.Dir = hardhatDir
 	output, err := cmd.CombinedOutput()
-	exitErr, typeOk := err.(*exec.ExitError)
-	stderr := ""
-	if typeOk {
+	var (
+		exitErr *exec.ExitError
+		stderr  string
+	)
+	if errors.As(err, &exitErr) {
 		stderr = string(exitErr.Stderr)
 	}
 	if err != nil {
@@ -389,8 +420,8 @@ func RunHardhatScript(script string) (string, string, error) {
 }
 
 func PrintStdErr(err error) {
-	exitErr, typeOk := err.(*exec.ExitError)
-	if typeOk {
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
 		fmt.Println(string(exitErr.Stderr))
 	}
 }
@@ -463,7 +494,7 @@ func ParsePublicDeployOutput(output string) (string, string, error) {
 	return subnetID, rpcURL, nil
 }
 
-func UpdateNodesWhitelistedSubnets(whitelistedSubnets string) error {
+func RestartNodesWithWhitelistedSubnets(whitelistedSubnets string) error {
 	cli, err := binutils.NewGRPCClient()
 	if err != nil {
 		return err
@@ -497,6 +528,26 @@ type NodeInfo struct {
 	PluginDir  string
 	ConfigFile string
 	URI        string
+	LogDir     string
+}
+
+func GetNodeVMVersion(nodeURI string, vmid string) (string, error) {
+	rootCtx := context.Background()
+	ctx, cancel := context.WithTimeout(rootCtx, constants.RequestTimeout)
+
+	client := info.NewClient(nodeURI)
+	versionInfo, err := client.GetNodeVersion(ctx)
+	cancel()
+	if err != nil {
+		return "", err
+	}
+
+	for vm, version := range versionInfo.VMVersions {
+		if vm == vmid {
+			return version, nil
+		}
+	}
+	return "", errors.New("vmid not found")
 }
 
 func GetNodesInfo() (map[string]NodeInfo, error) {
@@ -518,6 +569,7 @@ func GetNodesInfo() (map[string]NodeInfo, error) {
 			PluginDir:  nodeInfo.PluginDir,
 			ConfigFile: path.Join(path.Dir(nodeInfo.LogDir), "config.json"),
 			URI:        nodeInfo.Uri,
+			LogDir:     nodeInfo.LogDir,
 		}
 	}
 	return nodesInfo, nil
@@ -646,6 +698,21 @@ func RunSpacesVMAPITest(rpc string) error {
 	return nil
 }
 
+func GetFileHash(filename string) (string, error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
+}
+
 func FundLedgerAddress() error {
 	// get ledger
 	ledgerDev, err := ledger.New()
@@ -654,7 +721,6 @@ func FundLedgerAddress() error {
 	}
 
 	// get ledger addr
-	fmt.Println("*** Please provide extended public key on the ledger device ***")
 	ledgerAddrs, err := ledgerDev.Addresses([]uint32{0})
 	if err != nil {
 		return err
@@ -714,4 +780,23 @@ func FundLedgerAddress() error {
 	}
 
 	return nil
+}
+
+func GetPluginBinaries() ([]string, error) {
+	// load plugin files from the plugin directory
+	pluginDir := path.Join(GetBaseDir(), PluginDirExt)
+	files, err := os.ReadDir(pluginDir)
+	if err != nil {
+		return nil, err
+	}
+
+	pluginFiles := []string{}
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+		pluginFiles = append(pluginFiles, filepath.Join(pluginDir, file.Name()))
+	}
+
+	return pluginFiles, nil
 }

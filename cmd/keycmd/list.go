@@ -10,16 +10,17 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/MetalBlockchain/coreth/ethclient"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/key"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	ledger "github.com/MetalBlockchain/metal-ledger-go"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
-	"github.com/MetalBlockchain/metalgo/utils/units"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm"
+	"github.com/ava-labs/avalanche-cli/pkg/constants"
+	"github.com/ava-labs/avalanche-cli/pkg/key"
+	"github.com/ava-labs/avalanche-cli/pkg/models"
+	"github.com/ava-labs/avalanche-cli/pkg/ux"
+	"github.com/ava-labs/avalanchego/ids"
+	ledger "github.com/ava-labs/avalanchego/utils/crypto/ledger"
+	"github.com/ava-labs/avalanchego/utils/formatting/address"
+	"github.com/ava-labs/avalanchego/utils/logging"
+	"github.com/ava-labs/avalanchego/utils/units"
+	"github.com/ava-labs/avalanchego/vms/platformvm"
+	"github.com/ava-labs/coreth/ethclient"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -140,7 +141,7 @@ type addressInfo struct {
 	network string
 }
 
-func listKeys(cmd *cobra.Command, args []string) error {
+func listKeys(*cobra.Command, []string) error {
 	var addrInfos []addressInfo
 	networks := []models.Network{}
 	if local || all {
@@ -263,11 +264,12 @@ func getLedgerIndicesInfo(
 ) ([]addressInfo, error) {
 	ledgerDevice, err := ledger.New()
 	if err != nil {
+		ux.Logger.PrintToUser(logging.LightRed.Wrap("Error accessing ledger device. Please update ledger app to >= v0.6.5."))
 		return nil, err
 	}
-	ux.Logger.PrintToUser("*** Please provide extended public key on the ledger device ***")
 	addresses, err := ledgerDevice.Addresses(ledgerIndices)
 	if err != nil {
+		ux.Logger.PrintToUser(logging.LightRed.Wrap("Error accessing ledger device. Please update ledger app to >= v0.6.5."))
 		return nil, err
 	}
 	if len(addresses) != len(ledgerIndices) {

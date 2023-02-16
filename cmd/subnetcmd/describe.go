@@ -72,6 +72,7 @@ func printDetails(genesis core.Genesis, sc models.Sidecar) {
 	table.Append([]string{"Subnet Name", sc.Subnet})
 	table.Append([]string{"ChainID", genesis.Config.ChainID.String()})
 	table.Append([]string{"Token Name", app.GetTokenName(sc.Subnet)})
+	table.Append([]string{"VM Version", sc.VMVersion})
 	if sc.ImportedVMID != "" {
 		table.Append([]string{"VM ID", sc.ImportedVMID})
 	} else {
@@ -82,6 +83,7 @@ func printDetails(genesis core.Genesis, sc models.Sidecar) {
 		}
 		table.Append([]string{"VM ID", id})
 	}
+
 	for net, data := range sc.Networks {
 		if data.SubnetID != ids.Empty {
 			table.Append([]string{fmt.Sprintf("%s SubnetID", net), data.SubnetID.String()})
@@ -233,7 +235,7 @@ func describeSubnetEvmGenesis(sc models.Sidecar) error {
 	return nil
 }
 
-func readGenesis(cmd *cobra.Command, args []string) error {
+func readGenesis(_ *cobra.Command, args []string) error {
 	subnetName := args[0]
 	if !app.GenesisExists(subnetName) {
 		ux.Logger.PrintToUser("The provided subnet name %q does not exist", subnetName)

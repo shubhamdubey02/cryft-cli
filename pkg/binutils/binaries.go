@@ -25,7 +25,8 @@ var (
 )
 
 type PluginBinaryDownloader interface {
-	InstallVM(vmID, vmBin, pluginDir string) error
+	InstallVM(vmID, vmBin string) error
+	RemoveVM(vmID string) error
 }
 
 type BinaryChecker interface {
@@ -111,7 +112,7 @@ func installZipArchive(zipfile []byte, binDir string) error {
 			}
 
 			_, err = io.CopyN(f, rc, maxCopy)
-			if err != nil && err != io.EOF {
+			if err != nil && !errors.Is(err, io.EOF) {
 				return fmt.Errorf("failed writing zip file entry to disk: %w", err)
 			}
 			if err := f.Close(); err != nil {
@@ -147,7 +148,7 @@ func installTarGzArchive(targz []byte, binDir string) error {
 		header, err := tarReader.Next()
 		switch {
 		// if no more files are found return
-		case err == io.EOF:
+		case errors.Is(err, io.EOF):
 			return nil
 		case err != nil:
 			return fmt.Errorf("failed reading next tar entry: %w", err)
@@ -184,7 +185,7 @@ func installTarGzArchive(targz []byte, binDir string) error {
 				return fmt.Errorf("failed opening new file from tar entry %w", err)
 			}
 			// copy over contents
-			if _, err := io.CopyN(f, tarReader, maxCopy); err != nil && err != io.EOF {
+			if _, err := io.CopyN(f, tarReader, maxCopy); err != nil && !errors.Is(err, io.EOF) {
 				return fmt.Errorf("failed writing tar entry contents to disk: %w", err)
 			}
 			// manually close here after each file operation; defering would cause each file close
@@ -197,7 +198,7 @@ func installTarGzArchive(targz []byte, binDir string) error {
 }
 
 // ExistsWithVersion returns true if the supplied binary is installed with the supplied version
-func (abc *binaryChecker) ExistsWithVersion(binDir, binPrefix, version string) (bool, error) {
+func (*binaryChecker) ExistsWithVersion(binDir, binPrefix, version string) (bool, error) {
 	match, err := filepath.Glob(filepath.Join(binDir, binPrefix) + version)
 	if err != nil {
 		return false, err
@@ -205,9 +206,9 @@ func (abc *binaryChecker) ExistsWithVersion(binDir, binPrefix, version string) (
 	return len(match) != 0, nil
 }
 
-func (d *pluginBinaryDownloader) InstallVM(vmID, vmBin, pluginDir string) error {
+func (pbd *pluginBinaryDownloader) InstallVM(vmID, vmBin string) error {
 	// target of VM install
-	binaryPath := filepath.Join(pluginDir, vmID)
+	binaryPath := filepath.Join(pbd.app.GetPluginsDir(), vmID)
 
 	// check if binary is already present, this should never happen
 	if _, err := os.Stat(binaryPath); err == nil {
@@ -218,6 +219,23 @@ func (d *pluginBinaryDownloader) InstallVM(vmID, vmBin, pluginDir string) error 
 
 	if err := CopyFile(vmBin, binaryPath); err != nil {
 		return fmt.Errorf("failed copying custom vm to plugin dir: %w", err)
+	}
+	return nil
+}
+
+func (pbd *pluginBinaryDownloader) RemoveVM(vmID string) error {
+	// target of VM install
+	binaryPath := filepath.Join(pbd.app.GetPluginsDir(), vmID)
+
+	// check if binary is already present, this should never happen
+	if _, err := os.Stat(binaryPath); errors.Is(err, os.ErrNotExist) {
+		return errors.New("vm binary does not exist")
+	} else if err != nil {
+		return err
+	}
+
+	if err := os.Remove(binaryPath); err != nil {
+		return fmt.Errorf("failed deleting plugin: %w", err)
 	}
 	return nil
 }

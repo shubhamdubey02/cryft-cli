@@ -5,6 +5,7 @@ package commands
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -42,8 +43,9 @@ func CreateSubnetEvmConfigWithVersion(subnetName string, genesisPath string, ver
 	cmd := exec.Command(CLIBinary, cmdArgs...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(cmd.String())
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 	}
 	gomega.Expect(err).Should(gomega.BeNil())
 
@@ -66,7 +68,25 @@ func ConfigureChainConfig(subnetName string, genesisPath string) {
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	// Config should now exist
-	exists, err := utils.SubnetConfigExists(subnetName)
+	exists, err := utils.ChainConfigExists(subnetName)
+	gomega.Expect(err).Should(gomega.BeNil())
+	gomega.Expect(exists).Should(gomega.BeTrue())
+}
+
+/* #nosec G204 */
+func ConfigurePerNodeChainConfig(subnetName string, perNodeChainConfigPath string) {
+	// run configure
+	cmdArgs := []string{SubnetCmd, "configure", subnetName, "--per-node-chain-config", perNodeChainConfigPath}
+	cmd := exec.Command(CLIBinary, cmdArgs...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(string(output))
+		fmt.Println(err)
+	}
+	gomega.Expect(err).Should(gomega.BeNil())
+
+	// Config should now exist
+	exists, err := utils.PerNodeChainConfigExists(subnetName)
 	gomega.Expect(err).Should(gomega.BeNil())
 	gomega.Expect(exists).Should(gomega.BeTrue())
 }
@@ -97,8 +117,9 @@ func CreateSpacesVMConfigWithVersion(subnetName string, genesisPath string, vers
 	cmd := exec.Command(CLIBinary, cmdArgs...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(cmd.String())
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 	}
 	gomega.Expect(err).Should(gomega.BeNil())
 
@@ -132,14 +153,16 @@ func CreateCustomVMConfig(subnetName string, genesisPath string, vmPath string) 
 		subnetName,
 	)
 	output, err := cmd.CombinedOutput()
-	exitErr, typeOk := err.(*exec.ExitError)
-	stderr := ""
-	if typeOk {
-		stderr = string(exitErr.Stderr)
-	}
 	if err != nil {
+		var (
+			exitErr *exec.ExitError
+			stderr  string
+		)
+		if errors.As(err, &exitErr) {
+			stderr = string(exitErr.Stderr)
+		}
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 		fmt.Println(stderr)
 	}
 
@@ -163,8 +186,9 @@ func DeleteSubnetConfig(subnetName string) {
 	cmd := exec.Command(CLIBinary, SubnetCmd, "delete", subnetName)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(cmd.String())
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 	}
 	gomega.Expect(err).Should(gomega.BeNil())
 
@@ -223,14 +247,16 @@ func DeploySubnetLocallyWithArgs(subnetName string, version string, confPath str
 	}
 	cmd := exec.Command(CLIBinary, cmdArgs...)
 	output, err := cmd.CombinedOutput()
-	exitErr, typeOk := err.(*exec.ExitError)
-	stderr := ""
-	if typeOk {
-		stderr = string(exitErr.Stderr)
-	}
 	if err != nil {
+		var (
+			exitErr *exec.ExitError
+			stderr  string
+		)
+		if errors.As(err, &exitErr) {
+			stderr = string(exitErr.Stderr)
+		}
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 		fmt.Println(stderr)
 	}
 	gomega.Expect(err).Should(gomega.BeNil())
@@ -270,7 +296,8 @@ func SimulateFujiDeploy(
 	gomega.Expect(exists).Should(gomega.BeTrue())
 
 	// enable simulation of public network execution paths on a local network
-	os.Setenv(constants.SimulatePublicNetwork, "true")
+	err = os.Setenv(constants.SimulatePublicNetwork, "true")
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	// Deploy subnet locally
 	cmd := exec.Command(
@@ -288,13 +315,14 @@ func SimulateFujiDeploy(
 	)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(cmd.String())
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 	}
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	// disable simulation of public network execution paths on a local network
-	os.Unsetenv(constants.SimulatePublicNetwork)
-
+	err = os.Unsetenv(constants.SimulatePublicNetwork)
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	return string(output)
@@ -310,7 +338,8 @@ func SimulateMainnetDeploy(
 	gomega.Expect(exists).Should(gomega.BeTrue())
 
 	// enable simulation of public network execution paths on a local network
-	os.Setenv(constants.SimulatePublicNetwork, "true")
+	err = os.Setenv(constants.SimulatePublicNetwork, "true")
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	// Deploy subnet locally
 	cmd := exec.Command(
@@ -349,7 +378,8 @@ func SimulateMainnetDeploy(
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	// disable simulation of public network execution paths on a local network
-	os.Unsetenv(constants.SimulatePublicNetwork)
+	err = os.Unsetenv(constants.SimulatePublicNetwork)
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	return stdout + string(stderr)
 }
@@ -369,7 +399,8 @@ func SimulateFujiAddValidator(
 	gomega.Expect(exists).Should(gomega.BeTrue())
 
 	// enable simulation of public network execution paths on a local network
-	os.Setenv(constants.SimulatePublicNetwork, "true")
+	err = os.Setenv(constants.SimulatePublicNetwork, "true")
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	cmd := exec.Command(
 		CLIBinary,
@@ -390,13 +421,14 @@ func SimulateFujiAddValidator(
 	)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(cmd.String())
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 	}
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	// disable simulation of public network execution paths on a local network
-	os.Unsetenv(constants.SimulatePublicNetwork)
-
+	err = os.Unsetenv(constants.SimulatePublicNetwork)
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	return string(output)
@@ -416,7 +448,8 @@ func SimulateMainnetAddValidator(
 	gomega.Expect(exists).Should(gomega.BeTrue())
 
 	// enable simulation of public network execution paths on a local network
-	os.Setenv(constants.SimulatePublicNetwork, "true")
+	err = os.Setenv(constants.SimulatePublicNetwork, "true")
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	cmd := exec.Command(
 		CLIBinary,
@@ -459,7 +492,8 @@ func SimulateMainnetAddValidator(
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	// disable simulation of public network execution paths on a local network
-	os.Unsetenv(constants.SimulatePublicNetwork)
+	err = os.Unsetenv(constants.SimulatePublicNetwork)
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	return stdout + string(stderr)
 }
@@ -477,7 +511,8 @@ func SimulateFujiJoin(
 	gomega.Expect(exists).Should(gomega.BeTrue())
 
 	// enable simulation of public network execution paths on a local network
-	os.Setenv(constants.SimulatePublicNetwork, "true")
+	err = os.Setenv(constants.SimulatePublicNetwork, "true")
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	cmd := exec.Command(
 		CLIBinary,
@@ -500,10 +535,10 @@ func SimulateFujiJoin(
 		fmt.Println(string(output))
 		fmt.Println(err)
 	}
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	// disable simulation of public network execution paths on a local network
-	os.Unsetenv(constants.SimulatePublicNetwork)
-
+	err = os.Unsetenv(constants.SimulatePublicNetwork)
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	return string(output)
@@ -522,7 +557,8 @@ func SimulateMainnetJoin(
 	gomega.Expect(exists).Should(gomega.BeTrue())
 
 	// enable simulation of public network execution paths on a local network
-	os.Setenv(constants.SimulatePublicNetwork, "true")
+	err = os.Setenv(constants.SimulatePublicNetwork, "true")
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	cmd := exec.Command(
 		CLIBinary,
@@ -542,13 +578,14 @@ func SimulateMainnetJoin(
 	)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(cmd.String())
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 	}
+	gomega.Expect(err).Should(gomega.BeNil())
 
 	// disable simulation of public network execution paths on a local network
-	os.Unsetenv(constants.SimulatePublicNetwork)
-
+	err = os.Unsetenv(constants.SimulatePublicNetwork)
 	gomega.Expect(err).Should(gomega.BeNil())
 
 	return string(output)
@@ -577,12 +614,14 @@ func ImportSubnetConfig(repoAlias string, subnetName string) {
 		subnetName,
 	)
 	output, err := cmd.CombinedOutput()
-	exitErr, typeOk := err.(*exec.ExitError)
-	stderr := ""
-	if typeOk {
-		stderr = string(exitErr.Stderr)
-	}
 	if err != nil {
+		var (
+			exitErr *exec.ExitError
+			stderr  string
+		)
+		if errors.As(err, &exitErr) {
+			stderr = string(exitErr.Stderr)
+		}
 		fmt.Println(string(output))
 		fmt.Println(err)
 		fmt.Println(stderr)
@@ -622,14 +661,16 @@ func ImportSubnetConfigFromURL(repoURL string, branch string, subnetName string)
 		subnetName,
 	)
 	output, err := cmd.CombinedOutput()
-	exitErr, typeOk := err.(*exec.ExitError)
-	stderr := ""
-	if typeOk {
-		stderr = string(exitErr.Stderr)
-	}
 	if err != nil {
+		var (
+			exitErr *exec.ExitError
+			stderr  string
+		)
+		if errors.As(err, &exitErr) {
+			stderr = string(exitErr.Stderr)
+		}
 		fmt.Println(string(output))
-		fmt.Println(err)
+		utils.PrintStdErr(err)
 		fmt.Println(stderr)
 	}
 
@@ -640,6 +681,25 @@ func ImportSubnetConfigFromURL(repoURL string, branch string, subnetName string)
 	exists, err = utils.SubnetAPMVMExists(subnetName)
 	gomega.Expect(err).Should(gomega.BeNil())
 	gomega.Expect(exists).Should(gomega.BeTrue())
+}
+
+/* #nosec G204 */
+func DescribeSubnet(subnetName string) (string, error) {
+	// Create config
+	cmd := exec.Command(
+		CLIBinary,
+		SubnetCmd,
+		"describe",
+		subnetName,
+	)
+
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Println(cmd.String())
+		fmt.Println(string(output))
+		utils.PrintStdErr(err)
+	}
+	return string(output), err
 }
 
 func SimulateGetSubnetStatsFuji(subnetName, subnetID string) string {
@@ -663,12 +723,12 @@ func SimulateGetSubnetStatsFuji(subnetName, subnetID string) string {
 		"--fuji",
 	)
 	output, err := cmd.CombinedOutput()
-	exitErr, typeOk := err.(*exec.ExitError)
-	stderr := ""
-	if typeOk {
-		stderr = string(exitErr.Stderr)
-	}
+	var exitErr *exec.ExitError
 	if err != nil {
+		stderr := ""
+		if errors.As(err, &exitErr) {
+			stderr = string(exitErr.Stderr)
+		}
 		fmt.Println(string(output))
 		fmt.Println(err)
 		fmt.Println(stderr)

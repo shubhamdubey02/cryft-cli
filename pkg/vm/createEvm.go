@@ -16,6 +16,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/ava-labs/subnet-evm/core"
 	"github.com/ava-labs/subnet-evm/params"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 func CreateEvmSubnetConfig(app *application.Avalanche, subnetName string, genesisPath string, subnetEVMVersion string) ([]byte, *models.Sidecar, error) {
@@ -60,7 +61,11 @@ func CreateEvmSubnetConfig(app *application.Avalanche, subnetName string, genesi
 	return genesisBytes, sc, nil
 }
 
-func createEvmGenesis(app *application.Avalanche, subnetName string, subnetEVMVersion string) ([]byte, *models.Sidecar, error) {
+func createEvmGenesis(
+	app *application.Avalanche,
+	subnetName string,
+	subnetEVMVersion string,
+) ([]byte, *models.Sidecar, error) {
 	ux.Logger.PrintToUser("creating subnet %s", subnetName)
 
 	genesis := core.Genesis{}
@@ -93,7 +98,7 @@ func createEvmGenesis(app *application.Avalanche, subnetName string, subnetEVMVe
 		case descriptorsState:
 			chainID, tokenName, vmVersion, direction, err = getDescriptors(app, subnetEVMVersion)
 		case feeState:
-			*conf, direction, err = getFeeConfig(*conf, app)
+			*conf, direction, err = GetFeeConfig(*conf, app)
 		case airdropState:
 			allocation, direction, err = getEVMAllocation(app)
 		case precompilesState:
@@ -105,6 +110,12 @@ func createEvmGenesis(app *application.Avalanche, subnetName string, subnetEVMVe
 			return nil, nil, err
 		}
 		subnetEvmState.NextState(direction)
+	}
+
+	if conf != nil && conf.TxAllowListConfig != nil {
+		if err := ensureAdminsHaveBalance(conf.TxAllowListConfig.AllowListAdmins, allocation); err != nil {
+			return nil, nil, err
+		}
 	}
 
 	conf.ChainID = chainID
@@ -140,6 +151,22 @@ func createEvmGenesis(app *application.Avalanche, subnetName string, subnetEVMVe
 	}
 
 	return prettyJSON.Bytes(), sc, nil
+}
+
+func ensureAdminsHaveBalance(admins []common.Address, alloc core.GenesisAlloc) error {
+	if len(admins) < 1 {
+		return nil
+	}
+
+	for _, admin := range admins {
+		// we can break at the first admin who has a non-zero balance
+		if bal, ok := alloc[admin]; ok &&
+			bal.Balance != nil &&
+			bal.Balance.Uint64() > uint64(0) {
+			return nil
+		}
+	}
+	return errors.New("none of the addresses in the transaction allow list precompile have any tokens allocated to them. Currently, no address can transact on the network. Airdrop some funds to one of the allow list addresses to continue")
 }
 
 // In own function to facilitate testing
