@@ -578,7 +578,7 @@ func GetNodesInfo() (map[string]NodeInfo, error) {
 func GetWhilelistedSubnetsFromConfigFile(configFile string) (string, error) {
 	fileBytes, err := os.ReadFile(configFile)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		return "", fmt.Errorf("failed to load avalanchego config file %s: %w", configFile, err)
+		return "", fmt.Errorf("failed to load metalgo config file %s: %w", configFile, err)
 	}
 	var avagoConfig map[string]interface{}
 	if err := json.Unmarshal(fileBytes, &avagoConfig); err != nil {

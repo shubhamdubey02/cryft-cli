@@ -86,8 +86,8 @@ func TestFindDefaultFiles(t *testing.T) {
 
 	scanDirs := []string{
 		// firs indexes should succeed
-		filepath.Join(testDir, "etc", "avalanchego"),
-		filepath.Join(testDir, "home", ".avalanchego"),
+		filepath.Join(testDir, "etc", "metalgo"),
+		filepath.Join(testDir, "home", ".metalgo"),
 		testDir,
 		"$" + config.AvalancheGoDataDirVar,
 		// following indexes should fail (don't exist)
