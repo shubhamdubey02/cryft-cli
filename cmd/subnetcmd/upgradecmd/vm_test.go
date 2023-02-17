@@ -7,14 +7,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ava-labs/avalanche-cli/pkg/application"
-	"github.com/ava-labs/avalanche-cli/pkg/config"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/prompts"
-	"github.com/ava-labs/avalanche-cli/pkg/utils"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/utils/logging"
+	"github.com/MetalBlockchain/metal-cli/pkg/application"
+	"github.com/MetalBlockchain/metal-cli/pkg/config"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/stretchr/testify/require"
 )
 
@@ -133,7 +133,7 @@ func TestAtMostOneNetworkSelected(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			useConfig = tt.useConfig
 			useLocal = tt.useLocal
-			useFuji = tt.useFuji
+			useTahoe = tt.useFuji
 			useMainnet = tt.useMainnet
 
 			accepted := atMostOneNetworkSelected()
@@ -299,7 +299,7 @@ func TestUpdateToCustomBin(t *testing.T) {
 	networkToUpgrade := futureDeployment
 
 	factory := logging.NewFactory(logging.Config{})
-	log, err := factory.Make("avalanche")
+	log, err := factory.Make("metal")
 	assert.NoError(err)
 
 	// create the user facing logger as a global var

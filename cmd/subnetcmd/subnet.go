@@ -5,8 +5,8 @@ package subnetcmd
 import (
 	"fmt"
 
-	"github.com/ava-labs/avalanche-cli/cmd/subnetcmd/upgradecmd"
-	"github.com/ava-labs/avalanche-cli/pkg/application"
+	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd/upgradecmd"
+	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/spf13/cobra"
 )
 

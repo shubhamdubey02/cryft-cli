@@ -10,8 +10,8 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metal-cli/pkg/statemachine"
-	"github.com/ava-labs/subnet-evm/params"
-	"github.com/ava-labs/subnet-evm/precompile"
+	"github.com/MetalBlockchain/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/precompile"
 	"github.com/ethereum/go-ethereum/common"
 )
 

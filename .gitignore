@@ -29,8 +29,8 @@
 
 bin/
 build/
-avalanche-cli
-avalanche
+metal-cli
+metal
 
 dist/
 bin/

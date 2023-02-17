@@ -24,7 +24,7 @@ func AddRepo(app *application.Avalanche, repoURL *url.URL, branch string) (strin
 	}
 
 	if alias == constants.DefaultAvaLabsPackage {
-		ux.Logger.PrintToUser("Avalanche Plugins Core already installed, skipping...")
+		ux.Logger.PrintToUser("Metal Plugins Core already installed, skipping...")
 		return "", nil
 	}
 

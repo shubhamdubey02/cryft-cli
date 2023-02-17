@@ -87,7 +87,7 @@ func (p *publisherImpl) Publish(
 
 	ux.Logger.PrintToUser("Committing resources to local git repo...")
 	now := time.Now()
-	commitStr := fmt.Sprintf("avalanche-commit-%s", now.String())
+	commitStr := fmt.Sprintf("metal-commit-%s", now.String())
 
 	// use the global git config to try identifying the author
 	conf, err := config.LoadConfig(config.GlobalScope)

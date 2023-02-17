@@ -6,27 +6,27 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ava-labs/avalanche-cli/pkg/binutils"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/plugins"
-	"github.com/ava-labs/avalanche-cli/pkg/subnet"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanche-cli/pkg/vm"
+	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/plugins"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/spf13/cobra"
 )
 
 const (
 	futureDeployment  = "Update config for future deployments"
 	localDeployment   = "Existing local deployment"
-	fujiDeployment    = "Fuji"
+	tahoeDeployment   = "Tahoe"
 	mainnetDeployment = "Mainnet (coming soon)"
 )
 
 var (
 	pluginDir string
 
-	useFuji       bool
+	useTahoe      bool
 	useMainnet    bool
 	useLocal      bool
 	useConfig     bool
@@ -49,8 +49,8 @@ func newUpgradeVMCmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(&useConfig, "config", false, "upgrade config for future subnet deployments")
 	cmd.Flags().BoolVar(&useLocal, "local", false, "upgrade existing `local` deployment")
-	cmd.Flags().BoolVar(&useFuji, "fuji", false, "upgrade existing `fuji` deployment (alias for `testnet`)")
-	cmd.Flags().BoolVar(&useFuji, "testnet", false, "upgrade existing `testnet` deployment (alias for `fuji`)")
+	cmd.Flags().BoolVar(&useTahoe, "tahoe", false, "upgrade existing `tahoe` deployment (alias for `testnet`)")
+	cmd.Flags().BoolVar(&useTahoe, "testnet", false, "upgrade existing `testnet` deployment (alias for `tahoe`)")
 	cmd.Flags().BoolVar(&useMainnet, "mainnet", false, "upgrade existing `mainnet` deployment")
 
 	cmd.Flags().BoolVar(&useManual, "print", false, "print instructions for upgrading")
@@ -64,8 +64,8 @@ func newUpgradeVMCmd() *cobra.Command {
 }
 
 func atMostOneNetworkSelected() bool {
-	return !(useConfig && useLocal || useConfig && useFuji || useConfig && useMainnet || useLocal && useFuji ||
-		useLocal && useMainnet || useFuji && useMainnet)
+	return !(useConfig && useLocal || useConfig && useTahoe || useConfig && useMainnet || useLocal && useTahoe ||
+		useLocal && useMainnet || useTahoe && useMainnet)
 }
 
 func atMostOneVersionSelected() bool {
@@ -124,8 +124,8 @@ func selectNetworkToUpgrade(sc models.Sidecar, upgradeOptions []string) (string,
 		return futureDeployment, nil
 	case useLocal:
 		return localDeployment, nil
-	case useFuji:
-		return fujiDeployment, nil
+	case useTahoe:
+		return tahoeDeployment, nil
 	case useMainnet:
 		return mainnetDeployment, nil
 	}
@@ -145,9 +145,9 @@ func selectNetworkToUpgrade(sc models.Sidecar, upgradeOptions []string) (string,
 		upgradeOptions = append(upgradeOptions, localDeployment)
 	}
 
-	// check if subnet deployed on fuji
-	if _, ok := sc.Networks[models.Fuji.String()]; ok {
-		upgradeOptions = append(upgradeOptions, fujiDeployment)
+	// check if subnet deployed on tahoe
+	if _, ok := sc.Networks[models.Tahoe.String()]; ok {
+		upgradeOptions = append(upgradeOptions, tahoeDeployment)
 	}
 
 	// check if subnet deployed on mainnet
@@ -250,7 +250,7 @@ func updateVMByNetwork(sc models.Sidecar, targetVersion string, networkToUpgrade
 		return updateFutureVM(sc, targetVersion)
 	case localDeployment:
 		return updateExistingLocalVM(sc, targetVersion)
-	case fujiDeployment:
+	case tahoeDeployment:
 		return chooseManualOrAutomatic(sc, targetVersion, networkToUpgrade)
 	case mainnetDeployment:
 		return updateMainnetVM()
@@ -298,7 +298,7 @@ func chooseManualOrAutomatic(sc models.Sidecar, targetVersion string, _ string) 
 		choiceAutomatic = "Automatic (Make sure your node isn't running)"
 	)
 	choice, err := app.Prompt.CaptureList(
-		"How would you like to update the avalanchego config?",
+		"How would you like to update the metalgo config?",
 		[]string{choiceAutomatic, choiceManual},
 	)
 	if err != nil {

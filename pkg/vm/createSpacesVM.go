@@ -16,7 +16,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/statemachine"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/ava-labs/spacesvm/chain"
-	"github.com/ava-labs/subnet-evm/core"
+	"github.com/MetalBlockchain/subnet-evm/core"
 )
 
 const (

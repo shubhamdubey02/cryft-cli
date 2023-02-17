@@ -15,6 +15,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/MetalBlockchain/coreth/params"
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
@@ -28,9 +29,8 @@ import (
 	anrutils "github.com/MetalBlockchain/metal-network-runner/utils"
 	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/metalgo/utils/storage"
-	"github.com/MetalBlockchain/coreth/params"
+	"github.com/MetalBlockchain/subnet-evm/core"
 	spacesvmchain "github.com/ava-labs/spacesvm/chain"
-	"github.com/ava-labs/subnet-evm/core"
 	"go.uber.org/zap"
 )
 
@@ -110,7 +110,7 @@ func (d *LocalDeployer) BackendStartedHere() bool {
 //   - waits completion of operation
 //   - show status
 func (d *LocalDeployer) doDeploy(chain string, chainGenesis []byte, genesisPath string) (ids.ID, ids.ID, error) {
-	avalancheGoBinPath, err := d.SetupLocalEnv()
+	metalGoBinPath, err := d.SetupLocalEnv()
 	if err != nil {
 		return ids.Empty, ids.Empty, err
 	}
@@ -154,7 +154,7 @@ func (d *LocalDeployer) doDeploy(chain string, chainGenesis []byte, genesisPath 
 	}
 
 	if !networkBooted {
-		if err := d.startNetwork(ctx, cli, avalancheGoBinPath, runDir); err != nil {
+		if err := d.startNetwork(ctx, cli, metalGoBinPath, runDir); err != nil {
 			return ids.Empty, ids.Empty, err
 		}
 	}
@@ -310,9 +310,9 @@ func (d *LocalDeployer) printExtraEvmInfo(chain string, chainGenesis []byte) err
 
 // SetupLocalEnv also does some heavy lifting:
 // * sets up default snapshot if not installed
-// * checks if avalanchego is installed in the local binary path
+// * checks if metalgo is installed in the local binary path
 // * if not, it downloads it and installs it (os - and archive dependent)
-// * returns the location of the avalanchego path
+// * returns the location of the metalgo path
 func (d *LocalDeployer) SetupLocalEnv() (string, error) {
 	err := d.setDefaultSnapshot(d.app.GetSnapshotsDir(), false)
 	if err != nil {
@@ -325,7 +325,7 @@ func (d *LocalDeployer) SetupLocalEnv() (string, error) {
 	}
 
 	pluginDir := d.app.GetPluginsDir()
-	avalancheGoBinPath := filepath.Join(avagoDir, "avalanchego")
+	metalGoBinPath := filepath.Join(avagoDir, "metalgo")
 
 	if err := os.MkdirAll(pluginDir, constants.DefaultPerms755); err != nil {
 		return "", fmt.Errorf("could not create pluginDir %s", pluginDir)
@@ -339,13 +339,13 @@ func (d *LocalDeployer) SetupLocalEnv() (string, error) {
 	// TODO: we need some better version management here
 	// * compare latest to local version
 	// * decide if force update or give user choice
-	exists, err = storage.FileExists(avalancheGoBinPath)
+	exists, err = storage.FileExists(metalGoBinPath)
 	if !exists || err != nil {
 		return "", fmt.Errorf(
-			"evaluated avalancheGoBinPath to be %s but it does not exist", avalancheGoBinPath)
+			"evaluated metalGoBinPath to be %s but it does not exist", metalGoBinPath)
 	}
 
-	return avalancheGoBinPath, nil
+	return metalGoBinPath, nil
 }
 
 func (d *LocalDeployer) setupLocalEnv() (string, error) {

@@ -9,15 +9,15 @@ import (
 	"os"
 	"time"
 
-	"github.com/ava-labs/avalanche-cli/pkg/binutils"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/subnet"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	ANRclient "github.com/ava-labs/avalanche-network-runner/client"
-	"github.com/ava-labs/avalanche-network-runner/server"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/subnet-evm/params"
+	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	ANRclient "github.com/MetalBlockchain/metal-network-runner/client"
+	"github.com/MetalBlockchain/metal-network-runner/server"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -47,8 +47,8 @@ func newUpgradeApplyCmd() *cobra.Command {
 
 	cmd.Flags().BoolVar(&useConfig, "config", false, "create upgrade config for future subnet deployments (same as generate)")
 	cmd.Flags().BoolVar(&useLocal, "local", false, "apply upgrade existing `local` deployment")
-	cmd.Flags().BoolVar(&useFuji, "fuji", false, "apply upgrade existing `fuji` deployment (alias for `testnet`)")
-	cmd.Flags().BoolVar(&useFuji, "testnet", false, "apply upgrade existing `testnet` deployment (alias for `fuji`)")
+	cmd.Flags().BoolVar(&useTahoe, "tahoe", false, "apply upgrade existing `tahoe` deployment (alias for `testnet`)")
+	cmd.Flags().BoolVar(&useTahoe, "testnet", false, "apply upgrade existing `testnet` deployment (alias for `tahoe`)")
 	cmd.Flags().BoolVar(&useMainnet, "mainnet", false, "apply upgrade existing `mainnet` deployment")
 
 	return cmd
@@ -75,7 +75,7 @@ func applyCmd(_ *cobra.Command, args []string) error {
 	// update a locally running network
 	case localDeployment:
 		return applyLocalNetworkUpgrade(subnetName, sc)
-	case fujiDeployment:
+	case tahoeDeployment:
 		return errNotYetImplemented
 	case mainnetDeployment:
 		return errNotYetImplemented
@@ -108,7 +108,7 @@ func applyLocalNetworkUpgrade(subnetName string, sc models.Sidecar) error {
 	if err != nil {
 		if err == os.ErrNotExist {
 			ux.Logger.PrintToUser("No file with upgrade specs for the given subnet has been found")
-			ux.Logger.PrintToUser("You may need to first create it with the `avalanche subnet upgrade generate` command or import it")
+			ux.Logger.PrintToUser("You may need to first create it with the `metal subnet upgrade generate` command or import it")
 			ux.Logger.PrintToUser("Aborting this command. No changes applied")
 		}
 		return err

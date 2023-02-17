@@ -7,8 +7,8 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/MetalBlockchain/metal-cli/pkg/statemachine"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/ava-labs/subnet-evm/commontype"
-	"github.com/ava-labs/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/commontype"
+	"github.com/MetalBlockchain/subnet-evm/params"
 )
 
 func GetFeeConfig(config params.ChainConfig, app *application.Avalanche) (

@@ -46,8 +46,8 @@ var _ = ginkgo.Describe("[APM]", func() {
 		utils.RemoveAPMRepo()
 	})
 
-	ginkgo.It("can import from avalanche-core", func() {
-		repo := "ava-labs/avalanche-plugins-core"
+	ginkgo.It("can import from metal-core", func() {
+		repo := "MetalBlockchain/metal-plugins-core"
 		commands.ImportSubnetConfig(repo, subnet1)
 	})
 

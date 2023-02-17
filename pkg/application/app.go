@@ -15,7 +15,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/ava-labs/subnet-evm/core"
+	"github.com/MetalBlockchain/subnet-evm/core"
 )
 
 const (

@@ -38,13 +38,13 @@ var (
 func NewRootCmd() *cobra.Command {
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd := &cobra.Command{
-		Use: "avalanche",
-		Long: `Avalanche-CLI is a command-line tool that gives developers access to
-everything Avalanche. This release specializes in helping developers
+		Use: "metal",
+		Long: `Metal-CLI is a command-line tool that gives developers access to
+everything Metal. This release specializes in helping developers
 build and test Subnets.
 
 To get started, look at the documentation for the subcommands or jump right
-in with avalanche subnet create myNewSubnet.`,
+in with metal subnet create myNewSubnet.`,
 		PersistentPreRunE: createApp,
 		Version:           Version,
 	}
@@ -52,7 +52,7 @@ in with avalanche subnet create myNewSubnet.`,
 	// Disable printing the completion command
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.avalanche-cli.json)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.metal-cli.json)")
 	rootCmd.PersistentFlags().StringVar(&logLevel, "log-level", "ERROR", "log level for the application")
 
 	// add sub commands
@@ -185,7 +185,7 @@ func setupLogging(baseDir string) (logging.Logger, error) {
 	config.MaxAge = constants.RetainOldFiles
 
 	factory := logging.NewFactory(config)
-	log, err := factory.Make("avalanche")
+	log, err := factory.Make("metal")
 	if err != nil {
 		factory.Close()
 		return nil, fmt.Errorf("failed setting up logging, exiting: %w", err)

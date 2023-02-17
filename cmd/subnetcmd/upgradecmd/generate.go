@@ -9,14 +9,14 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/prompts"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanche-cli/pkg/vm"
-	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/ava-labs/subnet-evm/commontype"
-	"github.com/ava-labs/subnet-evm/params"
-	"github.com/ava-labs/subnet-evm/precompile"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/vm"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/subnet-evm/commontype"
+	"github.com/MetalBlockchain/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/precompile"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/spf13/cobra"
@@ -86,7 +86,7 @@ func upgradeGenerateCmd(_ *cobra.Command, args []string) error {
 
 	fmt.Println()
 	ux.Logger.PrintToUser(logging.Yellow.Wrap(
-		"Avalanchego and this tool support configuring multiple precompiles. " +
+		"MetalGo and this tool support configuring multiple precompiles. " +
 			"However, we suggest to only configure one per upgrade."))
 	fmt.Println()
 
@@ -211,7 +211,7 @@ func promptNativeMintParams(precompiles *[]params.PrecompileUpgrade, date time.T
 				if err != nil {
 					return "", err
 				}
-				amount, err := app.Prompt.CaptureUint64("Amount to airdrop (in AVAX units)")
+				amount, err := app.Prompt.CaptureUint64("Amount to airdrop (in METAL units)")
 				if err != nil {
 					return "", err
 				}

@@ -50,7 +50,7 @@ flag.`,
 		&repoOrURL,
 		"repo",
 		"",
-		"the repo to import (ex: ava-labs/avalanche-plugins-core) or url to download the repo from",
+		"the repo to import (ex: MetalBlockchain/metal-plugins-core) or url to download the repo from",
 	)
 	cmd.Flags().StringVar(
 		&branch,

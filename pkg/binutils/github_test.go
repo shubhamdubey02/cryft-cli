@@ -23,7 +23,7 @@ type urlTest struct {
 
 func TestGetGithubLatestReleaseURL(t *testing.T) {
 	require := require.New(t)
-	expected := "https://api.github.com/repos/ava-labs/avalanchego/releases/latest"
+	expected := "https://api.github.com/repos/MetalBlockchain/metalgo/releases/latest"
 	url := GetGithubLatestReleaseURL(constants.AvaLabsOrg, constants.AvalancheGoRepoName)
 	require.Equal(expected, url)
 }
@@ -84,7 +84,7 @@ func TestGetDownloadURL_SubnetEVM(t *testing.T) {
 			version:     "v1.17.1",
 			goarch:      "amd64",
 			goos:        "linux",
-			expectedURL: "https://github.com/ava-labs/subnet-evm/releases/download/v1.17.1/subnet-evm_1.17.1_linux_amd64.tar.gz",
+			expectedURL: "https://github.com/MetalBlockchain/subnet-evm/releases/download/v1.17.1/subnet-evm_1.17.1_linux_amd64.tar.gz",
 			expectedExt: tarExtension,
 			expectedErr: nil,
 		},
@@ -92,7 +92,7 @@ func TestGetDownloadURL_SubnetEVM(t *testing.T) {
 			version:     "v1.18.5",
 			goarch:      "arm64",
 			goos:        "darwin",
-			expectedURL: "https://github.com/ava-labs/subnet-evm/releases/download/v1.18.5/subnet-evm_1.18.5_darwin_arm64.tar.gz",
+			expectedURL: "https://github.com/MetalBlockchain/subnet-evm/releases/download/v1.18.5/subnet-evm_1.18.5_darwin_arm64.tar.gz",
 			expectedExt: tarExtension,
 			expectedErr: nil,
 		},

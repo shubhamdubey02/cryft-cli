@@ -23,7 +23,7 @@ const (
 	version1 = "v1.17.1"
 	version2 = "v1.18.1"
 
-	avalanchegoBin = "avalanchego"
+	avalanchegoBin = "metalgo"
 )
 
 var (

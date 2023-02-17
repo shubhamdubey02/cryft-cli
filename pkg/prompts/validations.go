@@ -12,12 +12,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanchego/ids"
-	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
-	"github.com/ava-labs/avalanchego/utils/formatting/address"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metalgo/ids"
+	avago_constants "github.com/MetalBlockchain/metalgo/utils/constants"
+	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -124,13 +124,13 @@ func validatePChainAddress(input string) (string, error) {
 	return hrp, nil
 }
 
-func validatePChainFujiAddress(input string) error {
+func validatePChainTahoeddress(input string) error {
 	hrp, err := validatePChainAddress(input)
 	if err != nil {
 		return err
 	}
-	if hrp != avago_constants.FujiHRP {
-		return errors.New("this is not a fuji address")
+	if hrp != avago_constants.TahoeHRP {
+		return errors.New("this is not a tahoe address")
 	}
 	return nil
 }
@@ -161,8 +161,8 @@ func validatePChainLocalAddress(input string) error {
 
 func getPChainValidationFunc(network models.Network) func(string) error {
 	switch network {
-	case models.Fuji:
-		return validatePChainFujiAddress
+	case models.Tahoe:
+		return validatePChainTahoeddress
 	case models.Mainnet:
 		return validatePChainMainAddress
 	case models.Local:

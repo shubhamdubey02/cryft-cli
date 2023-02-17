@@ -14,8 +14,8 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/statemachine"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/ava-labs/subnet-evm/core"
-	"github.com/ava-labs/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/core"
+	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -171,5 +171,5 @@ func ensureAdminsHaveBalance(admins []common.Address, alloc core.GenesisAlloc) e
 
 // In own function to facilitate testing
 func getEVMAllocation(app *application.Avalanche) (core.GenesisAlloc, statemachine.StateDirection, error) {
-	return getAllocation(app, defaultEvmAirdropAmount, oneAvax, "Amount to airdrop (in AVAX units)")
+	return getAllocation(app, defaultEvmAirdropAmount, oneAvax, "Amount to airdrop (in METAL units)")
 }

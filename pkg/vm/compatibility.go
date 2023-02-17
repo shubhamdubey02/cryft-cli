@@ -15,7 +15,7 @@ import (
 	"golang.org/x/mod/semver"
 )
 
-var ErrNoAvagoVersion = errors.New("unable to find a compatible avalanchego version")
+var ErrNoAvagoVersion = errors.New("unable to find a compatible metalgo version")
 
 func GetRPCProtocolVersion(app *application.Avalanche, vmType models.VMType, vmVersion string) (int, error) {
 	var url string

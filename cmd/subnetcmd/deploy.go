@@ -11,25 +11,25 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ava-labs/avalanche-cli/cmd/flags"
-	"github.com/ava-labs/avalanche-cli/pkg/binutils"
-	"github.com/ava-labs/avalanche-cli/pkg/constants"
-	"github.com/ava-labs/avalanche-cli/pkg/key"
-	"github.com/ava-labs/avalanche-cli/pkg/localnetworkinterface"
-	"github.com/ava-labs/avalanche-cli/pkg/models"
-	"github.com/ava-labs/avalanche-cli/pkg/prompts"
-	"github.com/ava-labs/avalanche-cli/pkg/subnet"
-	"github.com/ava-labs/avalanche-cli/pkg/txutils"
-	"github.com/ava-labs/avalanche-cli/pkg/ux"
-	"github.com/ava-labs/avalanche-cli/pkg/vm"
-	"github.com/ava-labs/avalanche-network-runner/utils"
-	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/avalanchego/utils/crypto/keychain"
-	ledger "github.com/ava-labs/avalanchego/utils/crypto/ledger"
-	"github.com/ava-labs/avalanchego/utils/formatting/address"
-	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/ava-labs/avalanchego/vms/platformvm/txs"
-	"github.com/ava-labs/coreth/core"
+	"github.com/MetalBlockchain/metal-cli/cmd/flags"
+	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/key"
+	"github.com/MetalBlockchain/metal-cli/pkg/localnetworkinterface"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/vm"
+	"github.com/MetalBlockchain/metal-network-runner/utils"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/crypto/keychain"
+	ledger "github.com/MetalBlockchain/metalgo/utils/crypto/ledger"
+	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
+	"github.com/MetalBlockchain/coreth/core"
 	spacesvmchain "github.com/ava-labs/spacesvm/chain"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -68,10 +68,10 @@ func newDeployCmd() *cobra.Command {
 
 At the end of the call, the command prints the RPC URL you can use to interact with the Subnet.
 
-Avalanche-CLI only supports deploying an individual Subnet once per network. Subsequent
+Metal-CLI only supports deploying an individual Subnet once per network. Subsequent
 attempts to deploy the same Subnet to the same network (local, Fuji, Mainnet) aren't
 allowed. If you'd like to redeploy a Subnet locally for testing, you must first call
-avalanche network clean to reset all deployed chain state. Subsequent local deploys
+metal network clean to reset all deployed chain state. Subsequent local deploys
 redeploy the chain with fresh state. You can deploy the same Subnet to multiple networks,
 so you can take your locally tested Subnet and deploy it on Fuji or Mainnet.`,
 		SilenceUsage: true,
@@ -82,7 +82,7 @@ so you can take your locally tested Subnet and deploy it on Fuji or Mainnet.`,
 	cmd.Flags().BoolVarP(&deployTestnet, "testnet", "t", false, "deploy to testnet (alias to `fuji`)")
 	cmd.Flags().BoolVarP(&deployTestnet, "fuji", "f", false, "deploy to fuji (alias to `testnet`")
 	cmd.Flags().BoolVarP(&deployMainnet, "mainnet", "m", false, "deploy to mainnet")
-	cmd.Flags().StringVar(&userProvidedAvagoVersion, "avalanchego-version", "latest", "use this version of avalanchego (ex: v1.17.12)")
+	cmd.Flags().StringVar(&userProvidedAvagoVersion, "metalgo-version", "latest", "use this version of metalgo (ex: v1.17.12)")
 	cmd.Flags().StringVarP(&keyName, "key", "k", "", "select the key to use [fuji deploy only]")
 	cmd.Flags().BoolVarP(&sameControlKey, "same-control-key", "s", false, "use creation key as control key")
 	cmd.Flags().Uint32Var(&threshold, "threshold", 0, "required number of control key signatures to make subnet changes")
@@ -625,7 +625,7 @@ func PrintReadyToSignMsg(
 	ux.Logger.PrintToUser("Tx is fully signed, and ready to be committed")
 	ux.Logger.PrintToUser("")
 	ux.Logger.PrintToUser("Commit command:")
-	ux.Logger.PrintToUser("  avalanche transaction commit %s --input-tx-filepath %s", chain, outputTxPath)
+	ux.Logger.PrintToUser("  metal transaction commit %s --input-tx-filepath %s", chain, outputTxPath)
 }
 
 func PrintRemainingToSignMsg(
@@ -643,7 +643,7 @@ func PrintRemainingToSignMsg(
 		"and run the signing command, or send %q to another user for signing.", outputTxPath)
 	ux.Logger.PrintToUser("")
 	ux.Logger.PrintToUser("Signing command:")
-	ux.Logger.PrintToUser("  avalanche transaction sign %s --input-tx-filepath %s", chain, outputTxPath)
+	ux.Logger.PrintToUser("  metal transaction sign %s --input-tx-filepath %s", chain, outputTxPath)
 }
 
 func GetKeychain(
@@ -782,7 +782,7 @@ func checkForInvalidDeployAndGetAvagoVersion(network localnetworkinterface.Statu
 		if userProvidedAvagoVersion == "latest" {
 			if runningRPCVersion != configuredRPCVersion && !skipRPCCheck {
 				return "", fmt.Errorf(
-					"the current avalanchego deployment uses rpc version %d but your subnet has version %d and is not compatible",
+					"the current metalgo deployment uses rpc version %d but your subnet has version %d and is not compatible",
 					runningRPCVersion,
 					configuredRPCVersion,
 				)
@@ -790,7 +790,7 @@ func checkForInvalidDeployAndGetAvagoVersion(network localnetworkinterface.Statu
 			desiredAvagoVersion = runningAvagoVersion
 		} else if runningAvagoVersion != userProvidedAvagoVersion {
 			// user wants a specific version
-			return "", errors.New("incompatible avalanchego version selected")
+			return "", errors.New("incompatible metalgo version selected")
 		}
 	} else if userProvidedAvagoVersion == "latest" {
 		// find latest avago version for this rpc version

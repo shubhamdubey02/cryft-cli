@@ -89,15 +89,15 @@ func TestDeployToLocal(t *testing.T) {
 	app := &application.Avalanche{}
 	app.Setup(testDir, logging.NoLog{}, config.New(), prompts.NewPrompter(), application.NewDownloader())
 
-	binDir := filepath.Join(app.GetAvalanchegoBinDir(), "avalanchego-"+avagoVersion)
+	binDir := filepath.Join(app.GetAvalanchegoBinDir(), "metalgo-"+avagoVersion)
 
 	// create a dummy plugins dir, deploy will check it exists
 	binChecker := &mocks.BinaryChecker{}
 	err = os.MkdirAll(filepath.Join(binDir, "plugins"), perms.ReadWriteExecute)
 	require.NoError(err)
 
-	// create a dummy avalanchego file, deploy will check it exists
-	f, err := os.Create(filepath.Join(binDir, "avalanchego"))
+	// create a dummy metalgo file, deploy will check it exists
+	f, err := os.Create(filepath.Join(binDir, "metalgo"))
 	require.NoError(err)
 	defer func() {
 		_ = f.Close()

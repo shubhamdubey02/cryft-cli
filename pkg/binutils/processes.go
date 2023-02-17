@@ -149,7 +149,7 @@ func StartServerProcess(app *application.Avalanche) error {
 		return err
 	}
 
-	outputFile, err := os.Create(path.Join(outputDir, "avalanche-cli-backend"))
+	outputFile, err := os.Create(path.Join(outputDir, "metal-cli-backend"))
 	if err != nil {
 		return err
 	}

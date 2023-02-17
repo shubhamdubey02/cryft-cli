@@ -240,7 +240,7 @@ func DeploySubnetLocallyWithArgs(subnetName string, version string, confPath str
 	// Deploy subnet locally
 	cmdArgs := []string{SubnetCmd, "deploy", "--local", subnetName}
 	if version != "" {
-		cmdArgs = append(cmdArgs, "--avalanchego-version", version)
+		cmdArgs = append(cmdArgs, "--metalgo-version", version)
 	}
 	if confPath != "" {
 		cmdArgs = append(cmdArgs, "--config", confPath)
@@ -274,7 +274,7 @@ func DeploySubnetLocallyWithArgsExpectError(subnetName string, version string, c
 	// Deploy subnet locally
 	cmdArgs := []string{SubnetCmd, "deploy", "--local", subnetName}
 	if version != "" {
-		cmdArgs = append(cmdArgs, "--avalanchego-version", version)
+		cmdArgs = append(cmdArgs, "--metalgo-version", version)
 	}
 	if confPath != "" {
 		cmdArgs = append(cmdArgs, "--config", confPath)
@@ -519,7 +519,7 @@ func SimulateFujiJoin(
 		SubnetCmd,
 		"join",
 		"--fuji",
-		"--avalanchego-config",
+		"--metalgo-config",
 		avalanchegoConfig,
 		"--plugin-dir",
 		pluginDir,
@@ -565,7 +565,7 @@ func SimulateMainnetJoin(
 		SubnetCmd,
 		"join",
 		"--mainnet",
-		"--avalanchego-config",
+		"--metalgo-config",
 		avalanchegoConfig,
 		"--plugin-dir",
 		pluginDir,
@@ -712,7 +712,7 @@ func SimulateGetSubnetStatsFuji(subnetName, subnetID string) string {
 	// add the subnet ID to the `fuji` section so that the `stats` command
 	// can find it (as this is a simulation with a `local` network,
 	// it got written in to the `local` network section)
-	err = utils.AddSubnetIDToSidecar(subnetName, models.Fuji, subnetID)
+	err = utils.AddSubnetIDToSidecar(subnetName, models.Tahoe, subnetID)
 	gomega.Expect(err).Should(gomega.BeNil())
 	// run stats
 	cmd := exec.Command(

@@ -4,13 +4,13 @@ set -e
 usage() {
   this=$1
   cat <<EOF
-$this: download go binaries for ava-labs/avalanche-cli
+$this: download go binaries for MetalBlockchain/metal-cli
 
 Usage: $this [-b] bindir [-d] [tag]
   -b sets bindir or installation directory, Defaults to ~/bin
   -d turns on debug logging
    [tag] is a tag from
-   https://github.com/ava-labs/avalanche-cli/releases
+   https://github.com/MetalBlockchain/metal-cli/releases
    If tag is missing, then the latest will be used.
 
 EOF
@@ -57,10 +57,10 @@ execute() {
 }
 get_binaries() {
   case "$PLATFORM" in
-    darwin/amd64) BINARIES="avalanche" ;;
-    darwin/arm64) BINARIES="avalanche" ;;
-    linux/amd64) BINARIES="avalanche" ;;
-    linux/arm64) BINARIES="avalanche" ;;
+    darwin/amd64) BINARIES="metal" ;;
+    darwin/arm64) BINARIES="metal" ;;
+    linux/amd64) BINARIES="metal" ;;
+    linux/arm64) BINARIES="metal" ;;
     *)
       log_crit "platform $PLATFORM is not supported.  Make sure this script is up-to-date and file request at https://github.com/${PREFIX}/issues/new"
       exit 1
@@ -329,10 +329,10 @@ End of functions from https://github.com/client9/shlib
 ------------------------------------------------------------------------
 EOF
 
-PROJECT_NAME=avalanche-cli
-OWNER=ava-labs
-REPO="avalanche-cli"
-BINARY=avalanche
+PROJECT_NAME=metal-cli
+OWNER=MetalBlockchain
+REPO="metal-cli"
+BINARY=metal
 FORMAT=tar.gz
 OS=$(uname_os)
 ARCH=$(uname_arch)
@@ -383,12 +383,12 @@ sed_in_place() {
 
 BASH_COMPLETION_MAIN=~/.bash_completion
 BASH_COMPLETION_SCRIPTS_DIR=~/.local/share/bash-completion/completions
-BASH_COMPLETION_SCRIPT_PATH=$BASH_COMPLETION_SCRIPTS_DIR/avalanche.sh
+BASH_COMPLETION_SCRIPT_PATH=$BASH_COMPLETION_SCRIPTS_DIR/metal.sh
 mkdir -p $BASH_COMPLETION_SCRIPTS_DIR
 $BINDIR/$BINARY completion bash > $BASH_COMPLETION_SCRIPT_PATH
 touch $BASH_COMPLETION_MAIN
-sed_in_place "/.*# avalanche completion/d" $BASH_COMPLETION_MAIN
-echo "source $BASH_COMPLETION_SCRIPT_PATH # avalanche completion" >> $BASH_COMPLETION_MAIN
+sed_in_place "/.*# metal completion/d" $BASH_COMPLETION_MAIN
+echo "source $BASH_COMPLETION_SCRIPT_PATH # metal completion" >> $BASH_COMPLETION_MAIN
 if [ $(uname) = Darwin ]
 then
     BREW_INSTALLED=false
@@ -397,19 +397,19 @@ then
     then
         BASHRC=~/.bashrc
         touch $BASHRC
-        sed_in_place "/.*# avalanche completion/d" $BASHRC
-        echo "source $(brew --prefix)/etc/bash_completion # avalanche completion" >> $BASHRC
+        sed_in_place "/.*# metal completion/d" $BASHRC
+        echo "source $(brew --prefix)/etc/bash_completion # metal completion" >> $BASHRC
     else 
-        echo "warning: brew not found on macos. bash avalanche command completion not installed"
+        echo "warning: brew not found on macos. bash metal command completion not installed"
     fi
 fi
 
 ZSH_COMPLETION_MAIN=~/.zshrc
 ZSH_COMPLETION_SCRIPTS_DIR=~/.local/share/zsh-completion/completions
-ZSH_COMPLETION_SCRIPT_PATH=$ZSH_COMPLETION_SCRIPTS_DIR/_avalanche
+ZSH_COMPLETION_SCRIPT_PATH=$ZSH_COMPLETION_SCRIPTS_DIR/_metal
 mkdir -p $ZSH_COMPLETION_SCRIPTS_DIR
 $BINDIR/$BINARY completion zsh > $ZSH_COMPLETION_SCRIPT_PATH
 touch $ZSH_COMPLETION_MAIN
-sed_in_place "/.*# avalanche completion/d" $ZSH_COMPLETION_MAIN
-echo "fpath=($ZSH_COMPLETION_SCRIPTS_DIR \$fpath) # avalanche completion" >> $ZSH_COMPLETION_MAIN
-echo "rm -f ~/.zcompdump; compinit # avalanche completion" >> $ZSH_COMPLETION_MAIN
+sed_in_place "/.*# metal completion/d" $ZSH_COMPLETION_MAIN
+echo "fpath=($ZSH_COMPLETION_SCRIPTS_DIR \$fpath) # metal completion" >> $ZSH_COMPLETION_MAIN
+echo "rm -f ~/.zcompdump; compinit # metal completion" >> $ZSH_COMPLETION_MAIN

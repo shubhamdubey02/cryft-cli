@@ -1,14 +1,14 @@
 # ref. https://goreleaser.com/customization/build/
 builds:
-  - id: avalanche-cli
+  - id: metal-cli
     main: ./main.go
-    binary: avalanche
+    binary: metal
     flags:
       - -v
     # windows is ignored by default, as the `goos` field by default only
     # contains linux and darwin
     ldflags:
-      - -X 'github.com/ava-labs/avalanche-cli/cmd.Version={{.Version}}'
+      - -X 'github.com/MetalBlockchain/metal-cli/cmd.Version={{.Version}}'
     goos:
       - linux
       - darwin
@@ -36,5 +36,5 @@ release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL or empty if its private hosted.
   github:
-    owner: ava-labs
-    name: avalanche-cli
+    owner: MetalBlockchain
+    name: metal-cli

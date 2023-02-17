@@ -9,7 +9,7 @@ import (
 const (
 	DefaultPerms755 = 0o755
 
-	BaseDirName = ".avalanche-cli"
+	BaseDirName = ".metal-cli"
 	LogDir      = "logs"
 
 	ServerRunFile      = "gRPCserver.run"
@@ -31,8 +31,8 @@ const (
 	RequestTimeout = 3 * time.Minute
 
 	SimulatePublicNetwork = "SIMULATE_PUBLIC_NETWORK"
-	FujiAPIEndpoint       = "https://api.avax-test.network"
-	MainnetAPIEndpoint    = "https://api.avax.network"
+	FujiAPIEndpoint       = "https://tahoe.metalblockchain.org"
+	MainnetAPIEndpoint    = "https://api.metalblockchain.org"
 
 	// this depends on bootstrap snapshot
 	LocalAPIEndpoint = "http://127.0.0.1:9650"
@@ -67,17 +67,17 @@ const (
 	StakingStartLeadTime   = 1 * time.Minute
 	StakingMinimumLeadTime = 25 * time.Second
 
-	DefaultConfigFileName = ".avalanche-cli"
+	DefaultConfigFileName = ".metal-cli"
 	DefaultConfigFileType = "json"
 
 	CustomVMDir = "vms"
 
-	AvaLabsOrg          = "ava-labs"
-	AvalancheGoRepoName = "avalanchego"
+	AvaLabsOrg          = "MetalBlockchain"
+	AvalancheGoRepoName = "metalgo"
 	SubnetEVMRepoName   = "subnet-evm"
 	SpacesVMRepoName    = "spacesvm"
 
-	AvalancheGoInstallDir = "avalanchego"
+	AvalancheGoInstallDir = "metalgo"
 	SubnetEVMInstallDir   = "subnet-evm"
 	SpacesVMInstallDir    = "spacesvm"
 
@@ -88,11 +88,11 @@ const (
 
 	APMDir                = ".apm"
 	APMLogName            = "apm.log"
-	DefaultAvaLabsPackage = "ava-labs/avalanche-plugins-core"
+	DefaultAvaLabsPackage = "MetalBlockchain/metal-plugins-core"
 	APMPluginDir          = "apm_plugins"
 
 	// #nosec G101
-	GithubAPITokenEnvVarName = "AVALANCHE_CLI_GITHUB_TOKEN"
+	GithubAPITokenEnvVarName = "METAL_CLI_GITHUB_TOKEN"
 
 	ReposDir       = "repos"
 	SubnetDir      = "subnets"
@@ -103,20 +103,20 @@ const (
 	ChainConfigFileName        = "chain.json"
 	PerNodeChainConfigFileName = "per-node-chain.json"
 
-	GitRepoCommitName  = "Avalanche-CLI"
+	GitRepoCommitName  = "Metal-CLI"
 	GitRepoCommitEmail = "info@avax.network"
 
-	AvaLabsMaintainers = "ava-labs"
+	AvaLabsMaintainers = "MetalBlockchain"
 
 	UpgradeBytesFileName      = "upgrade.json"
 	UpgradeBytesLockExtension = ".lock"
 	NotAvailableLabel         = "Not available"
-	BackendCmd                = "avalanche-cli-backend"
+	BackendCmd                = "metal-cli-backend"
 
 	AvalancheGoCompatibilityVersionAdded = "v1.9.2"
-	AvalancheGoCompatibilityURL          = "https://raw.githubusercontent.com/ava-labs/avalanchego/master/version/compatibility.json"
-	SubnetEVMRPCCompatibilityURL         = "https://raw.githubusercontent.com/ava-labs/subnet-evm/master/compatibility.json"
-	SpacesVMRPCCompatibilityURL          = "https://raw.githubusercontent.com/ava-labs/spacesvm/master/compatibility.json"
+	AvalancheGoCompatibilityURL          = "https://raw.githubusercontent.com/MetalBlockchain/metalgo/master/version/compatibility.json"
+	SubnetEVMRPCCompatibilityURL         = "https://raw.githubusercontent.com/MetalBlockchain/subnet-evm/master/compatibility.json"
+	SpacesVMRPCCompatibilityURL          = "https://raw.githubusercontent.com/MetalBlockchain/spacesvm/master/compatibility.json"
 
 	YesLabel = "Yes"
 	NoLabel  = "No"
