@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/MetalBlockchain/coreth/core"
 	"github.com/MetalBlockchain/metal-cli/cmd/flags"
 	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
@@ -29,7 +30,6 @@ import (
 	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
-	"github.com/MetalBlockchain/coreth/core"
 	spacesvmchain "github.com/ava-labs/spacesvm/chain"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"

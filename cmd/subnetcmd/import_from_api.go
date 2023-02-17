@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/MetalBlockchain/coreth/core"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
@@ -17,7 +18,6 @@ import (
 	"github.com/MetalBlockchain/metalgo/utils/rpc"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
-	"github.com/MetalBlockchain/coreth/core"
 	"github.com/ava-labs/spacesvm/chain"
 	"github.com/spf13/cobra"
 )

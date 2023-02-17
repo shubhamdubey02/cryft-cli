@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
+	"github.com/MetalBlockchain/apm/types"
 	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
@@ -22,7 +23,6 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/metalgo/version"
-	"github.com/MetalBlockchain/apm/types"
 	"gopkg.in/yaml.v3"
 )
 
