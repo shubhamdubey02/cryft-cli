@@ -80,7 +80,7 @@ func TestInfoKnownVMs(t *testing.T) {
 		require.NoError(err)
 		// it's kinda useless to create the URL by building it via downloader -
 		// would defeat the purpose of the test
-		expectedURL := "https://github.com/ava-labs/" +
+		expectedURL := "https://github.com/MetalBlockchain/" +
 			c.repoName + "/releases/download/" +
 			c.strVer + "/" + c.repoName + "_" + c.strVer[1:] + "_" +
 			runtime.GOOS + "_" + runtime.GOARCH + ".tar.gz"
