@@ -29,8 +29,8 @@ import (
 	anrutils "github.com/MetalBlockchain/metal-network-runner/utils"
 	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/metalgo/utils/storage"
+	spacesvmchain "github.com/MetalBlockchain/spacesvm/chain"
 	"github.com/MetalBlockchain/subnet-evm/core"
-	spacesvmchain "github.com/ava-labs/spacesvm/chain"
 	"go.uber.org/zap"
 )
 

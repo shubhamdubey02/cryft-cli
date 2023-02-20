@@ -30,7 +30,7 @@ import (
 	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
-	spacesvmchain "github.com/ava-labs/spacesvm/chain"
+	spacesvmchain "github.com/MetalBlockchain/spacesvm/chain"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"

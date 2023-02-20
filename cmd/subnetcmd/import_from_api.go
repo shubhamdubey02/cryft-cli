@@ -18,7 +18,7 @@ import (
 	"github.com/MetalBlockchain/metalgo/utils/rpc"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
-	"github.com/ava-labs/spacesvm/chain"
+	"github.com/MetalBlockchain/spacesvm/chain"
 	"github.com/spf13/cobra"
 )
 

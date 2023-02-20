@@ -7,8 +7,8 @@ require (
 	github.com/MetalBlockchain/coreth v0.11.7-rc.0
 	github.com/MetalBlockchain/metal-network-runner v1.3.6
 	github.com/MetalBlockchain/metalgo v1.9.8
-	github.com/MetalBlockchain/subnet-evm v0.4.9-rc.0
-	github.com/ava-labs/spacesvm v0.0.14
+	github.com/MetalBlockchain/spacesvm v0.0.15
+	github.com/MetalBlockchain/subnet-evm v0.4.9
 	github.com/docker/docker v23.0.0+incompatible
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/go-git/go-git/v5 v5.5.2
@@ -35,7 +35,6 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20221026131551-cf6655e29de4 // indirect
 	github.com/VictoriaMetrics/fastcache v1.10.0 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
-	github.com/ava-labs/avalanchego v1.9.4 // indirect
 	github.com/ava-labs/ledger-avalanche/go v0.0.0-20230105152938-00a24d05a8c7 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2 // indirect

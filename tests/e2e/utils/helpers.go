@@ -33,9 +33,9 @@ import (
 	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/MetalBlockchain/metalgo/vms/secp256k1fx"
 	"github.com/MetalBlockchain/metalgo/wallet/subnet/primary"
+	"github.com/MetalBlockchain/spacesvm/chain"
+	spacesvmclient "github.com/MetalBlockchain/spacesvm/client"
 	"github.com/MetalBlockchain/subnet-evm/ethclient"
-	"github.com/ava-labs/spacesvm/chain"
-	spacesvmclient "github.com/ava-labs/spacesvm/client"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
