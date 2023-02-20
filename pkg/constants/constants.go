@@ -45,7 +45,7 @@ const (
 	// it's unlikely anyone would want to name a snapshot `default`
 	// but let's add some more entropy
 	SnapshotsDirName             = "snapshots"
-	DefaultSnapshotName          = "default-1654102509"
+	DefaultSnapshotName          = "default-1654102510"
 	BootstrapSnapshotArchiveName = "bootstrapSnapshot.tar.gz"
 	BootstrapSnapshotLocalPath   = "assets/" + BootstrapSnapshotArchiveName
 	BootstrapSnapshotURL         = "https://github.com/MetalBlockchain/metal-cli/raw/main/" + BootstrapSnapshotLocalPath
