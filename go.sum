@@ -47,18 +47,8 @@ github.com/anmitsu/go-shlex v0.0.0-20200514113438-38f4b401e2be/go.mod h1:ySMOLuW
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
-github.com/ava-labs/avalanche-network-runner v1.7.6 h1:2yXa2Zq099t900ffpn0RG9D5dca98fs3l+/hF7AumIY=
-github.com/ava-labs/avalanche-network-runner v1.7.6/go.mod h1:+Br4mCjreTMtnDiUDNXJba500fnchMk0Ygu5qWVj6A4=
-github.com/ava-labs/avalanchego v1.11.1 h1:NSelfZ/Di8uGCsRoFK32HOR262eHlpUFmAu8pbfg0Jo=
-github.com/ava-labs/avalanchego v1.11.1/go.mod h1:+UpgT8X2fNN93+iE100efkZL7ePfBRfRdmpJ/i3YnyY=
-github.com/ava-labs/awm-relayer v1.1.0 h1:2yrxwXk1rGpSP2iAe41cdsxOpcBU1YQxcXQn/Z0MXm8=
-github.com/ava-labs/awm-relayer v1.1.0/go.mod h1:xTsIghzl4y86Fm3dIqjqYz5tCoYVUl3bT2CDH10ZqdA=
 github.com/ava-labs/ledger-avalanche/go v0.0.0-20231102202641-ae2ebdaeac34 h1:mg9Uw6oZFJKytJxgxnl3uxZOs/SB8CVHg6Io4Tf99Zc=
 github.com/ava-labs/ledger-avalanche/go v0.0.0-20231102202641-ae2ebdaeac34/go.mod h1:pJxaT9bUgeRNVmNRgtCHb7sFDIRKy7CzTQVi8gGNT6g=
-github.com/ava-labs/subnet-evm v0.6.1 h1:NyknPPWBKGN9VIwfKi1+oR6NpvephiNkWEwzjGcNLkA=
-github.com/ava-labs/subnet-evm v0.6.1/go.mod h1:PRwf9C3KgXzrANnrCvKa/gQVvIBomKzQgZM2ucECGYE=
-github.com/ava-labs/teleporter v1.0.0 h1:io209qZh3SDpwLre0oStMzOFRcPvOrmMQuLq5OFvzJo=
-github.com/ava-labs/teleporter v1.0.0/go.mod h1:4Wyz/5sZDHMaaLegh2ULyrAOWnyaBk6upTmbwSrVSMs=
 github.com/aws/aws-sdk-go-v2 v1.26.0 h1:/Ce4OCiM3EkpW7Y+xUnfAFpchU78K7/Ug01sZni9PgA=
 github.com/aws/aws-sdk-go-v2 v1.26.0/go.mod h1:35hUlJVYd+M++iLI3ALmVwMOyRYMmRqUXpTtRGW+K9I=
 github.com/aws/aws-sdk-go-v2/config v1.27.9 h1:gRx/NwpNEFSk+yQlgmk1bmxxvQ5TyJ76CWXs9XScTqg=
@@ -79,8 +69,6 @@ github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.1 h1:EyBZibR
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.1/go.mod h1:JKpmtYhhPs7D97NL/ltqz7yCkERFW5dOlHyVl66ZYF8=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.6 h1:b+E7zIUHMmcB4Dckjpkapoy47W6C9QBv/zoUP+Hn8Kc=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.6/go.mod h1:S2fNV0rxrP78NhPbCZeQgY8H9jdDMeGtwcfZIRxzBqU=
-github.com/aws/aws-sdk-go-v2/service/kms v1.30.0 h1:yS0JkEdV6h9JOo8sy2JSpjX+i7vsKifU8SIeHrqiDhU=
-github.com/aws/aws-sdk-go-v2/service/kms v1.30.0/go.mod h1:+I8VUUSVD4p5ISQtzpgSva4I8cJ4SQ4b1dcBcof7O+g=
 github.com/aws/aws-sdk-go-v2/service/sso v1.20.3 h1:mnbuWHOcM70/OFUlZZ5rcdfA8PflGXXiefU/O+1S3+8=
 github.com/aws/aws-sdk-go-v2/service/sso v1.20.3/go.mod h1:5HFu51Elk+4oRBZVxmHrSds5jFXmFj8C3w7DVF2gnrs=
 github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.3 h1:uLq0BKatTmDzWa/Nu4WO0M1AaQDaPpwTKAeByEc6WFM=
