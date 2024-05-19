@@ -69,7 +69,7 @@ func NewDevnetNetwork(endpoint string, id uint32) Network {
 }
 
 func NewTahoeNetwork() Network {
-	return NewNetwork(Tahoe, avagoconstants.TahoeID, constants.FujiAPIEndpoint, "")
+	return NewNetwork(Tahoe, avagoconstants.TahoeID, constants.TahoeAPIEndpoint, "")
 }
 
 func NewMainnetNetwork() Network {

@@ -68,8 +68,8 @@ const (
 	AWSGP3DefaultThroughput     = 125
 	SimulatePublicNetwork       = "SIMULATE_PUBLIC_NETWORK"
 
-	FujiAPIEndpoint    = "https://api.avax-test.network"
-	MainnetAPIEndpoint = "https://api.avax.network"
+	TahoeAPIEndpoint   = "https://tahoe.metalblockchain.org"
+	MainnetAPIEndpoint = "https://api.metalblockchain.org"
 
 	// this depends on bootstrap snapshot
 	LocalAPIEndpoint = "http://127.0.0.1:9650"
