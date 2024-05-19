@@ -7,9 +7,9 @@ toolchain go1.22.2
 require (
 	github.com/MetalBlockchain/apm v0.0.4
 	github.com/MetalBlockchain/coreth v0.13.2-rc.3
-	github.com/MetalBlockchain/metal-network-runner v1.6.3
-	github.com/MetalBlockchain/metalgo v1.11.3
-	github.com/MetalBlockchain/subnet-evm v0.6.3
+	github.com/MetalBlockchain/metal-network-runner v1.6.4
+	github.com/MetalBlockchain/metalgo v1.11.3-rc.1
+	github.com/MetalBlockchain/subnet-evm v0.6.3-rc.1
 	github.com/aws/aws-sdk-go-v2 v1.26.0
 	github.com/aws/aws-sdk-go-v2/config v1.27.9
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.154.0
