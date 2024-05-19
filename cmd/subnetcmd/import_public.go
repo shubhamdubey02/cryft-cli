@@ -3,7 +3,6 @@
 package subnetcmd
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -11,6 +10,8 @@ import (
 	"github.com/MetalBlockchain/coreth/core"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/MetalBlockchain/metalgo/api/info"
@@ -18,45 +19,40 @@ import (
 	"github.com/MetalBlockchain/metalgo/utils/rpc"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
-	"github.com/MetalBlockchain/spacesvm/chain"
 	"github.com/spf13/cobra"
 )
 
 var (
-	genesisFilePath string
-	blockchainIDstr string
-	nodeURL         string
+	importPublicSupportedNetworkOptions = []networkoptions.NetworkOption{networkoptions.Tahoe, networkoptions.Mainnet}
+	genesisFilePath                     string
+	blockchainIDstr                     string
+	nodeURL                             string
 )
 
-// avalanche subnet import
-func newImportFromNetworkCmd() *cobra.Command {
+// avalanche subnet import public
+func newImportPublicCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:          "public [subnetPath]",
 		Short:        "Import an existing subnet config from running subnets on a public network",
-		RunE:         importRunningSubnet,
+		RunE:         importPublic,
 		SilenceUsage: true,
 		Args:         cobra.MaximumNArgs(1),
-		Long: `The subnet import public command will import a subnet configuration from a running network.
+		Long: `The subnet import public command imports a Subnet configuration from a running network.
 
-Currently this only supports importing one single chain from a subnet. 
-Therefore, this import asks the blockchain ID from the user.
-The genesis file should be available from the disk for this to work. 
-By default, an imported subnet will not overwrite an existing subnet with the same name. 
-To allow overwrites, provide the --force flag.`,
+The genesis file should be available from the disk for this to work. By default, an imported Subnet
+doesn't overwrite an existing Subnet with the same name. To allow overwrites, provide the --force
+flag.`,
 	}
+
+	networkoptions.AddNetworkFlagsToCmd(cmd, &globalNetworkFlags, false, importPublicSupportedNetworkOptions)
 
 	cmd.Flags().StringVar(&nodeURL, "node-url", "", "[optional] URL of an already running subnet validator")
 
-	cmd.Flags().BoolVar(&deployTestnet, "fuji", false, "import from `fuji` (alias for `testnet`)")
-	cmd.Flags().BoolVar(&deployTestnet, "testnet", false, "import from `testnet` (alias for `fuji`)")
-	cmd.Flags().BoolVar(&deployMainnet, "mainnet", false, "import from `mainnet`")
 	cmd.Flags().BoolVar(&useSubnetEvm, "evm", false, "import a subnet-evm")
-	cmd.Flags().BoolVar(&useSpacesVM, "spacesvm", false, "use the SpacesVM as the base template")
 	cmd.Flags().BoolVar(&useCustom, "custom", false, "use a custom VM template")
-	cmd.Flags().BoolVarP(
+	cmd.Flags().BoolVar(
 		&overwriteImport,
 		"force",
-		"f",
 		false,
 		"overwrite the existing configuration if one exists",
 	)
@@ -75,26 +71,16 @@ To allow overwrites, provide the --force flag.`,
 	return cmd
 }
 
-func importRunningSubnet(*cobra.Command, []string) error {
-	var err error
-
-	var network models.Network
-	switch {
-	case deployTestnet:
-		network = models.Tahoe
-	case deployMainnet:
-		network = models.Mainnet
-	}
-
-	if network == models.Undefined {
-		networkStr, err := app.Prompt.CaptureList(
-			"Choose a network to import from",
-			[]string{models.Tahoe.String(), models.Mainnet.String()},
-		)
-		if err != nil {
-			return err
-		}
-		network = models.NetworkFromString(networkStr)
+func importPublic(*cobra.Command, []string) error {
+	network, err := networkoptions.GetNetworkFromCmdLineFlags(
+		app,
+		globalNetworkFlags,
+		false,
+		importPublicSupportedNetworkOptions,
+		"",
+	)
+	if err != nil {
+		return err
 	}
 
 	if genesisFilePath == "" {
@@ -117,7 +103,7 @@ func importRunningSubnet(*cobra.Command, []string) error {
 			if err != nil {
 				return err
 			}
-			ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
+			ctx, cancel := utils.GetAPIContext()
 			defer cancel()
 			infoAPI := info.NewClient(nodeURL)
 			options := []rpc.Option{}
@@ -141,19 +127,12 @@ func importRunningSubnet(*cobra.Command, []string) error {
 		}
 	}
 
-	var pubAPI string
-	switch network {
-	case models.Tahoe:
-		pubAPI = constants.FujiAPIEndpoint
-	case models.Mainnet:
-		pubAPI = constants.MainnetAPIEndpoint
-	}
-	client := platformvm.NewClient(pubAPI)
-	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
+	client := platformvm.NewClient(network.Endpoint)
+	ctx, cancel := utils.GetAPIContext()
 	defer cancel()
 	options := []rpc.Option{}
 
-	ux.Logger.PrintToUser("Getting information from the %s network...", network.String())
+	ux.Logger.PrintToUser("Getting information from the %s network...", network.Name())
 
 	txBytes, err := client.GetTx(ctx, blockchainID, options...)
 	if err != nil {
@@ -173,7 +152,7 @@ func importRunningSubnet(*cobra.Command, []string) error {
 
 	createChainTx, ok := tx.Unsigned.(*txs.CreateChainTx)
 	if !ok {
-		return fmt.Errorf("expected a CreateChainTx, got %T", createChainTx)
+		return fmt.Errorf("expected a CreateChainTx, got %T", tx.Unsigned)
 	}
 
 	vmID = createChainTx.VMID
@@ -202,7 +181,7 @@ func importRunningSubnet(*cobra.Command, []string) error {
 	if vmType == "" {
 		subnetTypeStr, err := app.Prompt.CaptureList(
 			"What's this VM's type?",
-			[]string{models.SubnetEvm, models.SpacesVM, models.CustomVM},
+			[]string{models.SubnetEvm, models.CustomVM},
 		)
 		if err != nil {
 			return err
@@ -216,7 +195,7 @@ func importRunningSubnet(*cobra.Command, []string) error {
 		Name: subnetName,
 		VM:   vmType,
 		Networks: map[string]models.NetworkData{
-			network.String(): {
+			network.Name(): {
 				SubnetID:     subnetID,
 				BlockchainID: blockchainID,
 			},
@@ -224,6 +203,7 @@ func importRunningSubnet(*cobra.Command, []string) error {
 		Subnet:       subnetName,
 		Version:      constants.SidecarVersion,
 		TokenName:    constants.DefaultTokenName,
+		TokenSymbol:  constants.DefaultTokenSymbol,
 		ImportedVMID: vmIDstr,
 		// signals that the VMID wasn't derived from the subnet name but through import
 		ImportedFromAPM: true,
@@ -249,12 +229,6 @@ func importRunningSubnet(*cobra.Command, []string) error {
 				return err
 			}
 			sc.VMVersion, err = app.Prompt.CaptureList("Pick the version for this VM", versions)
-		case models.SpacesVM:
-			versions, err = app.Downloader.GetAllReleasesForRepo(constants.AvaLabsOrg, constants.SpacesVMRepoName)
-			if err != nil {
-				return err
-			}
-			sc.VMVersion, err = app.Prompt.CaptureList("Pick the version for this VM", versions)
 		case models.CustomVM:
 			return fmt.Errorf("importing custom VMs is not yet implemented, but will be available soon")
 		default:
@@ -268,27 +242,19 @@ func importRunningSubnet(*cobra.Command, []string) error {
 			return fmt.Errorf("failed getting RPCVersion for VM type %s with version %s", vmType, sc.VMVersion)
 		}
 	}
-
-	switch vmType {
-	case models.SubnetEvm:
+	if vmType == models.SubnetEvm {
 		var genesis core.Genesis
 		if err := json.Unmarshal(genBytes, &genesis); err != nil {
 			return err
 		}
 		sc.ChainID = genesis.Config.ChainID.String()
-	case models.SpacesVM:
-		// for spacesvm just make sure it's valid
-		var genesis chain.Genesis
-		if err := json.Unmarshal(genBytes, &genesis); err != nil {
-			return err
-		}
 	}
 
 	if err := app.CreateSidecar(sc); err != nil {
 		return fmt.Errorf("failed creating the sidecar for import: %w", err)
 	}
 
-	ux.Logger.PrintToUser("Subnet %s imported successfully", sc.Name)
+	ux.Logger.PrintToUser("Subnet %q imported successfully", sc.Name)
 
 	return nil
 }

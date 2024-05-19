@@ -9,14 +9,25 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metalgo/utils/units"
+	"github.com/MetalBlockchain/coreth/ethclient"
+	"go.uber.org/zap"
+
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/subnet-evm/commontype"
 	"github.com/MetalBlockchain/subnet-evm/params"
-	"github.com/MetalBlockchain/subnet-evm/precompile"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/deployerallowlist"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/feemanager"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/nativeminter"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/rewardmanager"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
+	subnetevmutils "github.com/MetalBlockchain/subnet-evm/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/spf13/cobra"
@@ -27,19 +38,23 @@ const (
 	feeConfigKey        = "initialFeeConfig"
 	initialMintKey      = "initialMint"
 	adminAddressesKey   = "adminAddresses"
+	managerAddressesKey = "managerAddresses"
 	enabledAddressesKey = "enabledAddresses"
 
 	enabledLabel = "enabled"
+	managerLabel = "manager"
 	adminLabel   = "admin"
 )
+
+var subnetName string
 
 // avalanche subnet upgrade generate
 func newUpgradeGenerateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "generate [subnetName]",
 		Short: "Generate the configuration file to upgrade subnet nodes",
-		Long: `Upgrades to subnet nodes can be executed by providing a upgrade.json file to the nodes.
-This command starts a wizard guiding the user generating the required file.`,
+		Long: `The subnet upgrade generate command builds a new upgrade.json file to customize your Subnet. It
+guides the user through the process using an interactive wizard.`,
 		RunE: upgradeGenerateCmd,
 		Args: cobra.ExactArgs(1),
 	}
@@ -47,7 +62,7 @@ This command starts a wizard guiding the user generating the required file.`,
 }
 
 func upgradeGenerateCmd(_ *cobra.Command, args []string) error {
-	subnetName := args[0]
+	subnetName = args[0]
 	if !app.GenesisExists(subnetName) {
 		ux.Logger.PrintToUser("The provided subnet name %q does not exist", subnetName)
 		return nil
@@ -82,11 +97,12 @@ func upgradeGenerateCmd(_ *cobra.Command, args []string) error {
 		vm.FeeManager,
 		vm.NativeMint,
 		vm.TxAllowList,
+		vm.RewardManager,
 	}
 
 	fmt.Println()
 	ux.Logger.PrintToUser(logging.Yellow.Wrap(
-		"MetalGo and this tool support configuring multiple precompiles. " +
+		"Avalanchego and this tool support configuring multiple precompiles. " +
 			"However, we suggest to only configure one per upgrade."))
 	fmt.Println()
 
@@ -184,6 +200,8 @@ func promptParams(precomp string, precompiles *[]params.PrecompileUpgrade) error
 		return promptNativeMintParams(precompiles, date)
 	case vm.FeeManager:
 		return promptFeeManagerParams(precompiles, date)
+	case vm.RewardManager:
+		return promptRewardManagerParams(precompiles, date)
 	default:
 		return fmt.Errorf("unexpected precompile identifier: %q", precomp)
 	}
@@ -192,7 +210,7 @@ func promptParams(precomp string, precompiles *[]params.PrecompileUpgrade) error
 func promptNativeMintParams(precompiles *[]params.PrecompileUpgrade, date time.Time) error {
 	initialMint := map[common.Address]*math.HexOrDecimal256{}
 
-	adminAddrs, enabledAddrs, err := promptAdminAndEnabledAddresses()
+	adminAddrs, managerAddrs, enabledAddrs, err := promptAdminManagerAndEnabledAddresses()
 	if err != nil {
 		return err
 	}
@@ -202,16 +220,21 @@ func promptNativeMintParams(precompiles *[]params.PrecompileUpgrade, date time.T
 		return err
 	}
 
+	sc, err := app.LoadSidecar(subnetName)
+	if err != nil {
+		return err
+	}
+
 	if yes {
 		_, cancel, err := prompts.CaptureListDecision(
 			app.Prompt,
 			"How would you like to distribute your funds",
-			func(s string) (string, error) {
+			func(_ string) (string, error) {
 				addr, err := app.Prompt.CaptureAddress("Address to airdrop to")
 				if err != nil {
 					return "", err
 				}
-				amount, err := app.Prompt.CaptureUint64("Amount to airdrop (in METAL units)")
+				amount, err := app.Prompt.CaptureUint64(fmt.Sprintf("Amount to airdrop (in %s units)", sc.TokenSymbol))
 				if err != nil {
 					return "", err
 				}
@@ -231,21 +254,48 @@ func promptNativeMintParams(precompiles *[]params.PrecompileUpgrade, date time.T
 		}
 	}
 
-	config := precompile.NewContractNativeMinterConfig(
-		big.NewInt(date.Unix()),
+	config := nativeminter.NewConfig(
+		subnetevmutils.NewUint64(uint64(date.Unix())),
 		adminAddrs,
 		enabledAddrs,
+		managerAddrs,
 		initialMint,
 	)
 	upgrade := params.PrecompileUpgrade{
-		ContractNativeMinterConfig: config,
+		Config: config,
+	}
+	*precompiles = append(*precompiles, upgrade)
+	return nil
+}
+
+func promptRewardManagerParams(precompiles *[]params.PrecompileUpgrade, date time.Time) error {
+	adminAddrs, managerAddrs, enabledAddrs, err := promptAdminManagerAndEnabledAddresses()
+	if err != nil {
+		return err
+	}
+
+	initialConfig, err := vm.ConfigureInitialRewardConfig(app)
+	if err != nil {
+		return err
+	}
+
+	config := rewardmanager.NewConfig(
+		subnetevmutils.NewUint64(uint64(date.Unix())),
+		adminAddrs,
+		enabledAddrs,
+		managerAddrs,
+		initialConfig,
+	)
+
+	upgrade := params.PrecompileUpgrade{
+		Config: config,
 	}
 	*precompiles = append(*precompiles, upgrade)
 	return nil
 }
 
 func promptFeeManagerParams(precompiles *[]params.PrecompileUpgrade, date time.Time) error {
-	adminAddrs, enabledAddrs, err := promptAdminAndEnabledAddresses()
+	adminAddrs, managerAddrs, enabledAddrs, err := promptAdminManagerAndEnabledAddresses()
 	if err != nil {
 		return err
 	}
@@ -259,79 +309,193 @@ func promptFeeManagerParams(precompiles *[]params.PrecompileUpgrade, date time.T
 	var feeConfig *commontype.FeeConfig
 
 	if yes {
-		chainConfig, _, err := vm.GetFeeConfig(params.ChainConfig{}, app)
+		chainConfig, _, err := vm.GetFeeConfig(params.ChainConfig{}, app, false)
 		if err != nil {
 			return err
 		}
 		feeConfig = &chainConfig.FeeConfig
 	}
 
-	config := precompile.NewFeeManagerConfig(
-		big.NewInt(date.Unix()),
+	config := feemanager.NewConfig(
+		subnetevmutils.NewUint64(uint64(date.Unix())),
 		adminAddrs,
 		enabledAddrs,
+		managerAddrs,
 		feeConfig,
 	)
 	upgrade := params.PrecompileUpgrade{
-		FeeManagerConfig: config,
+		Config: config,
 	}
 	*precompiles = append(*precompiles, upgrade)
 	return nil
 }
 
 func promptContractAllowListParams(precompiles *[]params.PrecompileUpgrade, date time.Time) error {
-	adminAddrs, enabledAddrs, err := promptAdminAndEnabledAddresses()
+	adminAddrs, managerAddrs, enabledAddrs, err := promptAdminManagerAndEnabledAddresses()
 	if err != nil {
 		return err
 	}
 
-	config := precompile.NewContractDeployerAllowListConfig(
-		big.NewInt(date.Unix()),
+	config := deployerallowlist.NewConfig(
+		subnetevmutils.NewUint64(uint64(date.Unix())),
 		adminAddrs,
 		enabledAddrs,
+		managerAddrs,
 	)
 	upgrade := params.PrecompileUpgrade{
-		ContractDeployerAllowListConfig: config,
+		Config: config,
 	}
 	*precompiles = append(*precompiles, upgrade)
 	return nil
 }
 
 func promptTxAllowListParams(precompiles *[]params.PrecompileUpgrade, date time.Time) error {
-	adminAddrs, enabledAddrs, err := promptAdminAndEnabledAddresses()
+	adminAddrs, managerAddrs, enabledAddrs, err := promptAdminManagerAndEnabledAddresses()
 	if err != nil {
 		return err
 	}
 
-	config := precompile.NewTxAllowListConfig(
-		big.NewInt(date.Unix()),
+	config := txallowlist.NewConfig(
+		subnetevmutils.NewUint64(uint64(date.Unix())),
 		adminAddrs,
 		enabledAddrs,
+		managerAddrs,
 	)
 	upgrade := params.PrecompileUpgrade{
-		TxAllowListConfig: config,
+		Config: config,
 	}
 	*precompiles = append(*precompiles, upgrade)
 	return nil
 }
 
-func promptAdminAndEnabledAddresses() ([]common.Address, []common.Address, error) {
-	var admin, enabled []common.Address
+func getCClient(apiEndpoint string, blockchainID string) (ethclient.Client, error) {
+	cClient, err := ethclient.Dial(fmt.Sprintf("%s/ext/bc/%s/rpc", apiEndpoint, blockchainID))
+	if err != nil {
+		return nil, err
+	}
+	return cClient, nil
+}
+
+func ensureHaveBalanceLocalNetwork(which string, addresses []common.Address, blockchainID string) error {
+	cClient, err := getCClient(constants.LocalAPIEndpoint, blockchainID)
+	if err != nil {
+		return err
+	}
+
+	for _, address := range addresses {
+		// we can break at the first address who has a non-zero balance
+		accountBalance, err := getAccountBalance(cClient, address.String())
+		if err != nil {
+			return err
+		}
+		if accountBalance > float64(0) {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("at least one of the %s addresses requires a positive token balance", which)
+}
+
+func ensureHaveBalance(which string, addresses []common.Address, subnetName string) error {
+	if len(addresses) < 1 {
+		return nil
+	}
+
+	if !app.GenesisExists(subnetName) {
+		ux.Logger.PrintToUser("The provided subnet name %q does not exist", subnetName)
+		return nil
+	}
+
+	// read in sidecar
+	sc, err := app.LoadSidecar(subnetName)
+	if err != nil {
+		return err
+	}
+	switch sc.VM {
+	case models.SubnetEvm:
+		// Currently only checking if admins have balance for subnets deployed in Local Network
+		if networkData, ok := sc.Networks["Local Network"]; ok {
+			blockchainID := networkData.BlockchainID.String()
+			err = ensureHaveBalanceLocalNetwork(which, addresses, blockchainID)
+			if err != nil {
+				return err
+			}
+		}
+	default:
+		app.Log.Warn("Unsupported VM type", zap.Any("vm-type", sc.VM))
+	}
+	return nil
+}
+
+func getAccountBalance(cClient ethclient.Client, addrStr string) (float64, error) {
+	addr := common.HexToAddress(addrStr)
+	ctx, cancel := utils.GetAPIContext()
+	balance, err := cClient.BalanceAt(ctx, addr, nil)
+	defer cancel()
+	if err != nil {
+		return 0, err
+	}
+	// convert to nAvax
+	balance = balance.Div(balance, big.NewInt(int64(units.Avax)))
+	if balance.Cmp(big.NewInt(0)) == 0 {
+		return 0, nil
+	}
+	return float64(balance.Uint64()) / float64(units.Avax), nil
+}
+
+func promptAdminManagerAndEnabledAddresses() ([]common.Address, []common.Address, []common.Address, error) {
+	var admin, manager, enabled []common.Address
 
 	for {
 		if err := captureAddress(adminLabel, &admin); err != nil {
-			return nil, nil, err
-		}
-		if err := captureAddress(enabledLabel, &enabled); err != nil {
-			return nil, nil, err
+			return nil, nil, nil, err
 		}
 
-		if len(enabled) == 0 && len(admin) == 0 {
+		if err := ensureHaveBalance(adminLabel, admin, subnetName); err != nil {
+			return nil, nil, nil, err
+		}
+
+		if err := captureAddress(managerLabel, &manager); err != nil {
+			return nil, nil, nil, err
+		}
+
+		if err := ensureHaveBalance(managerLabel, admin, subnetName); err != nil {
+			return nil, nil, nil, err
+		}
+
+		adminsMap := make(map[string]bool)
+		for _, adminsAddress := range admin {
+			adminsMap[adminsAddress.String()] = true
+		}
+		managersMap := make(map[string]bool)
+		for _, managerAddress := range manager {
+			managersMap[managerAddress.String()] = true
+		}
+
+		for _, managerAddress := range manager {
+			if _, ok := adminsMap[managerAddress.String()]; ok {
+				return nil, nil, nil, fmt.Errorf("can't have address %s in both admin and manager addresses", managerAddress.String())
+			}
+		}
+
+		if err := captureAddress(enabledLabel, &enabled); err != nil {
+			return nil, nil, nil, err
+		}
+
+		for _, enabledAddress := range enabled {
+			if _, ok := adminsMap[enabledAddress.String()]; ok {
+				return nil, nil, nil, fmt.Errorf("can't have address %s in both admin and enabled addresses", enabledAddress.String())
+			}
+			if _, ok := managersMap[enabledAddress.String()]; ok {
+				return nil, nil, nil, fmt.Errorf("can't have address %s in both manager and enabled addresses", enabledAddress.String())
+			}
+		}
+		if len(enabled) == 0 && len(admin) == 0 && len(manager) == 0 {
 			ux.Logger.PrintToUser(fmt.Sprintf(
-				"We need at least one address for either '%s' or '%s'. Otherwise abort.", enabledAddressesKey, adminAddressesKey))
+				"We need at least one address for either '%s', '%s' or '%s'. Otherwise abort.", enabledAddressesKey, managerAddressesKey, adminAddressesKey))
 			continue
 		}
-		return admin, enabled, nil
+		return admin, manager, enabled, nil
 	}
 }
 

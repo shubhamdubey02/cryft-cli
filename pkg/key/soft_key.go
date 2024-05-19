@@ -12,9 +12,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/metalgo/utils/cb58"
-	"github.com/MetalBlockchain/metalgo/utils/crypto"
+	"github.com/MetalBlockchain/metalgo/utils/crypto/secp256k1"
 	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
 	"github.com/MetalBlockchain/metalgo/vms/components/avax"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
@@ -34,11 +35,12 @@ var (
 var _ Key = &SoftKey{}
 
 type SoftKey struct {
-	privKey        *crypto.PrivateKeySECP256K1R
+	privKey        *secp256k1.PrivateKey
 	privKeyRaw     []byte
 	privKeyEncoded string
 
 	pAddr string
+	xAddr string
 
 	keyChain *secp256k1fx.Keychain
 }
@@ -51,10 +53,10 @@ const (
 	EwoqPrivateKey = privKeyEncPfx + rawEwoqPk
 )
 
-var keyFactory = new(crypto.FactorySECP256K1R)
+var ewoqKeyBytes = []byte("56289e99c94b6912bfc12adc093c9b51124f0dc54ac7a766b2bc5ccf558d8027")
 
 type SOp struct {
-	privKey        *crypto.PrivateKeySECP256K1R
+	privKey        *secp256k1.PrivateKey
 	privKeyEncoded string
 }
 
@@ -67,7 +69,7 @@ func (sop *SOp) applyOpts(opts []SOpOption) {
 }
 
 // To create a new key SoftKey with a pre-loaded private key.
-func WithPrivateKey(privKey *crypto.PrivateKeySECP256K1R) SOpOption {
+func WithPrivateKey(privKey *secp256k1.PrivateKey) SOpOption {
 	return func(sop *SOp) {
 		sop.privKey = privKey
 	}
@@ -100,14 +102,10 @@ func NewSoft(networkID uint32, opts ...SOpOption) (*SoftKey, error) {
 
 	// generate a new one
 	if ret.privKey == nil {
-		rpk, err := keyFactory.NewPrivateKey()
+		var err error
+		ret.privKey, err = secp256k1.NewPrivateKey()
 		if err != nil {
 			return nil, err
-		}
-		var ok bool
-		ret.privKey, ok = rpk.(*crypto.PrivateKeySECP256K1R)
-		if !ok {
-			return nil, ErrInvalidType
 		}
 	}
 
@@ -140,6 +138,10 @@ func NewSoft(networkID uint32, opts ...SOpOption) (*SoftKey, error) {
 	if err != nil {
 		return nil, err
 	}
+	m.xAddr, err = address.Format("X", hrp, m.privKey.PublicKey().Address().Bytes())
+	if err != nil {
+		return nil, err
+	}
 
 	return m, nil
 }
@@ -150,7 +152,15 @@ func LoadSoft(networkID uint32, keyPath string) (*SoftKey, error) {
 	if err != nil {
 		return nil, err
 	}
+	return LoadSoftFromBytes(networkID, kb)
+}
 
+func LoadEwoq(networkID uint32) (*SoftKey, error) {
+	return LoadSoftFromBytes(networkID, ewoqKeyBytes)
+}
+
+// LoadSoftFromBytes loads the private key from bytes and creates the corresponding SoftKey.
+func LoadSoftFromBytes(networkID uint32, kb []byte) (*SoftKey, error) {
 	// in case, it's already encoded
 	k, err := NewSoft(networkID, WithPrivateKeyEncoded(string(kb)))
 	if err == nil {
@@ -174,13 +184,9 @@ func LoadSoft(networkID uint32, keyPath string) (*SoftKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	rpk, err := keyFactory.ToPrivateKey(skBytes)
+	privKey, err := secp256k1.ToPrivateKey(skBytes)
 	if err != nil {
 		return nil, err
-	}
-	privKey, ok := rpk.(*crypto.PrivateKeySECP256K1R)
-	if !ok {
-		return nil, ErrInvalidType
 	}
 
 	return NewSoft(networkID, WithPrivateKey(privKey))
@@ -220,7 +226,7 @@ func checkKeyFileEnd(r io.ByteReader) error {
 	}
 }
 
-func encodePrivateKey(pk *crypto.PrivateKeySECP256K1R) (string, error) {
+func encodePrivateKey(pk *secp256k1.PrivateKey) (string, error) {
 	privKeyRaw := pk.Bytes()
 	enc, err := cb58.Encode(privKeyRaw)
 	if err != nil {
@@ -229,19 +235,15 @@ func encodePrivateKey(pk *crypto.PrivateKeySECP256K1R) (string, error) {
 	return privKeyEncPfx + enc, nil
 }
 
-func decodePrivateKey(enc string) (*crypto.PrivateKeySECP256K1R, error) {
+func decodePrivateKey(enc string) (*secp256k1.PrivateKey, error) {
 	rawPk := strings.Replace(enc, privKeyEncPfx, "", 1)
 	skBytes, err := cb58.Decode(rawPk)
 	if err != nil {
 		return nil, err
 	}
-	rpk, err := keyFactory.ToPrivateKey(skBytes)
+	privKey, err := secp256k1.ToPrivateKey(skBytes)
 	if err != nil {
 		return nil, err
-	}
-	privKey, ok := rpk.(*crypto.PrivateKeySECP256K1R)
-	if !ok {
-		return nil, ErrInvalidType
 	}
 	return privKey, nil
 }
@@ -260,7 +262,7 @@ func (m *SoftKey) KeyChain() *secp256k1fx.Keychain {
 }
 
 // Returns the private key.
-func (m *SoftKey) Key() *crypto.PrivateKeySECP256K1R {
+func (m *SoftKey) Key() *secp256k1.PrivateKey {
 	return m.privKey
 }
 
@@ -277,11 +279,15 @@ func (m *SoftKey) Encode() string {
 // Saves the private key to disk with hex encoding.
 func (m *SoftKey) Save(p string) error {
 	k := hex.EncodeToString(m.privKeyRaw)
-	return os.WriteFile(p, []byte(k), fsModeWrite)
+	return os.WriteFile(p, []byte(k), constants.WriteReadUserOnlyPerms)
 }
 
 func (m *SoftKey) P() []string {
 	return []string{m.pAddr}
+}
+
+func (m *SoftKey) X() []string {
+	return []string{m.xAddr}
 }
 
 func (m *SoftKey) Spends(outputs []*avax.UTXO, opts ...OpOption) (
@@ -321,7 +327,7 @@ func (m *SoftKey) Spends(outputs []*avax.UTXO, opts ...OpOption) (
 
 func (m *SoftKey) spend(output *avax.UTXO, time uint64) (
 	input avax.TransferableIn,
-	signers []*crypto.PrivateKeySECP256K1R,
+	signers []*secp256k1.PrivateKey,
 	err error,
 ) {
 	// "time" is used to check whether the key owner
@@ -338,16 +344,14 @@ func (m *SoftKey) spend(output *avax.UTXO, time uint64) (
 	return input, psigners, nil
 }
 
-const fsModeWrite = 0o600
-
 func (m *SoftKey) Addresses() []ids.ShortID {
 	return []ids.ShortID{m.privKey.PublicKey().Address()}
 }
 
 func (m *SoftKey) Sign(pTx *txs.Tx, signers [][]ids.ShortID) error {
-	privsigners := make([][]*crypto.PrivateKeySECP256K1R, len(signers))
+	privsigners := make([][]*secp256k1.PrivateKey, len(signers))
 	for i, inputSigners := range signers {
-		privsigners[i] = make([]*crypto.PrivateKeySECP256K1R, len(inputSigners))
+		privsigners[i] = make([]*secp256k1.PrivateKey, len(inputSigners))
 		for j, signer := range inputSigners {
 			if signer != m.privKey.PublicKey().Address() {
 				// Should never happen

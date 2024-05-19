@@ -26,8 +26,6 @@ type testContext struct {
 	expected map[string]string
 	// fake versions set for the evm binaries, faking github
 	sourceEVM string
-	// fake versions set for the spacesvm binaries, faking github
-	sourceSpacesVM string
 	// fake versions set for the metalgo binaries, faking github
 	sourceAvago string
 	// should the test fail
@@ -104,14 +102,12 @@ func (m *testMapper) GetApp() *application.Avalanche {
 }
 
 // GetCompatURL fakes a github endpoint for
-// evm and spacesvm releases
+// evm releases
 // implement VersionMapper
 func (m *testMapper) GetCompatURL(vmType models.VMType) string {
 	switch vmType {
 	case models.SubnetEvm:
 		return m.srv.URL + "/evm"
-	case models.SpacesVM:
-		return m.srv.URL + "/spaces"
 	default:
 		m.t.Fatalf("unexpected vmType: %T", vmType)
 	}
@@ -138,8 +134,6 @@ func (m *testMapper) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/evm":
 		_, err = w.Write([]byte(m.currentContext.sourceEVM))
-	case "/spaces":
-		_, err = w.Write([]byte(m.currentContext.sourceSpacesVM))
 	case "/avago":
 		_, err = w.Write([]byte(m.currentContext.sourceAvago))
 	default:
@@ -155,7 +149,7 @@ func (m *testMapper) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // the expected values.
 // For the test to be meaningful, we start a httptest HTTP
 // server locally, which then returns fake versions for each request
-// (sourceEVM, spacesVM, sourceAvago) which then
+// (sourceEVM, sourceAvago) which then
 // the mapping code in `GetVersionMapping` is expected
 // to correctly evaluate for the global `binaryToVersion` map,
 // used by the tests to know which version to use for which test.
@@ -199,16 +193,6 @@ func TestGetVersionMapping(t *testing.T) {
 							"v0.4.0": 17
 						}
 				  }`,
-			sourceSpacesVM: `{
-  					"rpcChainVMProtocolVersion": {
-    					"v0.0.12": 19,
-    					"v0.0.11": 19,
-    					"v0.0.10": 19,
-    					"v0.0.9": 17,
-    					"v0.0.8": 16,
-    					"v0.0.7": 15
-						}
-					}`,
 			sourceAvago: `{
 						"19": [
 							"v1.9.2",
@@ -237,8 +221,6 @@ func TestGetVersionMapping(t *testing.T) {
 				MultiAvagoSubnetEVMKey: "v0.9.9",
 				LatestEVM2AvagoKey:     "v0.9.9",
 				LatestAvago2EVMKey:     "v2.3.4",
-				Spaces2AvagoKey:        "v4.5.12",
-				Avago2SpacesKey:        "v2.3.4",
 			},
 			sourceEVM: `{
 					"rpcChainVMProtocolVersion": {
@@ -250,14 +232,6 @@ func TestGetVersionMapping(t *testing.T) {
 						"v0.4.0": 17
 					}
 			  }`,
-			sourceSpacesVM: `{
-  					"rpcChainVMProtocolVersion": {
-    					"v4.5.12": 99,
-    					"v3.2.12": 77,
-    					"v2.1.11": 66,
-    					"v0.0.10": 19
-						}
-					}`,
 			sourceAvago: `{
 					"99": [
 						"v2.3.4",
@@ -301,13 +275,6 @@ func TestGetVersionMapping(t *testing.T) {
 						"v0.4.0": 17
 					}
 			  }`,
-			sourceSpacesVM: `{
-  					"rpcChainVMProtocolVersion": {
-    					"v3.2.12": 77,
-    					"v2.1.11": 66,
-    					"v0.0.10": 19
-						}
-					}`,
 			sourceAvago: `{
 					"99": [
 						"v4.3.2"

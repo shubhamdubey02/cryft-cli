@@ -45,7 +45,7 @@ var _ = ginkgo.Describe("[Public Subnet]", func() {
 		commands.CleanNetwork()
 	})
 
-	ginkgo.It("deploy subnet to fuji", func() {
+	ginkgo.It("deploy subnet to tahoe", func() {
 		// deploy
 		s := commands.SimulateFujiDeploy(subnetName, keyName, controlKeys)
 		subnetID, rpcURL, err := utils.ParsePublicDeployOutput(s)

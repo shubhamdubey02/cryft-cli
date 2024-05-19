@@ -8,19 +8,20 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metalgo/api/info"
 	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/api"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
+
+var statsSupportedNetworkOptions = []networkoptions.NetworkOption{networkoptions.Tahoe, networkoptions.Mainnet}
 
 // avalanche subnet stats
 func newStatsCmd() *cobra.Command {
@@ -32,39 +33,23 @@ func newStatsCmd() *cobra.Command {
 		RunE:         stats,
 		SilenceUsage: true,
 	}
-	cmd.Flags().BoolVar(&deployTestnet, "tahoe", false, "print stats on `tahoe` (alias for `testnet`)")
-	cmd.Flags().BoolVar(&deployTestnet, "testnet", false, "print stats on `testnet` (alias for `tahoe`)")
-	cmd.Flags().BoolVar(&deployMainnet, "mainnet", false, "print stats on `mainnet`")
+	networkoptions.AddNetworkFlagsToCmd(cmd, &globalNetworkFlags, false, statsSupportedNetworkOptions)
 	return cmd
 }
 
 func stats(_ *cobra.Command, args []string) error {
-	var network models.Network
-	switch {
-	case deployTestnet:
-		network = models.Tahoe
-	case deployMainnet:
-		network = models.Mainnet
+	network, err := networkoptions.GetNetworkFromCmdLineFlags(
+		app,
+		globalNetworkFlags,
+		false,
+		statsSupportedNetworkOptions,
+		"",
+	)
+	if err != nil {
+		return err
 	}
 
-	if network == models.Undefined {
-		networkStr, err := app.Prompt.CaptureList(
-			"Choose a network from which you want to get the statistics (this command only supports public networks)",
-			[]string{models.Tahoe.String(), models.Mainnet.String()},
-		)
-		if err != nil {
-			return err
-		}
-		// flag provided
-		networkStr = strings.Title(networkStr)
-		// as we are allowing a flag, we need to check if a supported network has been provided
-		if !(networkStr == models.Tahoe.String() || networkStr == models.Mainnet.String()) {
-			return errors.New("unsupported network")
-		}
-		network = models.NetworkFromString(networkStr)
-	}
-
-	chains, err := validateSubnetNameAndGetChains(args)
+	chains, err := ValidateSubnetNameAndGetChains(args)
 	if err != nil {
 		return err
 	}
@@ -75,7 +60,7 @@ func stats(_ *cobra.Command, args []string) error {
 		return err
 	}
 
-	subnetID := sc.Networks[network.String()].SubnetID
+	subnetID := sc.Networks[network.Name()].SubnetID
 	if subnetID == ids.Empty {
 		return errors.New("no subnetID found for the provided subnet name; has this subnet actually been deployed to this network?")
 	}
@@ -95,107 +80,7 @@ func stats(_ *cobra.Command, args []string) error {
 	}
 	table.Render()
 
-	table = tablewriter.NewWriter(os.Stdout)
-	rows, err = buildPendingValidatorStats(pClient, infoClient, table, subnetID)
-	if err != nil {
-		return err
-	}
-
-	if len(rows) == 0 {
-		return nil
-	}
-	for _, row := range rows {
-		table.Append(row)
-	}
-	table.Render()
 	return nil
-}
-
-func buildPendingValidatorStats(pClient platformvm.Client, infoClient info.Client, table *tablewriter.Table, subnetID ids.ID) ([][]string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	pendingValidatorsIface, pendingDelegatorsIface, err := pClient.GetPendingValidators(ctx, subnetID, []ids.NodeID{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to query the API endpoint for the pending validators: %w", err)
-	}
-
-	pendingValidators := make([]api.PermissionlessValidator, len(pendingValidatorsIface))
-	var ok bool
-	for i, v := range pendingValidatorsIface {
-		pendingValidators[i], ok = v.(api.PermissionlessValidator)
-		if !ok {
-			return nil, fmt.Errorf("expected type api.PermissionlessValidator, but got %T", v)
-		}
-	}
-
-	pendingDelegators := make([]api.Staker, len(pendingDelegatorsIface))
-	for i, v := range pendingDelegatorsIface {
-		pendingDelegators[i], ok = v.(api.Staker)
-		if !ok {
-			return nil, fmt.Errorf("expected type api.Staker, but got %T", v)
-		}
-	}
-
-	rows := [][]string{}
-
-	if len(pendingValidators) == 0 {
-		ux.Logger.PrintToUser("No pending validators found.")
-		return rows, nil
-	}
-
-	ux.Logger.PrintToUser("Pending validators (not yet validating the subnet)")
-	ux.Logger.PrintToUser("==================================================")
-
-	header := []string{"nodeID", "weight", "start-time", "end-time", "vmversion"}
-	table.SetHeader(header)
-	table.SetAutoMergeCellsByColumnIndex([]int{0})
-	table.SetAutoMergeCells(true)
-	table.SetRowLine(true)
-
-	var (
-		startTime, endTime          time.Time
-		localNodeID                 ids.NodeID
-		weight                      string
-		localVersionStr, versionStr string
-	)
-
-	// try querying the local node for its node version
-	reply, err := infoClient.GetNodeVersion(ctx)
-	if err == nil {
-		// we can ignore err here; if it worked, we have a non-zero node ID
-		localNodeID, _, _ = infoClient.GetNodeID(ctx)
-		for k, v := range reply.VMVersions {
-			localVersionStr = fmt.Sprintf("%s: %s\n", k, v)
-		}
-	}
-
-	for _, v := range pendingValidators {
-		startTime = time.Unix(int64(v.StartTime), 0)
-		endTime = time.Unix(int64(v.EndTime), 0)
-
-		uint64Weight := v.Weight
-		for _, d := range pendingDelegators {
-			uint64Weight += d.Weight
-		}
-		weight = strconv.FormatUint(uint64(uint64Weight), 10)
-
-		// if retrieval of localNodeID failed, it will be empty,
-		// and this comparison fails
-		if v.NodeID == localNodeID {
-			versionStr = localVersionStr
-		}
-		// query peers for IP address of this NodeID...
-		rows = append(rows, []string{
-			v.NodeID.String(),
-			weight,
-			startTime.Local().String(),
-			endTime.Local().String(),
-			versionStr,
-		})
-	}
-
-	return rows, nil
 }
 
 func buildCurrentValidatorStats(pClient platformvm.Client, infoClient info.Client, table *tablewriter.Table, subnetID ids.ID) ([][]string, error) {
@@ -290,21 +175,8 @@ func findAPIEndpoint(network models.Network) (platformvm.Client, info.Client) {
 		}
 	}
 
-	var url string
-	// try public APIs
-	switch network {
-	case models.Tahoe:
-		url = constants.FujiAPIEndpoint
-	case models.Mainnet:
-		url = constants.MainnetAPIEndpoint
-	}
-	// unsupported network
-	if url == "" {
-		return nil, nil
-	}
-
 	// create client to public API
-	c = platformvm.NewClient(url)
+	c = platformvm.NewClient(network.Endpoint)
 	// try calling it to make sure it actually worked
 	_, err = c.GetHeight(ctx)
 	if err == nil {

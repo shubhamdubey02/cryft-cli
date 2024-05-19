@@ -9,6 +9,7 @@ builds:
     # contains linux and darwin
     ldflags:
       - -X 'github.com/MetalBlockchain/metal-cli/cmd.Version={{.Version}}'
+      - -X 'github.com/MetalBlockchain/metal-cli/pkg/utils.telemetryToken={{ .Env.TELEMETRY_TOKEN }}'
     goos:
       - linux
       - darwin

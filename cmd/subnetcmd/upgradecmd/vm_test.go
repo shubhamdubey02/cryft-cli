@@ -130,10 +130,10 @@ func TestAtMostOneNetworkSelected(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			useConfig = tt.useConfig
 			useLocal = tt.useLocal
-			useTahoe = tt.useFuji
+			useFuji = tt.useFuji
 			useMainnet = tt.useMainnet
 
 			accepted := atMostOneNetworkSelected()
@@ -217,7 +217,7 @@ func TestAtMostOneVersionSelected(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			useLatest = tt.useLatest
 			targetVersion = tt.version
 			binaryPathArg = tt.binary
@@ -270,7 +270,7 @@ func TestAtMostOneAutomationSelected(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			useManual = tt.useManual
 			pluginDir = tt.pluginDir
 
@@ -299,7 +299,7 @@ func TestUpdateToCustomBin(t *testing.T) {
 	networkToUpgrade := futureDeployment
 
 	factory := logging.NewFactory(logging.Config{})
-	log, err := factory.Make("metal")
+	log, err := factory.Make("avalanche")
 	assert.NoError(err)
 
 	// create the user facing logger as a global var
@@ -321,7 +321,7 @@ func TestUpdateToCustomBin(t *testing.T) {
 
 	assert.FileExists(binaryPath)
 
-	err = updateToCustomBin(subnetName, sc, networkToUpgrade, binaryPath)
+	err = updateToCustomBin(sc, networkToUpgrade, binaryPath, false)
 	assert.NoError(err)
 
 	// check new binary exists and matches

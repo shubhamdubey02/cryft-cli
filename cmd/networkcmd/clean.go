@@ -7,8 +7,11 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"github.com/MetalBlockchain/metal-cli/pkg/elasticsubnet"
+
 	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/shirou/gopsutil/process"
@@ -43,8 +46,15 @@ configuration.`,
 func clean(*cobra.Command, []string) error {
 	app.Log.Info("killing gRPC server process...")
 
-	if err := subnet.SetDefaultSnapshot(app.GetSnapshotsDir(), true); err != nil {
+	configSingleNodeEnabled := app.Conf.GetConfigBoolValue(constants.ConfigSingleNodeEnabledKey)
+
+	if _, err := subnet.SetDefaultSnapshot(app.GetSnapshotsDir(), true, "", configSingleNodeEnabled); err != nil {
 		app.Log.Warn("failed resetting default snapshot", zap.Error(err))
+	}
+
+	defaultSnapshotRelayerConfigPath := filepath.Join(app.GetAWMRelayerSnapshotConfsDir(), constants.DefaultSnapshotName+jsonExt)
+	if err := os.RemoveAll(defaultSnapshotRelayerConfigPath); err != nil {
+		return err
 	}
 
 	if err := binutils.KillgRPCServerProcess(app); err != nil {
@@ -53,25 +63,84 @@ func clean(*cobra.Command, []string) error {
 		ux.Logger.PrintToUser("Process terminated.")
 	}
 
+	if err := os.RemoveAll(app.GetAWMRelayerConfigPath()); err != nil {
+		return err
+	}
+
+	if err := os.RemoveAll(app.GetExtraLocalNetworkDataPath()); err != nil {
+		return err
+	}
+
 	if hard {
-		ux.Logger.PrintToUser("hard clean requested via flag, removing all downloaded metalgo and plugin binaries")
+		ux.Logger.PrintToUser("hard clean requested via flag, removing all downloaded avalanchego and plugin binaries")
 		binDir := filepath.Join(app.GetBaseDir(), constants.AvalancheCliBinDir)
 		cleanBins(binDir)
 		_ = killAllBackendsByName()
 	}
 
-	// Remove all plugins from plugin dir
-	pluginDir := app.GetPluginsDir()
-	installedPlugins, err := os.ReadDir(pluginDir)
+	if err := app.ResetPluginsDir(); err != nil {
+		return err
+	}
+
+	if err := removeLocalDeployInfoFromSidecars(); err != nil {
+		return err
+	}
+	if err := removeLocalElasticSubnetInfoFromSidecars(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func removeLocalDeployInfoFromSidecars() error {
+	// Remove all local deployment info from sidecar files
+	deployedSubnets, err := subnet.GetLocallyDeployedSubnetsFromFile(app)
 	if err != nil {
 		return err
 	}
-	for _, plugin := range installedPlugins {
-		if err = os.Remove(filepath.Join(pluginDir, plugin.Name())); err != nil {
+
+	for _, subnet := range deployedSubnets {
+		sc, err := app.LoadSidecar(subnet)
+		if err != nil {
+			return err
+		}
+
+		delete(sc.Networks, models.Local.String())
+		if err = app.UpdateSidecar(&sc); err != nil {
 			return err
 		}
 	}
+	return nil
+}
 
+func removeLocalElasticSubnetInfoFromSidecars() error {
+	// Remove all local elastic subnet info from sidecar files
+	elasticSubnets, err := elasticsubnet.GetLocalElasticSubnetsFromFile(app)
+	if err != nil {
+		return err
+	}
+
+	for _, subnet := range elasticSubnets {
+		sc, err := app.LoadSidecar(subnet)
+		if err != nil {
+			return err
+		}
+
+		delete(sc.ElasticSubnet, models.Local.String())
+		if err = app.UpdateSidecar(&sc); err != nil {
+			return err
+		}
+		if err = deleteElasticSubnetConfigFile(subnet); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func deleteElasticSubnetConfigFile(subnetName string) error {
+	elasticSubetConfigPath := app.GetElasticSubnetConfigPath(subnetName)
+	if err := os.Remove(elasticSubetConfigPath); err != nil {
+		return err
+	}
 	return nil
 }
 

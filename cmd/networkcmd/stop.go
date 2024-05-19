@@ -3,14 +3,19 @@
 package networkcmd
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-network-runner/local"
 	"github.com/MetalBlockchain/metal-network-runner/server"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 func newStopCmd() *cobra.Command {
@@ -34,12 +39,55 @@ default snapshot with network start.`,
 }
 
 func StopNetwork(*cobra.Command, []string) error {
-	cli, err := binutils.NewGRPCClient()
+	if err := saveNetwork(); errors.Is(err, binutils.ErrGRPCTimeout) {
+		// no server to kill
+		return nil
+	}
+
+	relayerConfigPath := app.GetAWMRelayerConfigPath()
+	if utils.FileExists(relayerConfigPath) {
+		relayerStoredConfigPath := filepath.Join(app.GetAWMRelayerSnapshotConfsDir(), snapshotName+jsonExt)
+		if err := os.MkdirAll(filepath.Dir(relayerStoredConfigPath), constants.DefaultPerms755); err != nil {
+			return err
+		}
+		if err := os.Rename(relayerConfigPath, relayerStoredConfigPath); err != nil {
+			return fmt.Errorf("couldn't store relayer conf from %s into %s", relayerConfigPath, relayerStoredConfigPath)
+		}
+	}
+
+	extraLocalNetworkDataPath := app.GetExtraLocalNetworkDataPath()
+	if utils.FileExists(extraLocalNetworkDataPath) {
+		storedExtraLocalNetowkrDataPath := filepath.Join(app.GetExtraLocalNetworkSnapshotsDir(), snapshotName+jsonExt)
+		if err := os.MkdirAll(filepath.Dir(storedExtraLocalNetowkrDataPath), constants.DefaultPerms755); err != nil {
+			return err
+		}
+		if err := os.Rename(extraLocalNetworkDataPath, storedExtraLocalNetowkrDataPath); err != nil {
+			return fmt.Errorf("couldn't store extra local network data from %s into %s", extraLocalNetworkDataPath, storedExtraLocalNetowkrDataPath)
+		}
+	}
+
+	var err error
+	if err = binutils.KillgRPCServerProcess(app); err != nil {
+		app.Log.Warn("failed killing server process", zap.Error(err))
+		fmt.Println(err)
+	} else {
+		ux.Logger.PrintToUser("Server shutdown gracefully")
+	}
+
+	return nil
+}
+
+func saveNetwork() error {
+	cli, err := binutils.NewGRPCClient(
+		binutils.WithAvoidRPCVersionCheck(true),
+		binutils.WithDialTimeout(constants.FastGRPCDialTimeout),
+	)
 	if err != nil {
 		return err
 	}
 
-	ctx := binutils.GetAsyncContext()
+	ctx, cancel := utils.GetANRContext()
+	defer cancel()
 
 	_, err = cli.RemoveSnapshot(ctx, snapshotName)
 	if err != nil {
@@ -59,5 +107,6 @@ func StopNetwork(*cobra.Command, []string) error {
 		return fmt.Errorf("failed to stop network with a snapshot: %w", err)
 	}
 	ux.Logger.PrintToUser("Network stopped successfully.")
+
 	return nil
 }

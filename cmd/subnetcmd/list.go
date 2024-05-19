@@ -24,9 +24,11 @@ var deployed bool
 // avalanche subnet list
 func newListCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:          "list",
-		Short:        "List all created Subnet configurations",
-		Long:         `The Subnet list command prints the names of all created Subnet configurations.`,
+		Use:   "list",
+		Short: "List all created Subnet configurations",
+		Long: `The subnet list command prints the names of all created Subnet configurations. Without any flags,
+it prints some general, static information about the Subnet. With the --deployed flag, the command
+shows additional information including the VMID, BlockchainID and SubnetID.`,
 		RunE:         listSubnets,
 		SilenceUsage: true,
 	}
@@ -138,7 +140,7 @@ func getSidecars(app *application.Avalanche) ([]*models.Sidecar, error) {
 }
 
 func listDeployInfo(*cobra.Command, []string) error {
-	header := []string{"subnet", "chain", "vm ID", "Local Network", "Fuji (testnet)", "Mainnet"}
+	header := []string{"subnet", "chain", "vm ID", "Local Network", "Tahoe (testnet)", "Mainnet"}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(header)
 	table.SetAutoMergeCellsByColumnIndex([]int{0, 1, 2, 3, 4})
@@ -214,6 +216,7 @@ func listDeployInfo(*cobra.Command, []string) error {
 			rows = append(rows, []string{
 				sc.Subnet,
 				sc.Name,
+				vmID,
 				deployedLocal,
 				netToID[fujiKey][1],
 				netToID[mainKey][1],

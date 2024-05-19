@@ -52,14 +52,9 @@ func CreatePlugin(app *application.Avalanche, subnetName string, pluginDir strin
 
 		switch sc.VM {
 		case models.SubnetEvm:
-			vmSourcePath, err = binutils.SetupSubnetEVM(app, sc.VMVersion)
+			_, vmSourcePath, err = binutils.SetupSubnetEVM(app, sc.VMVersion)
 			if err != nil {
 				return "", fmt.Errorf("failed to install subnet-evm: %w", err)
-			}
-		case models.SpacesVM:
-			vmSourcePath, err = binutils.SetupSpacesVM(app, sc.VMVersion)
-			if err != nil {
-				return "", fmt.Errorf("failed to install spaces-vm: %w", err)
 			}
 		case models.CustomVM:
 			vmSourcePath = binutils.SetupCustomBin(app, subnetName)
@@ -87,14 +82,9 @@ func CreatePluginFromVersion(
 
 	switch vm {
 	case models.SubnetEvm:
-		vmSourcePath, err = binutils.SetupSubnetEVM(app, version)
+		_, vmSourcePath, err = binutils.SetupSubnetEVM(app, version)
 		if err != nil {
 			return "", fmt.Errorf("failed to install subnet-evm: %w", err)
-		}
-	case models.SpacesVM:
-		vmSourcePath, err = binutils.SetupSpacesVM(app, version)
-		if err != nil {
-			return "", fmt.Errorf("failed to install spaces-vm: %w", err)
 		}
 	case models.CustomVM:
 		vmSourcePath = binutils.SetupCustomBin(app, subnetName)

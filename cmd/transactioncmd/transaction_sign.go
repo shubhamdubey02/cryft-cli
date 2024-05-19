@@ -4,8 +4,10 @@ package transactioncmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
+	"github.com/MetalBlockchain/metal-cli/pkg/keychain"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
@@ -70,10 +72,10 @@ func signTx(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	switch network {
+	switch network.Kind {
 	case models.Tahoe, models.Local:
 		if !useLedger && keyName == "" {
-			useLedger, keyName, err = prompts.GetFujiKeyOrLedger(app.Prompt, app.GetKeyDir())
+			useLedger, keyName, err = prompts.GetFujiKeyOrLedger(app.Prompt, "sign transaction", app.GetKeyDir())
 			if err != nil {
 				return err
 			}
@@ -93,34 +95,55 @@ func signTx(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	subnetID := sc.Networks[network.String()].SubnetID
+	subnetID := sc.Networks[network.Name()].SubnetID
 	if subnetID == ids.Empty {
 		return errNoSubnetID
 	}
+	transferSubnetOwnershipTxID := sc.Networks[network.Name()].TransferSubnetOwnershipTxID
 
-	subnetAuthKeys, err := txutils.GetAuthSigners(tx, network, subnetID)
+	subnetIDFromTX, err := txutils.GetSubnetID(tx)
+	if err != nil {
+		return err
+	}
+	if subnetIDFromTX != ids.Empty {
+		subnetID = subnetIDFromTX
+	}
+
+	controlKeys, _, err := txutils.GetOwners(network, subnetID, transferSubnetOwnershipTxID)
 	if err != nil {
 		return err
 	}
 
-	remainingSubnetAuthKeys, err := txutils.GetRemainingSigners(tx, network, subnetID)
+	// get the remaining tx signers so as to check that the wallet does contain an expected signer
+	subnetAuthKeys, remainingSubnetAuthKeys, err := txutils.GetRemainingSigners(tx, controlKeys)
 	if err != nil {
 		return err
 	}
 
 	if len(remainingSubnetAuthKeys) == 0 {
 		subnetcmd.PrintReadyToSignMsg(subnetName, inputTxPath)
-		return nil
+		ux.Logger.PrintToUser("")
+		return fmt.Errorf("tx is already fully signed")
 	}
 
-	// get keychain accesor
-	kc, err := subnetcmd.GetKeychain(useLedger, ledgerAddresses, keyName, network)
+	// get keychain accessor
+	kc, err := keychain.GetKeychain(app, false, useLedger, ledgerAddresses, keyName, network, 0)
 	if err != nil {
 		return err
 	}
 
-	deployer := subnet.NewPublicDeployer(app, useLedger, kc, network)
-	if err := deployer.Sign(tx, remainingSubnetAuthKeys, subnetID); err != nil {
+	// add control keys to the keychain whenever possible
+	if err := kc.AddAddresses(controlKeys); err != nil {
+		return err
+	}
+
+	deployer := subnet.NewPublicDeployer(app, kc, network)
+	if err := deployer.Sign(
+		tx,
+		remainingSubnetAuthKeys,
+		subnetID,
+		transferSubnetOwnershipTxID,
+	); err != nil {
 		if errors.Is(err, subnet.ErrNoSubnetAuthKeysInWallet) {
 			ux.Logger.PrintToUser("There are no required subnet auth keys present in the wallet")
 			ux.Logger.PrintToUser("")
@@ -128,18 +151,24 @@ func signTx(_ *cobra.Command, args []string) error {
 			for _, addr := range remainingSubnetAuthKeys {
 				ux.Logger.PrintToUser("  %s", addr)
 			}
-			return nil
+			ux.Logger.PrintToUser("")
+			return fmt.Errorf("no remaining signer address present in wallet")
 		}
+		return err
+	}
+
+	// update the remaining tx signers after the signature has been done
+	_, remainingSubnetAuthKeys, err = txutils.GetRemainingSigners(tx, controlKeys)
+	if err != nil {
 		return err
 	}
 
 	if err := subnetcmd.SaveNotFullySignedTx(
 		"Tx",
 		tx,
-		network,
 		subnetName,
-		subnetID,
 		subnetAuthKeys,
+		remainingSubnetAuthKeys,
 		inputTxPath,
 		true,
 	); err != nil {

@@ -3,7 +3,6 @@
 package keycmd
 
 import (
-	"context"
 	"fmt"
 	"math/big"
 	"os"
@@ -11,15 +10,17 @@ import (
 	"strings"
 
 	"github.com/MetalBlockchain/coreth/ethclient"
+	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/key"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metalgo/ids"
 	ledger "github.com/MetalBlockchain/metalgo/utils/crypto/ledger"
 	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/metalgo/utils/units"
+	"github.com/MetalBlockchain/metalgo/vms/avm"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/olekukonko/tablewriter"
@@ -27,22 +28,26 @@ import (
 )
 
 const (
-	localFlag         = "local"
-	fujiFlag          = "fuji"
-	testnetFlag       = "testnet"
-	mainnetFlag       = "mainnet"
 	allFlag           = "all-networks"
+	pchainFlag        = "pchain"
 	cchainFlag        = "cchain"
+	xchainFlag        = "xchain"
+	chainsFlag        = "chains"
 	ledgerIndicesFlag = "ledger"
+	useNanoAvaxFlag   = "use-nano-avax"
 )
 
 var (
-	local         bool
-	testnet       bool
-	mainnet       bool
-	all           bool
-	cchain        bool
-	ledgerIndices []uint
+	globalNetworkFlags          networkoptions.NetworkFlags
+	listSupportedNetworkOptions = []networkoptions.NetworkOption{networkoptions.Mainnet, networkoptions.Tahoe, networkoptions.Local, networkoptions.Cluster}
+	all                         bool
+	pchain                      bool
+	cchain                      bool
+	xchain                      bool
+	chains                      string
+	useNanoAvax                 bool
+	ledgerIndices               []uint
+	subnetName                  string
 )
 
 // avalanche subnet list
@@ -55,40 +60,19 @@ keys or for the ledger addresses associated to certain indices.`,
 		RunE:         listKeys,
 		SilenceUsage: true,
 	}
-	cmd.Flags().BoolVarP(
-		&local,
-		localFlag,
-		"l",
-		false,
-		"list local network addresses",
-	)
-	cmd.Flags().BoolVarP(
-		&testnet,
-		fujiFlag,
-		"f",
-		false,
-		"list testnet (fuji) network addresses",
-	)
-	cmd.Flags().BoolVarP(
-		&testnet,
-		testnetFlag,
-		"t",
-		false,
-		"list testnet (fuji) network addresses",
-	)
-	cmd.Flags().BoolVarP(
-		&mainnet,
-		mainnetFlag,
-		"m",
-		false,
-		"list mainnet network addresses",
-	)
+	networkoptions.AddNetworkFlagsToCmd(cmd, &globalNetworkFlags, false, listSupportedNetworkOptions)
 	cmd.Flags().BoolVarP(
 		&all,
 		allFlag,
 		"a",
 		false,
 		"list all network addresses",
+	)
+	cmd.Flags().BoolVar(
+		&pchain,
+		pchainFlag,
+		true,
+		"list P-Chain addresses",
 	)
 	cmd.Flags().BoolVarP(
 		&cchain,
@@ -97,6 +81,19 @@ keys or for the ledger addresses associated to certain indices.`,
 		true,
 		"list C-Chain addresses",
 	)
+	cmd.Flags().BoolVar(
+		&xchain,
+		xchainFlag,
+		true,
+		"list X-Chain addresses",
+	)
+	cmd.Flags().BoolVarP(
+		&useNanoAvax,
+		useNanoAvaxFlag,
+		"n",
+		false,
+		"use nano Avax for balances",
+	)
 	cmd.Flags().UintSliceVarP(
 		&ledgerIndices,
 		ledgerIndicesFlag,
@@ -104,32 +101,71 @@ keys or for the ledger addresses associated to certain indices.`,
 		[]uint{},
 		"list ledger addresses for the given indices",
 	)
+	cmd.Flags().StringVar(
+		&subnetName,
+		"subnet",
+		"",
+		"provide balance information for the given subnet (Subnet-Evm based only)",
+	)
+	cmd.Flags().StringVar(
+		&chains,
+		chainsFlag,
+		"pxc",
+		"short way to specify which chains to show information about (p=show p-chain, x=show x-chain, c=show c-chain). defaults to pxc",
+	)
 	return cmd
 }
 
-func getClients(networks []models.Network, cchain bool) (
+func getClients(networks []models.Network, pchain bool, cchain bool, xchain bool, subnetName string) (
 	map[models.Network]platformvm.Client,
+	map[models.Network]avm.Client,
+	map[models.Network]ethclient.Client,
 	map[models.Network]ethclient.Client,
 	error,
 ) {
-	apiEndpoints := map[models.Network]string{
-		models.Tahoe:   constants.FujiAPIEndpoint,
-		models.Mainnet: constants.MainnetAPIEndpoint,
-		models.Local:   constants.LocalAPIEndpoint,
-	}
 	var err error
+	xClients := map[models.Network]avm.Client{}
 	pClients := map[models.Network]platformvm.Client{}
 	cClients := map[models.Network]ethclient.Client{}
+	evmClients := map[models.Network]ethclient.Client{}
 	for _, network := range networks {
-		pClients[network] = platformvm.NewClient(apiEndpoints[network])
+		if pchain {
+			pClients[network] = platformvm.NewClient(network.Endpoint)
+		}
+		if xchain {
+			xClients[network] = avm.NewClient(network.Endpoint, "X")
+		}
 		if cchain {
-			cClients[network], err = ethclient.Dial(fmt.Sprintf("%s/ext/bc/%s/rpc", apiEndpoints[network], "C"))
+			cClients[network], err = ethclient.Dial(network.CChainEndpoint())
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, nil, err
+			}
+		}
+		if subnetName != "" {
+			_, err = subnetcmd.ValidateSubnetNameAndGetChains([]string{subnetName})
+			if err != nil {
+				return nil, nil, nil, nil, err
+			}
+			b, err := subnetcmd.HasSubnetEVMGenesis(subnetName)
+			if err != nil {
+				return nil, nil, nil, nil, err
+			}
+			if b {
+				sc, err := app.LoadSidecar(subnetName)
+				if err != nil {
+					return nil, nil, nil, nil, err
+				}
+				chainID := sc.Networks[network.Name()].BlockchainID
+				if chainID != ids.Empty {
+					evmClients[network], err = ethclient.Dial(network.BlockchainEndpoint(chainID.String()))
+					if err != nil {
+						return nil, nil, nil, nil, err
+					}
+				}
 			}
 		}
 	}
-	return pClients, cClients, nil
+	return pClients, xClients, cClients, evmClients, nil
 }
 
 type addressInfo struct {
@@ -144,32 +180,51 @@ type addressInfo struct {
 func listKeys(*cobra.Command, []string) error {
 	var addrInfos []addressInfo
 	networks := []models.Network{}
-	if local || all {
-		networks = append(networks, models.Local)
+	if globalNetworkFlags.UseLocal || all {
+		networks = append(networks, models.NewLocalNetwork())
 	}
-	if testnet || all {
-		networks = append(networks, models.Tahoe)
+	if globalNetworkFlags.UseTahoe || all {
+		networks = append(networks, models.NewTahoeNetwork())
 	}
-	if mainnet || all {
-		networks = append(networks, models.Mainnet)
+	if globalNetworkFlags.UseMainnet || all {
+		networks = append(networks, models.NewMainnetNetwork())
+	}
+	if globalNetworkFlags.ClusterName != "" {
+		network, err := app.GetClusterNetwork(globalNetworkFlags.ClusterName)
+		if err != nil {
+			return err
+		}
+		networks = append(networks, network)
 	}
 	if len(networks) == 0 {
-		// no flag was set, prompt user
-		networkStr, err := app.Prompt.CaptureList(
-			"Choose network for which to list addresses",
-			[]string{models.Mainnet.String(), models.Tahoe.String(), models.Local.String()},
+		network, err := networkoptions.GetNetworkFromCmdLineFlags(
+			app,
+			networkoptions.NetworkFlags{},
+			false,
+			listSupportedNetworkOptions,
+			subnetName,
 		)
 		if err != nil {
 			return err
 		}
-		network := models.NetworkFromString(networkStr)
 		networks = append(networks, network)
+	}
+	if !strings.Contains(chains, "p") {
+		pchain = false
+	}
+	if !strings.Contains(chains, "x") {
+		xchain = false
+	}
+	if !strings.Contains(chains, "c") {
+		cchain = false
 	}
 	queryLedger := len(ledgerIndices) > 0
 	if queryLedger {
+		pchain = true
 		cchain = false
+		xchain = false
 	}
-	pClients, cClients, err := getClients(networks, cchain)
+	pClients, xClients, cClients, evmClients, err := getClients(networks, pchain, cchain, xchain, subnetName)
 	if err != nil {
 		return err
 	}
@@ -183,7 +238,7 @@ func listKeys(*cobra.Command, []string) error {
 			return err
 		}
 	} else {
-		addrInfos, err = getStoredKeysInfo(pClients, cClients, networks, cchain)
+		addrInfos, err = getStoredKeysInfo(pClients, xClients, cClients, evmClients, networks)
 		if err != nil {
 			return err
 		}
@@ -194,23 +249,24 @@ func listKeys(*cobra.Command, []string) error {
 
 func getStoredKeysInfo(
 	pClients map[models.Network]platformvm.Client,
+	xClients map[models.Network]avm.Client,
 	cClients map[models.Network]ethclient.Client,
+	evmClients map[models.Network]ethclient.Client,
 	networks []models.Network,
-	cchain bool,
 ) ([]addressInfo, error) {
 	files, err := os.ReadDir(app.GetKeyDir())
 	if err != nil {
 		return nil, err
 	}
-	keyPaths := make([]string, len(files))
-	for i, f := range files {
+	keyPaths := []string{}
+	for _, f := range files {
 		if strings.HasSuffix(f.Name(), constants.KeySuffix) {
-			keyPaths[i] = filepath.Join(app.GetKeyDir(), f.Name())
+			keyPaths = append(keyPaths, filepath.Join(app.GetKeyDir(), f.Name()))
 		}
 	}
 	addrInfos := []addressInfo{}
 	for _, keyPath := range keyPaths {
-		keyAddrInfos, err := getStoredKeyInfo(pClients, cClients, networks, keyPath, cchain)
+		keyAddrInfos, err := getStoredKeyInfo(pClients, xClients, cClients, evmClients, networks, keyPath)
 		if err != nil {
 			return nil, err
 		}
@@ -221,37 +277,54 @@ func getStoredKeysInfo(
 
 func getStoredKeyInfo(
 	pClients map[models.Network]platformvm.Client,
+	xClients map[models.Network]avm.Client,
 	cClients map[models.Network]ethclient.Client,
+	evmClients map[models.Network]ethclient.Client,
 	networks []models.Network,
 	keyPath string,
-	cchain bool,
 ) ([]addressInfo, error) {
 	addrInfos := []addressInfo{}
 	for _, network := range networks {
-		networkID, err := network.NetworkID()
-		if err != nil {
-			return nil, err
-		}
 		keyName := strings.TrimSuffix(filepath.Base(keyPath), constants.KeySuffix)
-		sk, err := key.LoadSoft(networkID, keyPath)
+		sk, err := key.LoadSoft(network.ID, keyPath)
 		if err != nil {
 			return nil, err
 		}
-		if cchain {
-			cChainAddr := sk.C()
-			addrInfo, err := getCChainAddrInfo(cClients, network, cChainAddr, "stored", keyName)
+		if _, ok := evmClients[network]; ok {
+			evmAddr := sk.C()
+			addrInfo, err := getEvmBasedChainAddrInfo(subnetName, evmClients, network, evmAddr, "stored", keyName)
 			if err != nil {
 				return nil, err
 			}
 			addrInfos = append(addrInfos, addrInfo)
 		}
-		pChainAddrs := sk.P()
-		for _, pChainAddr := range pChainAddrs {
-			addrInfo, err := getPChainAddrInfo(pClients, network, pChainAddr, "stored", keyName)
+		if _, ok := cClients[network]; ok {
+			cChainAddr := sk.C()
+			addrInfo, err := getEvmBasedChainAddrInfo("C-Chain", cClients, network, cChainAddr, "stored", keyName)
 			if err != nil {
 				return nil, err
 			}
 			addrInfos = append(addrInfos, addrInfo)
+		}
+		if _, ok := pClients[network]; ok {
+			pChainAddrs := sk.P()
+			for _, pChainAddr := range pChainAddrs {
+				addrInfo, err := getPChainAddrInfo(pClients, network, pChainAddr, "stored", keyName)
+				if err != nil {
+					return nil, err
+				}
+				addrInfos = append(addrInfos, addrInfo)
+			}
+		}
+		if _, ok := xClients[network]; ok {
+			xChainAddrs := sk.X()
+			for _, xChainAddr := range xChainAddrs {
+				addrInfo, err := getXChainAddrInfo(xClients, network, xChainAddr, "stored", keyName)
+				if err != nil {
+					return nil, err
+				}
+				addrInfos = append(addrInfos, addrInfo)
+			}
 		}
 	}
 	return addrInfos, nil
@@ -264,12 +337,10 @@ func getLedgerIndicesInfo(
 ) ([]addressInfo, error) {
 	ledgerDevice, err := ledger.New()
 	if err != nil {
-		ux.Logger.PrintToUser(logging.LightRed.Wrap("Error accessing ledger device. Please update ledger app to >= v0.6.5."))
 		return nil, err
 	}
 	addresses, err := ledgerDevice.Addresses(ledgerIndices)
 	if err != nil {
-		ux.Logger.PrintToUser(logging.LightRed.Wrap("Error accessing ledger device. Please update ledger app to >= v0.6.5."))
 		return nil, err
 	}
 	if len(addresses) != len(ledgerIndices) {
@@ -295,11 +366,7 @@ func getLedgerIndexInfo(
 ) ([]addressInfo, error) {
 	addrInfos := []addressInfo{}
 	for _, network := range networks {
-		networkID, err := network.NetworkID()
-		if err != nil {
-			return nil, err
-		}
-		pChainAddr, err := address.Format("P", key.GetHRP(networkID), addr[:])
+		pChainAddr, err := address.Format("P", key.GetHRP(network.ID), addr[:])
 		if err != nil {
 			return nil, err
 		}
@@ -325,10 +392,10 @@ func getPChainAddrInfo(
 	kind string,
 	name string,
 ) (addressInfo, error) {
-	balance, err := getPChainBalanceStr(context.Background(), pClients[network], pChainAddr)
+	balance, err := getPChainBalanceStr(pClients[network], pChainAddr)
 	if err != nil {
 		// just ignore local network errors
-		if network != models.Local {
+		if network.Kind != models.Local {
 			return addressInfo{}, err
 		}
 	}
@@ -338,31 +405,56 @@ func getPChainAddrInfo(
 		chain:   "P-Chain (Bech32 format)",
 		address: pChainAddr,
 		balance: balance,
-		network: network.String(),
+		network: network.Name(),
 	}, nil
 }
 
-func getCChainAddrInfo(
-	cClients map[models.Network]ethclient.Client,
+func getXChainAddrInfo(
+	xClients map[models.Network]avm.Client,
 	network models.Network,
-	cChainAddr string,
+	xChainAddr string,
 	kind string,
 	name string,
 ) (addressInfo, error) {
-	cChainBalance, err := getCChainBalanceStr(context.Background(), cClients[network], cChainAddr)
+	balance, err := getXChainBalanceStr(xClients[network], xChainAddr)
 	if err != nil {
 		// just ignore local network errors
-		if network != models.Local {
+		if network.Kind != models.Local {
 			return addressInfo{}, err
 		}
 	}
 	return addressInfo{
 		kind:    kind,
 		name:    name,
-		chain:   "C-Chain (Ethereum hex format)",
+		chain:   "X-Chain (Bech32 format)",
+		address: xChainAddr,
+		balance: balance,
+		network: network.Name(),
+	}, nil
+}
+
+func getEvmBasedChainAddrInfo(
+	chainName string,
+	cClients map[models.Network]ethclient.Client,
+	network models.Network,
+	cChainAddr string,
+	kind string,
+	name string,
+) (addressInfo, error) {
+	cChainBalance, err := getCChainBalanceStr(cClients[network], cChainAddr)
+	if err != nil {
+		// just ignore local network errors
+		if network.Kind != models.Local {
+			return addressInfo{}, err
+		}
+	}
+	return addressInfo{
+		kind:    kind,
+		name:    name,
+		chain:   fmt.Sprintf("%s (Ethereum hex format)", chainName),
 		address: cChainAddr,
 		balance: cChainBalance,
-		network: network.String(),
+		network: network.Name(),
 	}, nil
 }
 
@@ -385,9 +477,9 @@ func printAddrInfos(addrInfos []addressInfo) {
 	table.Render()
 }
 
-func getCChainBalanceStr(ctx context.Context, cClient ethclient.Client, addrStr string) (string, error) {
+func getCChainBalanceStr(cClient ethclient.Client, addrStr string) (string, error) {
 	addr := common.HexToAddress(addrStr)
-	ctx, cancel := context.WithTimeout(ctx, constants.RequestTimeout)
+	ctx, cancel := utils.GetAPIContext()
 	balance, err := cClient.BalanceAt(ctx, addr, nil)
 	cancel()
 	if err != nil {
@@ -398,15 +490,21 @@ func getCChainBalanceStr(ctx context.Context, cClient ethclient.Client, addrStr 
 	if balance.Cmp(big.NewInt(0)) == 0 {
 		return "0", nil
 	}
-	return fmt.Sprintf("%.9f", float64(balance.Uint64())/float64(units.Avax)), nil
+	balanceStr := ""
+	if useNanoAvax {
+		balanceStr = fmt.Sprintf("%9d", balance.Uint64())
+	} else {
+		balanceStr = fmt.Sprintf("%.9f", float64(balance.Uint64())/float64(units.Avax))
+	}
+	return balanceStr, nil
 }
 
-func getPChainBalanceStr(ctx context.Context, pClient platformvm.Client, addr string) (string, error) {
+func getPChainBalanceStr(pClient platformvm.Client, addr string) (string, error) {
 	pID, err := address.ParseToID(addr)
 	if err != nil {
 		return "", err
 	}
-	ctx, cancel := context.WithTimeout(ctx, constants.RequestTimeout)
+	ctx, cancel := utils.GetAPIContext()
 	resp, err := pClient.GetBalance(ctx, []ids.ShortID{pID})
 	cancel()
 	if err != nil {
@@ -415,5 +513,38 @@ func getPChainBalanceStr(ctx context.Context, pClient platformvm.Client, addr st
 	if resp.Balance == 0 {
 		return "0", nil
 	}
-	return fmt.Sprintf("%.9f", float64(resp.Balance)/float64(units.Avax)), nil
+	balanceStr := ""
+	if useNanoAvax {
+		balanceStr = fmt.Sprintf("%9d", resp.Balance)
+	} else {
+		balanceStr = fmt.Sprintf("%.9f", float64(resp.Balance)/float64(units.Avax))
+	}
+	return balanceStr, nil
+}
+
+func getXChainBalanceStr(xClient avm.Client, addr string) (string, error) {
+	xID, err := address.ParseToID(addr)
+	if err != nil {
+		return "", err
+	}
+	ctx, cancel := utils.GetAPIContext()
+	asset, err := xClient.GetAssetDescription(ctx, "AVAX")
+	if err != nil {
+		return "", err
+	}
+	resp, err := xClient.GetBalance(ctx, xID, asset.AssetID.String(), false)
+	cancel()
+	if err != nil {
+		return "", err
+	}
+	if resp.Balance == 0 {
+		return "0", nil
+	}
+	balanceStr := ""
+	if useNanoAvax {
+		balanceStr = fmt.Sprintf("%9d", resp.Balance)
+	} else {
+		balanceStr = fmt.Sprintf("%.9f", float64(resp.Balance)/float64(units.Avax))
+	}
+	return balanceStr, nil
 }

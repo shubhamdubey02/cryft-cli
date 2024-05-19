@@ -74,8 +74,6 @@ func (*versionMapper) GetCompatURL(vmType models.VMType) string {
 	switch vmType {
 	case models.SubnetEvm:
 		return constants.SubnetEVMRPCCompatibilityURL
-	case models.SpacesVM:
-		return constants.SpacesVMRPCCompatibilityURL
 	case models.CustomVM:
 		// TODO: unclear yet what we should return here
 		return ""
@@ -235,22 +233,6 @@ func GetVersionMapping(mapper VersionMapper) (map[string]string, error) {
 		}
 	}
 
-	// finally let's do the SpacesVM
-	// this is simpler, we just need the latest and its compatible metalgo
-	spacesVMversions, spacesVMmapping, err := getVersions(mapper, models.SpacesVM)
-	if err != nil {
-		return nil, err
-	}
-	// the assumption is that the latest SpacesVM ALWAYS has a compatible metalgo already
-	latest := spacesVMversions[0]
-	rpc := spacesVMmapping[latest]
-	avago, err := mapper.GetLatestAvagoByProtoVersion(mapper.GetApp(), rpc, mapper.GetAvagoURL())
-	if err != nil {
-		return nil, err
-	}
-	binaryToVersion[Spaces2AvagoKey] = latest
-	binaryToVersion[Avago2SpacesKey] = avago
-
 	mapper.GetApp().Log.Debug("mapping:",
 		zap.String("SoloSubnetEVM1", binaryToVersion[SoloSubnetEVMKey1]),
 		zap.String("SoloSubnetEVM2", binaryToVersion[SoloSubnetEVMKey2]),
@@ -260,8 +242,6 @@ func GetVersionMapping(mapper VersionMapper) (map[string]string, error) {
 		zap.String("MultiAvagoSubnetEVM", binaryToVersion[MultiAvagoSubnetEVMKey]),
 		zap.String("LatestEVM2Avago", binaryToVersion[LatestEVM2AvagoKey]),
 		zap.String("LatestAvago2EVM", binaryToVersion[LatestAvago2EVMKey]),
-		zap.String("Spaces2Avago", binaryToVersion[Spaces2AvagoKey]),
-		zap.String("Avago2Spaces", binaryToVersion[Avago2SpacesKey]),
 	)
 
 	return binaryToVersion, nil

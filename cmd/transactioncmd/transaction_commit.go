@@ -3,7 +3,10 @@
 package transactioncmd
 
 import (
+	"fmt"
+
 	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
+	"github.com/MetalBlockchain/metal-cli/pkg/keychain"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
@@ -50,17 +53,17 @@ func commitTx(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	subnetID := sc.Networks[network.String()].SubnetID
+	subnetID := sc.Networks[network.Name()].SubnetID
 	if subnetID == ids.Empty {
 		return errNoSubnetID
 	}
+	transferSubnetOwnershipTxID := sc.Networks[network.Name()].TransferSubnetOwnershipTxID
 
-	subnetAuthKeys, err := txutils.GetAuthSigners(tx, network, subnetID)
+	controlKeys, _, err := txutils.GetOwners(network, subnetID, transferSubnetOwnershipTxID)
 	if err != nil {
 		return err
 	}
-
-	remainingSubnetAuthKeys, err := txutils.GetRemainingSigners(tx, network, subnetID)
+	subnetAuthKeys, remainingSubnetAuthKeys, err := txutils.GetRemainingSigners(tx, controlKeys)
 	if err != nil {
 		return err
 	}
@@ -69,7 +72,7 @@ func commitTx(_ *cobra.Command, args []string) error {
 		signedCount := len(subnetAuthKeys) - len(remainingSubnetAuthKeys)
 		ux.Logger.PrintToUser("%d of %d required signatures have been signed.", signedCount, len(subnetAuthKeys))
 		subnetcmd.PrintRemainingToSignMsg(subnetName, remainingSubnetAuthKeys, inputTxPath)
-		return nil
+		return fmt.Errorf("tx is not fully signed")
 	}
 
 	// get kc with some random address, to pass wallet creation checks
@@ -79,17 +82,24 @@ func commitTx(_ *cobra.Command, args []string) error {
 		return err
 	}
 
-	deployer := subnet.NewPublicDeployer(app, false, kc, network)
-	txID, err := deployer.Commit(tx)
+	deployer := subnet.NewPublicDeployer(app, keychain.NewKeychain(network, kc, nil, nil), network)
+	txID, err := deployer.Commit(tx, false)
 	if err != nil {
 		return err
 	}
 
 	if txutils.IsCreateChainTx(tx) {
-		if err := subnetcmd.PrintDeployResults(subnetName, subnetID, txID, true); err != nil {
+		// TODO: teleporter for multisig
+		if err := subnetcmd.PrintDeployResults(subnetName, subnetID, txID); err != nil {
 			return err
 		}
-		return app.UpdateSidecarNetworks(&sc, network, subnetID, txID)
+		return app.UpdateSidecarNetworks(&sc, network, subnetID, transferSubnetOwnershipTxID, txID, "", "")
+	}
+	if txutils.IsTransferSubnetOwnershipTx(tx) {
+		networkData := sc.Networks[network.Name()]
+		networkData.TransferSubnetOwnershipTxID = txID
+		sc.Networks[network.Name()] = networkData
+		return app.UpdateSidecar(&sc)
 	}
 	ux.Logger.PrintToUser("Transaction successful, transaction ID: %s", txID)
 

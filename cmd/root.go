@@ -3,36 +3,46 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
+	"time"
+
+	"github.com/MetalBlockchain/metal-cli/cmd/primarycmd"
+
+	"github.com/MetalBlockchain/metal-cli/cmd/nodecmd"
+
+	"github.com/MetalBlockchain/metal-cli/cmd/configcmd"
 
 	"github.com/MetalBlockchain/metal-cli/cmd/backendcmd"
 	"github.com/MetalBlockchain/metal-cli/cmd/keycmd"
 	"github.com/MetalBlockchain/metal-cli/cmd/networkcmd"
 	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
 	"github.com/MetalBlockchain/metal-cli/cmd/transactioncmd"
+	"github.com/MetalBlockchain/metal-cli/cmd/updatecmd"
 	"github.com/MetalBlockchain/metal-cli/internal/migrations"
-	"github.com/MetalBlockchain/metal-cli/pkg/apmintegration"
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/MetalBlockchain/metal-cli/pkg/config"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/metrics"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/metalgo/utils/perms"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
 var (
-	app *application.Avalanche
-
-	logLevel string
-	Version  = ""
-	cfgFile  string
+	app       *application.Avalanche
+	logLevel  string
+	Version   = ""
+	cfgFile   string
+	skipCheck bool
 )
 
 func NewRootCmd() *cobra.Command {
@@ -47,16 +57,19 @@ To get started, look at the documentation for the subcommands or jump right
 in with metal subnet create myNewSubnet.`,
 		PersistentPreRunE: createApp,
 		Version:           Version,
+		PersistentPostRun: handleTracking,
 	}
 
 	// Disable printing the completion command
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.metal-cli.json)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.avalanche-cli/config.json)")
 	rootCmd.PersistentFlags().StringVar(&logLevel, "log-level", "ERROR", "log level for the application")
+	rootCmd.PersistentFlags().BoolVar(&skipCheck, constants.SkipUpdateFlag, false, "skip check for new versions")
 
 	// add sub commands
 	rootCmd.AddCommand(subnetcmd.NewCmd(app))
+	rootCmd.AddCommand(primarycmd.NewCmd(app))
 	rootCmd.AddCommand(networkcmd.NewCmd(app))
 	rootCmd.AddCommand(keycmd.NewCmd(app))
 
@@ -65,6 +78,16 @@ in with metal subnet create myNewSubnet.`,
 
 	// add transaction command
 	rootCmd.AddCommand(transactioncmd.NewCmd(app))
+
+	// add config command
+	rootCmd.AddCommand(configcmd.NewCmd(app))
+
+	// add update command
+	rootCmd.AddCommand(updatecmd.NewCmd(app, Version))
+
+	// add node command
+	rootCmd.AddCommand(nodecmd.NewCmd(app))
+
 	return rootCmd
 }
 
@@ -80,26 +103,93 @@ func createApp(cmd *cobra.Command, _ []string) error {
 	cf := config.New()
 	app.Setup(baseDir, log, cf, prompts.NewPrompter(), application.NewDownloader())
 
-	// Setup APM, skip if running a hidden command
-	if !cmd.Hidden {
-		usr, err := user.Current()
-		if err != nil {
-			app.Log.Error("unable to get system user")
-			return err
-		}
-		apmBaseDir := filepath.Join(usr.HomeDir, constants.APMDir)
-		if err = apmintegration.SetupApm(app, apmBaseDir); err != nil {
-			return err
-		}
-	}
-
 	initConfig()
 
 	if err := migrations.RunMigrations(app); err != nil {
 		return err
 	}
+	if utils.IsE2E() && !app.Conf.ConfigFileExists() && !utils.FileExists(utils.UserHomePath(constants.OldMetricsConfigFileName)) && metrics.CheckCommandIsNotCompletion(cmd) {
+		err = metrics.HandleUserMetricsPreference(app)
+		if err != nil {
+			return err
+		}
+	}
+	if err := checkForUpdates(cmd, app); err != nil {
+		return err
+	}
 
 	return nil
+}
+
+// checkForUpdates evaluates first if the user is maybe wanting to skip the update check
+// if there's no skip, it runs the update check
+func checkForUpdates(cmd *cobra.Command, app *application.Avalanche) error {
+	var (
+		lastActs *application.LastActions
+		err      error
+	)
+	// we store a timestamp of the last skip check in a file
+	lastActs, err = app.ReadLastActionsFile()
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			// if the file does not exist AND the user is requesting to skipCheck,
+			// we write the new file
+			if skipCheck {
+				lastActs := &application.LastActions{
+					LastSkipCheck: time.Now(),
+				}
+				app.WriteLastActionsFile(lastActs)
+				return nil
+			}
+		}
+		app.Log.Warn("failed to read last-actions file! This is non-critical but is logged", zap.Error(err))
+		lastActs = &application.LastActions{}
+	}
+
+	// if the user had requested to skipCheck less than 24 hrs ago, we skip in any case
+	if lastActs.LastSkipCheck != (time.Time{}) &&
+		time.Now().Before(lastActs.LastSkipCheck.Add(24*time.Hour)) {
+		app.Log.Debug("last checked %s, so less than 24 hrs earlier. Skipping to check for updates.",
+			zap.Time("lastSkipCheck", lastActs.LastSkipCheck))
+		return nil
+	}
+
+	// more than 24hrs ago or the user never asked to skip before
+	// we update the timestamp and write the file again
+	if skipCheck {
+		if lastActs == nil {
+			lastActs = &application.LastActions{}
+		}
+		lastActs.LastSkipCheck = time.Now()
+		app.WriteLastActionsFile(lastActs)
+		return nil
+	}
+
+	// at this point we want to run the check
+	isUserCalled := false
+	commandList := strings.Fields(cmd.CommandPath())
+	if !(len(commandList) > 1 && commandList[1] == "update") {
+		if lastActs.LastCheckGit != (time.Time{}) && time.Now().Before(lastActs.LastCheckGit.Add(24*time.Hour)) {
+			if err := updatecmd.Update(cmd, isUserCalled, Version, lastActs); err != nil {
+				if errors.Is(err, updatecmd.ErrUserAbortedInstallation) {
+					return nil
+				}
+				if err == updatecmd.ErrNoVersion {
+					ux.Logger.PrintToUser(
+						"Attempted to check if a new version is available, but couldn't find the currently running version information")
+					ux.Logger.PrintToUser(
+						"Make sure to follow official instructions, or automatic updates won't be available for you")
+					return nil
+				}
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func handleTracking(cmd *cobra.Command, _ []string) {
+	metrics.HandleTracking(cmd, app, nil)
 }
 
 func setupEnv() (string, error) {
@@ -197,25 +287,14 @@ func setupLogging(baseDir string) (logging.Logger, error) {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Search for default config.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-		viper.AddConfigPath(home)
-		viper.SetConfigType(constants.DefaultConfigFileType)
-		viper.SetConfigName(constants.DefaultConfigFileName)
+	oldMetricsConfig := utils.UserHomePath(constants.OldMetricsConfigFileName)
+	if cfgFile == "" {
+		cfgFile = utils.UserHomePath(constants.DefaultConfigFileName)
 	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		app.Log.Info("Using config file", zap.String("config-file", viper.ConfigFileUsed()))
-	} else {
-		app.Log.Info("No log file found")
+	app.Conf.SetConfig(app.Log, cfgFile)
+	// check if metrics setting is available, and if not load metricConfig
+	if !app.Conf.ConfigValueIsSet(constants.ConfigMetricsEnabledKey) {
+		app.Conf.MergeConfig(app.Log, oldMetricsConfig)
 	}
 }
 

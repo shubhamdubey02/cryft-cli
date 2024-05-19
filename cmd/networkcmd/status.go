@@ -4,6 +4,8 @@ package networkcmd
 
 import (
 	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
+	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-network-runner/server"
 	"github.com/spf13/cobra"
@@ -25,12 +27,15 @@ network is running and some basic stats about the network.`,
 func networkStatus(*cobra.Command, []string) error {
 	ux.Logger.PrintToUser("Requesting network status...")
 
-	cli, err := binutils.NewGRPCClient()
+	cli, err := binutils.NewGRPCClient(
+		binutils.WithDialTimeout(constants.FastGRPCDialTimeout),
+	)
 	if err != nil {
 		return err
 	}
 
-	ctx := binutils.GetAsyncContext()
+	ctx, cancel := utils.GetAPIContext()
+	defer cancel()
 	status, err := cli.Status(ctx)
 	if err != nil {
 		if server.IsServerError(err, server.ErrNotBootstrapped) {
@@ -50,7 +55,7 @@ func networkStatus(*cobra.Command, []string) error {
 		ux.Logger.PrintToUser("Number of custom VMs: %d", len(status.ClusterInfo.CustomChains))
 		ux.Logger.PrintToUser("======================================== Node information ========================================")
 		for n, nodeInfo := range status.ClusterInfo.NodeInfos {
-			ux.Logger.PrintToUser("%s has ID %s and endpoint %s: ", n, nodeInfo.Id, nodeInfo.Uri)
+			ux.Logger.PrintToUser("%s has ID %s and endpoint %s ", n, nodeInfo.Id, nodeInfo.Uri)
 		}
 		ux.Logger.PrintToUser("==================================== Custom VM information =======================================")
 		for _, nodeInfo := range status.ClusterInfo.NodeInfos {

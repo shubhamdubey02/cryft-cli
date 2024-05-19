@@ -81,7 +81,7 @@ func UpgradeVMPublic(subnetName string, targetVersion string, pluginDir string) 
 		UpgradeCmd,
 		"vm",
 		subnetName,
-		"--fuji",
+		"--tahoe",
 		"--version",
 		targetVersion,
 		"--plugin-dir",

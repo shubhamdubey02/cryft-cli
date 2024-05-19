@@ -13,6 +13,7 @@ import (
 
 	"github.com/MetalBlockchain/metal-cli/internal/mocks"
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
+	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/config"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
@@ -59,7 +60,10 @@ var (
 					ChainId: testBlockChainID2,
 				},
 			},
-			Subnets: []string{testSubnetID1, testSubnetID2},
+			Subnets: map[string]*rpcpb.SubnetInfo{
+				testSubnetID1: {},
+				testSubnetID2: {},
+			},
 		},
 	}
 )
@@ -89,15 +93,15 @@ func TestDeployToLocal(t *testing.T) {
 	app := &application.Avalanche{}
 	app.Setup(testDir, logging.NoLog{}, config.New(), prompts.NewPrompter(), application.NewDownloader())
 
-	binDir := filepath.Join(app.GetAvalanchegoBinDir(), "metalgo-"+avagoVersion)
+	binDir := filepath.Join(app.GetAvalanchegoBinDir(), "avalanchego-"+avagoVersion)
 
 	// create a dummy plugins dir, deploy will check it exists
 	binChecker := &mocks.BinaryChecker{}
 	err = os.MkdirAll(filepath.Join(binDir, "plugins"), perms.ReadWriteExecute)
 	require.NoError(err)
 
-	// create a dummy metalgo file, deploy will check it exists
-	f, err := os.Create(filepath.Join(binDir, "metalgo"))
+	// create a dummy avalanchego file, deploy will check it exists
+	f, err := os.Create(filepath.Join(binDir, "avalanchego"))
 	require.NoError(err)
 	defer func() {
 		_ = f.Close()
@@ -136,17 +140,17 @@ func TestDeployToLocal(t *testing.T) {
 	err = os.WriteFile(testSidecar.Name(), []byte(sidecar), constants.DefaultPerms755)
 	require.NoError(err)
 	// test actual deploy
-	s, b, err := testDeployer.DeployToLocalNetwork(testChainName, []byte(genesis), testGenesis.Name())
+	deployInfo, err := testDeployer.DeployToLocalNetwork(testChainName, []byte(genesis), testGenesis.Name(), true, "")
 	require.NoError(err)
-	require.Equal(testSubnetID2, s.String())
-	require.Equal(testBlockChainID2, b.String())
+	require.Equal(testSubnetID2, deployInfo.SubnetID.String())
+	require.Equal(testBlockChainID2, deployInfo.BlockchainID.String())
 }
 
 func TestGetLatestAvagoVersion(t *testing.T) {
 	require := setupTest(t)
 
 	testVersion := "v1.99.9999"
-	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	testHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		resp := fmt.Sprintf(`{"some":"unimportant","fake":"data","tag_name":"%s","tag_name_was":"what we are interested in"}`, testVersion)
 		_, err := w.Write([]byte(resp))
 		require.NoError(err)
@@ -160,7 +164,7 @@ func TestGetLatestAvagoVersion(t *testing.T) {
 	require.Equal(v, testVersion)
 }
 
-func getTestClientFunc() (client.Client, error) {
+func getTestClientFunc(...binutils.GRPCClientOpOption) (client.Client, error) {
 	c := &mocks.Client{}
 	fakeLoadSnapshotResponse := &rpcpb.LoadSnapshotResponse{}
 	fakeSaveSnapshotResponse := &rpcpb.SaveSnapshotResponse{}
@@ -187,6 +191,6 @@ func getTestClientFunc() (client.Client, error) {
 	return c, nil
 }
 
-func fakeSetDefaultSnapshot(string, bool) error {
-	return nil
+func fakeSetDefaultSnapshot(string, bool, string, bool) (bool, error) {
+	return false, nil
 }

@@ -35,7 +35,17 @@ func TestExportImportSubnet(t *testing.T) {
 
 	app.Setup(testDir, logging.NoLog{}, nil, prompts.NewPrompter(), &mockAppDownloader)
 	ux.NewUserLog(logging.NoLog{}, io.Discard)
-	genBytes, sc, err := vm.CreateEvmSubnetConfig(app, testSubnet, "../../"+utils.SubnetEvmGenesisPath, vmVersion)
+	genBytes, sc, err := vm.CreateEvmSubnetConfig(
+		app,
+		testSubnet,
+		"../../"+utils.SubnetEvmGenesisPath,
+		vmVersion,
+		false,
+		0,
+		"",
+		false,
+		false,
+	)
 	require.NoError(err)
 	err = app.WriteGenesisFile(testSubnet, genBytes)
 	require.NoError(err)
@@ -50,7 +60,7 @@ func TestExportImportSubnet(t *testing.T) {
 		exportOutput = ""
 		app = nil
 	}()
-
+	globalNetworkFlags.UseLocal = true
 	err = exportSubnet(nil, []string{"this-does-not-exist-should-fail"})
 	require.Error(err)
 
@@ -68,7 +78,8 @@ func TestExportImportSubnet(t *testing.T) {
 	require.Equal(control["VM"], "Subnet-EVM")
 	require.Equal(control["VMVersion"], vmVersion)
 	require.Equal(control["Subnet"], testSubnet)
-	require.Equal(control["TokenName"], "TEST")
+	require.Equal(control["TokenName"], "Test Token")
+	require.Equal(control["TokenSymbol"], "TEST")
 	require.Equal(control["Version"], constants.SidecarVersion)
 	require.Equal(control["Networks"], nil)
 

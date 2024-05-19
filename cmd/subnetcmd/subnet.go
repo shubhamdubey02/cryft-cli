@@ -24,7 +24,7 @@ To get started, use the subnet create command wizard to walk through the
 configuration of your very first Subnet. Then, go ahead and deploy it
 with the subnet deploy command. You can use the rest of the commands to
 manage your Subnet configurations and live deployments.`,
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, _ []string) {
 			err := cmd.Help()
 			if err != nil {
 				fmt.Println(err)
@@ -58,7 +58,17 @@ manage your Subnet configurations and live deployments.`,
 	cmd.AddCommand(newStatsCmd())
 	// subnet configure
 	cmd.AddCommand(newConfigureCmd())
-	// subnet import-running
-	cmd.AddCommand(newImportFromNetworkCmd())
+	// subnet VMID
+	cmd.AddCommand(vmidCmd())
+	// subnet removeValidator
+	cmd.AddCommand(newRemoveValidatorCmd())
+	// subnet elastic
+	cmd.AddCommand(newElasticCmd())
+	// subnet validators
+	cmd.AddCommand(newValidatorsCmd())
+	// subnet addPermissionlessDelegator
+	cmd.AddCommand(newAddPermissionlessDelegatorCmd())
+	// subnet changeOwner
+	cmd.AddCommand(newChangeOwnerCmd())
 	return cmd
 }

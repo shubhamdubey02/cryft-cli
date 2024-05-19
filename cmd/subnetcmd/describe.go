@@ -3,18 +3,33 @@
 package subnetcmd
 
 import (
+	"encoding/hex"
 	"fmt"
+	"math"
 	"math/big"
 	"os"
 	"strconv"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/MetalBlockchain/metal-cli/pkg/key"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
+	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metal-network-runner/utils"
+	"github.com/MetalBlockchain/metal-cli/pkg/vm"
+	anr_utils "github.com/MetalBlockchain/metal-network-runner/utils"
 	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/subnet-evm/core"
 	"github.com/MetalBlockchain/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/deployerallowlist"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/feemanager"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/nativeminter"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/rewardmanager"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/warp"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -43,17 +58,20 @@ flag, the command instead prints out the raw genesis file.`,
 	return cmd
 }
 
-func printGenesis(subnetName string) error {
+func printGenesis(sc models.Sidecar, subnetName string) error {
 	genesisFile := app.GetGenesisPath(subnetName)
 	gen, err := os.ReadFile(genesisFile)
 	if err != nil {
 		return err
 	}
 	fmt.Println(string(gen))
+	if sc.SubnetEVMMainnetChainID != 0 {
+		fmt.Printf("Genesis is set to be deployed to Mainnet with Chain Id %d\n", sc.SubnetEVMMainnetChainID)
+	}
 	return nil
 }
 
-func printDetails(genesis core.Genesis, sc models.Sidecar) {
+func printDetails(genesis core.Genesis, sc models.Sidecar) error {
 	const art = `
  _____       _        _ _
 |  __ \     | |      (_) |
@@ -62,22 +80,27 @@ func printDetails(genesis core.Genesis, sc models.Sidecar) {
 | |__| |  __/ || (_| | | \__ \
 |_____/ \___|\__\__,_|_|_|___/
 `
-	fmt.Print(art)
+	fmt.Print(logging.LightBlue.Wrap(art))
 	table := tablewriter.NewWriter(os.Stdout)
 	header := []string{"Parameter", "Value"}
 	table.SetHeader(header)
 	table.SetRowLine(true)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAutoMergeCellsByColumnIndex([]int{0})
 
 	table.Append([]string{"Subnet Name", sc.Subnet})
 	table.Append([]string{"ChainID", genesis.Config.ChainID.String()})
+	if sc.SubnetEVMMainnetChainID != 0 {
+		table.Append([]string{"Mainnet ChainID", fmt.Sprint(sc.SubnetEVMMainnetChainID)})
+	}
 	table.Append([]string{"Token Name", app.GetTokenName(sc.Subnet)})
+	table.Append([]string{"Token Symbol", app.GetTokenSymbol(sc.Subnet)})
 	table.Append([]string{"VM Version", sc.VMVersion})
 	if sc.ImportedVMID != "" {
 		table.Append([]string{"VM ID", sc.ImportedVMID})
 	} else {
 		id := constants.NotAvailableLabel
-		vmID, err := utils.VMID(sc.Name)
+		vmID, err := anr_utils.VMID(sc.Name)
 		if err == nil {
 			id = vmID.String()
 		}
@@ -85,14 +108,37 @@ func printDetails(genesis core.Genesis, sc models.Sidecar) {
 	}
 
 	for net, data := range sc.Networks {
+		network, err := networkoptions.GetNetworkFromSidecarNetworkName(app, net)
+		if err != nil {
+			return err
+		}
 		if data.SubnetID != ids.Empty {
 			table.Append([]string{fmt.Sprintf("%s SubnetID", net), data.SubnetID.String()})
 		}
 		if data.BlockchainID != ids.Empty {
+			table.Append([]string{fmt.Sprintf("%s RPC URL", net), network.BlockchainEndpoint(data.BlockchainID.String())})
+			if network.Kind == models.Local {
+				codespaceURL, err := utils.GetCodespaceURL(network.BlockchainEndpoint(data.BlockchainID.String()))
+				if err != nil {
+					return err
+				}
+				if codespaceURL != "" {
+					table.Append([]string{"Codespace RPC URL", codespaceURL})
+				}
+			}
+			hexEncoding := "0x" + hex.EncodeToString(data.BlockchainID[:])
 			table.Append([]string{fmt.Sprintf("%s BlockchainID", net), data.BlockchainID.String()})
+			table.Append([]string{fmt.Sprintf("%s BlockchainID", net), hexEncoding})
+		}
+		if data.TeleporterMessengerAddress != "" {
+			table.Append([]string{fmt.Sprintf("%s Teleporter Messenger Address", net), data.TeleporterMessengerAddress})
+		}
+		if data.TeleporterRegistryAddress != "" {
+			table.Append([]string{fmt.Sprintf("%s Teleporter Registry Address", net), data.TeleporterRegistryAddress})
 		}
 	}
 	table.Render()
+	return nil
 }
 
 func printGasTable(genesis core.Genesis) {
@@ -109,7 +155,7 @@ func printGasTable(genesis core.Genesis) {
                                             |___/
 `
 
-	fmt.Print(art)
+	fmt.Print(logging.LightBlue.Wrap(art))
 	table := tablewriter.NewWriter(os.Stdout)
 	header := []string{"Gas Parameter", "Value"}
 	table.SetHeader(header)
@@ -127,7 +173,7 @@ func printGasTable(genesis core.Genesis) {
 	table.Render()
 }
 
-func printAirdropTable(genesis core.Genesis) {
+func printAirdropTable(genesis core.Genesis, sc models.Sidecar) error {
 	const art = `
           _         _
     /\   (_)       | |
@@ -138,23 +184,51 @@ func printAirdropTable(genesis core.Genesis) {
                                | |
                                |_|
 `
-	fmt.Print(art)
+	fmt.Print(logging.LightBlue.Wrap(art))
+	teleporterKeyAddress := ""
+	teleporterPrivKey := ""
+	if sc.TeleporterReady {
+		k, err := key.LoadSoft(models.NewLocalNetwork().ID, app.GetKeyPath(sc.TeleporterKey))
+		if err != nil {
+			return err
+		}
+		teleporterKeyAddress = k.C()
+		teleporterPrivKey = hex.EncodeToString(k.Raw())
+	}
+	subnetAirdropKeyName, subnetAirdropAddress, subnetAirdropPrivKey, err := subnet.GetSubnetAirdropKeyInfo(app, sc.Name)
+	if err != nil {
+		return err
+	}
 	if len(genesis.Alloc) > 0 {
 		table := tablewriter.NewWriter(os.Stdout)
-		header := []string{"Address", "Airdrop Amount (10^18)", "Airdrop Amount (wei)"}
+		header := []string{"Description", "Address", "Airdrop Amount (10^18)", "Airdrop Amount (wei)", "Private Key"}
 		table.SetHeader(header)
 		table.SetRowLine(true)
 
 		for address := range genesis.Alloc {
 			amount := genesis.Alloc[address].Balance
 			formattedAmount := new(big.Int).Div(amount, big.NewInt(params.Ether))
-			table.Append([]string{address.Hex(), formattedAmount.String(), amount.String()})
+			description := ""
+			privKey := ""
+			switch address.Hex() {
+			case teleporterKeyAddress:
+				description = fmt.Sprintf("Teleporter deploys %s", sc.TeleporterKey)
+				privKey = teleporterPrivKey
+			case subnetAirdropAddress:
+				description = fmt.Sprintf("Main funded account %s", subnetAirdropKeyName)
+				privKey = subnetAirdropPrivKey
+			case vm.PrefundedEwoqAddress.Hex():
+				description = "Main funded account EWOQ"
+				privKey = vm.PrefundedEwoqPrivate
+			}
+			table.Append([]string{description, address.Hex(), formattedAmount.String(), amount.String(), privKey})
 		}
 
 		table.Render()
 	} else {
 		fmt.Printf("No airdrops allocated")
 	}
+	return nil
 }
 
 func printPrecompileTable(genesis core.Genesis) {
@@ -170,52 +244,82 @@ func printPrecompileTable(genesis core.Genesis) {
                                     |_|
 
 `
-	fmt.Print(art)
+	fmt.Print(logging.LightBlue.Wrap(art))
 
 	table := tablewriter.NewWriter(os.Stdout)
-	header := []string{"Precompile", "Admin"}
+	header := []string{"Precompile", "Admin Addresses", "Enabled Addresses"}
 	table.SetHeader(header)
-	table.SetAutoMergeCellsByColumnIndex([]int{0})
+	table.SetAutoMergeCellsByColumnIndex([]int{0, 1, 2})
 	table.SetRowLine(true)
 
 	precompileSet := false
 
+	// Warp
+	if genesis.Config.GenesisPrecompiles[warp.ConfigKey] != nil {
+		table.Append([]string{"Warp", "n/a", "n/a"})
+		precompileSet = true
+	}
+
 	// Native Minting
-	if genesis.Config.ContractNativeMinterConfig != nil {
-		for _, address := range genesis.Config.ContractNativeMinterConfig.AllowListAdmins {
-			table.Append([]string{"Native Minter", address.Hex()})
-			precompileSet = true
-		}
+	if genesis.Config.GenesisPrecompiles[nativeminter.ConfigKey] != nil {
+		cfg := genesis.Config.GenesisPrecompiles[nativeminter.ConfigKey].(*nativeminter.Config)
+		appendToAddressTable(table, "Native Minter", cfg.AdminAddresses, cfg.EnabledAddresses)
+		precompileSet = true
 	}
 
 	// Contract allow list
-	if genesis.Config.ContractDeployerAllowListConfig != nil {
-		for _, address := range genesis.Config.ContractDeployerAllowListConfig.AllowListAdmins {
-			table.Append([]string{"Contract Allow list", address.Hex()})
-			precompileSet = true
-		}
+	if genesis.Config.GenesisPrecompiles[deployerallowlist.ConfigKey] != nil {
+		cfg := genesis.Config.GenesisPrecompiles[deployerallowlist.ConfigKey].(*deployerallowlist.Config)
+		appendToAddressTable(table, "Contract Allow List", cfg.AdminAddresses, cfg.EnabledAddresses)
+		precompileSet = true
 	}
 
 	// TX allow list
-	if genesis.Config.TxAllowListConfig != nil {
-		for _, address := range genesis.Config.TxAllowListConfig.AllowListAdmins {
-			table.Append([]string{"Tx Allow list", address.Hex()})
-			precompileSet = true
-		}
+	if genesis.Config.GenesisPrecompiles[txallowlist.ConfigKey] != nil {
+		cfg := genesis.Config.GenesisPrecompiles[txallowlist.Module.ConfigKey].(*txallowlist.Config)
+		appendToAddressTable(table, "Tx Allow List", cfg.AdminAddresses, cfg.EnabledAddresses)
+		precompileSet = true
 	}
 
 	// Fee config allow list
-	if genesis.Config.FeeManagerConfig != nil {
-		for _, address := range genesis.Config.FeeManagerConfig.AllowListAdmins {
-			table.Append([]string{"Fee Config Allow list", address.Hex()})
-			precompileSet = true
-		}
+	if genesis.Config.GenesisPrecompiles[feemanager.ConfigKey] != nil {
+		cfg := genesis.Config.GenesisPrecompiles[feemanager.ConfigKey].(*feemanager.Config)
+		appendToAddressTable(table, "Fee Config Allow List", cfg.AdminAddresses, cfg.EnabledAddresses)
+		precompileSet = true
+	}
+
+	// Reward config allow list
+	if genesis.Config.GenesisPrecompiles[rewardmanager.ConfigKey] != nil {
+		cfg := genesis.Config.GenesisPrecompiles[rewardmanager.ConfigKey].(*rewardmanager.Config)
+		appendToAddressTable(table, "Reward Manager Allow List", cfg.AdminAddresses, cfg.EnabledAddresses)
+		precompileSet = true
 	}
 
 	if precompileSet {
 		table.Render()
 	} else {
 		ux.Logger.PrintToUser("No precompiles set")
+	}
+}
+
+func appendToAddressTable(
+	table *tablewriter.Table,
+	label string,
+	adminAddresses []common.Address,
+	enabledAddresses []common.Address,
+) {
+	admins := len(adminAddresses)
+	enabled := len(enabledAddresses)
+	max := int(math.Max(float64(admins), float64(enabled)))
+	for i := 0; i < max; i++ {
+		var admin, enable string
+		if len(adminAddresses) >= i+1 && adminAddresses[i] != (common.Address{}) {
+			admin = adminAddresses[i].Hex()
+		}
+		if len(enabledAddresses) >= i+1 && enabledAddresses[i] != (common.Address{}) {
+			enable = enabledAddresses[i].Hex()
+		}
+		table.Append([]string{label, admin, enable})
 	}
 }
 
@@ -226,11 +330,15 @@ func describeSubnetEvmGenesis(sc models.Sidecar) error {
 		return err
 	}
 
-	printDetails(genesis, sc)
+	if err := printDetails(genesis, sc); err != nil {
+		return err
+	}
 	// Write gas table
 	printGasTable(genesis)
 	// fmt.Printf("\n\n")
-	printAirdropTable(genesis)
+	if err := printAirdropTable(genesis, sc); err != nil {
+		return err
+	}
 	printPrecompileTable(genesis)
 	return nil
 }
@@ -241,22 +349,22 @@ func readGenesis(_ *cobra.Command, args []string) error {
 		ux.Logger.PrintToUser("The provided subnet name %q does not exist", subnetName)
 		return nil
 	}
-	if printGenesisOnly {
-		return printGenesis(subnetName)
-	}
-	// read in sidecar
 	sc, err := app.LoadSidecar(subnetName)
 	if err != nil {
 		return err
 	}
-
-	switch sc.VM {
-	case models.SubnetEvm:
-		return describeSubnetEvmGenesis(sc)
-	default:
-		app.Log.Warn("Unknown genesis format", zap.Any("vm-type", sc.VM))
-		ux.Logger.PrintToUser("Printing genesis")
-		err = printGenesis(subnetName)
+	if printGenesisOnly {
+		return printGenesis(sc, subnetName)
 	}
-	return err
+
+	isEVM, err := HasSubnetEVMGenesis(subnetName)
+	if err != nil {
+		return err
+	}
+	if isEVM {
+		return describeSubnetEvmGenesis(sc)
+	}
+	app.Log.Warn("Unknown genesis format", zap.Any("vm-type", sc.VM))
+	ux.Logger.PrintToUser("Printing genesis")
+	return printGenesis(sc, subnetName)
 }
