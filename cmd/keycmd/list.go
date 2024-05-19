@@ -528,7 +528,7 @@ func getXChainBalanceStr(xClient avm.Client, addr string) (string, error) {
 		return "", err
 	}
 	ctx, cancel := utils.GetAPIContext()
-	asset, err := xClient.GetAssetDescription(ctx, "AVAX")
+	asset, err := xClient.GetAssetDescription(ctx, "METAL")
 	if err != nil {
 		return "", err
 	}

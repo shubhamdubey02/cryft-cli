@@ -118,7 +118,7 @@ func describe(_ *cobra.Command, _ []string) error {
 		table.Append([]string{"Codespace RPC URL", codespaceURL})
 	}
 	table.Append([]string{"EVM Chain ID", fmt.Sprint(evmChainID)})
-	table.Append([]string{"TOKEN SYMBOL", "AVAX"})
+	table.Append([]string{"TOKEN SYMBOL", "METAL"})
 	table.Append([]string{"Address", address})
 	table.Append([]string{"Balance", balanceStr})
 	table.Append([]string{"Private Key", privKey})
