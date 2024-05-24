@@ -4,9 +4,13 @@
 package commands
 
 const (
-	CLIBinary  = "./bin/metal"
-	SubnetCmd  = "subnet"
-	NetworkCmd = "network"
-	KeyCmd     = "key"
-	UpgradeCmd = "upgrade"
+	CLIBinary                     = "./bin/metal"
+	SubnetCmd                     = "subnet"
+	NetworkCmd                    = "network"
+	KeyCmd                        = "key"
+	UpgradeCmd                    = "upgrade"
+	ElasticTransformCmd           = "elastic"
+	JoinCmd                       = "join"
+	RemoveValidatorCmd            = "removeValidator"
+	AddPermissionlessDelegatorCmd = "addPermissionlessDelegator"
 )

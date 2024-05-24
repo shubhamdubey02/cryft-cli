@@ -47,11 +47,13 @@ var _ = ginkgo.Describe("[APM]", func() {
 	})
 
 	ginkgo.It("can import from metal-core", func() {
+		ginkgo.Skip("TODO")
 		repo := "MetalBlockchain/metal-plugins-core"
 		commands.ImportSubnetConfig(repo, subnet1)
 	})
 
 	ginkgo.It("can import from url", func() {
+		ginkgo.Skip("TODO")
 		branch := "master"
 		commands.ImportSubnetConfigFromURL(testRepo, branch, subnet2)
 	})

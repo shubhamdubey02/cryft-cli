@@ -5,13 +5,17 @@ package e2e
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/apm"
+	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/errhandling"
 	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/key"
 	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/network"
+	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/node/create"
+	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/node/devnet"
+	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/node/monitoring"
 	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/packageman"
 	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/root"
 	_ "github.com/MetalBlockchain/metal-cli/tests/e2e/testcases/subnet"
@@ -24,7 +28,7 @@ import (
 )
 
 func TestE2e(t *testing.T) {
-	if os.Getenv("RUN_E2E") == "" {
+	if !utils.IsE2E() {
 		t.Skip("Environment variable RUN_E2E not set; skipping E2E tests")
 	}
 	gomega.RegisterFailHandler(ginkgo.Fail)
@@ -33,6 +37,7 @@ func TestE2e(t *testing.T) {
 }
 
 var _ = ginkgo.BeforeSuite(func() {
+	format.MaxLength = 40000
 	cmd := exec.Command("./scripts/build.sh")
 	out, err := cmd.CombinedOutput()
 	fmt.Println(string(out))

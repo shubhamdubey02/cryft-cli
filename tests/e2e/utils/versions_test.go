@@ -61,6 +61,11 @@ func newTestMapper(t *testing.T) *testMapper {
 }
 
 // implement VersionMapper
+func (*testMapper) FilterAvailableVersions(versions []string) []string {
+	return versions
+}
+
+// implement VersionMapper
 func (*testMapper) GetEligibleVersions(sorted []string, _ string, _ *application.Avalanche) ([]string, error) {
 	// tests were written with the assumption that the first version is always in progress
 	return sorted[1:], nil
@@ -181,8 +186,6 @@ func TestGetVersionMapping(t *testing.T) {
 				MultiAvagoSubnetEVMKey: "v0.4.3",
 				LatestEVM2AvagoKey:     "v0.4.3",
 				LatestAvago2EVMKey:     "v1.9.3",
-				Spaces2AvagoKey:        "v0.0.12",
-				Avago2SpacesKey:        "v1.9.3",
 			},
 			sourceEVM: `{
 						"rpcChainVMProtocolVersion": {
@@ -260,8 +263,6 @@ func TestGetVersionMapping(t *testing.T) {
 				MultiAvagoSubnetEVMKey: "v0.4.2",
 				LatestEVM2AvagoKey:     "v0.9.9",
 				LatestAvago2EVMKey:     "v4.3.2",
-				Spaces2AvagoKey:        "v3.2.12",
-				Avago2SpacesKey:        "v2.1.1",
 			},
 			sourceEVM: `{
 					"rpcChainVMProtocolVersion": {
@@ -312,36 +313,6 @@ func TestGetVersionMapping(t *testing.T) {
 		{
 			// this test should fail, simulating that
 			// the APIs would return empty releases for some reason
-			// just for the spacesvm
-			name:       "no spaces",
-			shouldFail: true,
-			expected:   map[string]string{},
-			sourceAvago: `{
-					"99": [
-						"v2.3.4",
-						"v2.3.3"
-					],
-					"88": [
-						"v1.9.1"
-					],
-					"77": [
-						"v1.9.0"
-					]
-			  }`,
-			sourceEVM: `{
-					"rpcChainVMProtocolVersion": {
-						"v1.0.0": 100,
-						"v0.9.9": 66,
-						"v0.9.8": 55,
-						"v0.4.2": 44,
-						"v0.4.1": 33,
-						"v0.4.0": 22
-					}
-			  }`,
-		},
-		{
-			// this test should fail, simulating that
-			// the APIs would return empty releases for some reason
 			// but only got sourceEVM versions
 			name:        "only evm",
 			shouldFail:  true,
@@ -382,7 +353,7 @@ func TestGetVersionMapping(t *testing.T) {
 	}
 
 	for i, tc := range testContexts {
-		t.Run(tc.name, func(tt *testing.T) {
+		t.Run(tc.name, func(_ *testing.T) {
 			// run the function, but use the testMapper,
 			// so that we can set the currentContext
 			mapping, err := m.getVersionMapping(tc)

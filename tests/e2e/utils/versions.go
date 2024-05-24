@@ -16,7 +16,6 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"go.uber.org/zap"
 	"golang.org/x/mod/semver"
 )
 
@@ -27,9 +26,27 @@ var (
 	_ VersionMapper = &versionMapper{}
 )
 
+/*
+VersionMapper keys and their usage:
+ * OnlyAvagoKey: 					Used when running one avalanchego only (no compatibility required)
+
+ * MultiAvago1Key					Used for the update scenario where avalanchego is updated and
+ * MultiAvago2Key    			both avalanchego versions need to be compatible.
+ * MultiAvagoSubnetEVMKey	This is the Subnet-EVM version compatible to the above scenario.
+
+ * LatestEVM2AvagoKey 	  Latest subnet-evm version
+ * LatestAvago2EVMKey     while this is the latest avalanchego compatible with that subnet-evm
+
+ * SoloSubnetEVMKey1 			This is used when we want to test subnet-evm versions where compatibility
+ * SoloSubnetEVMKey2      needs to be between the two subnet-evm versions
+ 													(latest might not be compatible with second latest)
+
+
+*/
+
 // VersionMapper is an abstraction for retrieving version compatibility URLs
 // allowing unit tests without requiring external http calls.
-// The idea is to finally calculate which VM is compatible with which metalgo,
+// The idea is to finally calculate which VM is compatible with which Avalanchego,
 // so that the e2e tests can always download and run the latest compatible versions,
 // without having to manually update the e2e tests periodically.
 type VersionMapper interface {
@@ -38,6 +55,7 @@ type VersionMapper interface {
 	GetApp() *application.Avalanche
 	GetLatestAvagoByProtoVersion(app *application.Avalanche, rpcVersion int, url string) (string, error)
 	GetEligibleVersions(sortedVersions []string, repoName string, app *application.Avalanche) ([]string, error)
+	FilterAvailableVersions(versions []string) []string
 }
 
 // NewVersionMapper returns the default VersionMapper for e2e tests
@@ -110,7 +128,20 @@ func (*versionMapper) GetEligibleVersions(sortedVersions []string, repoName stri
 	return eligible, nil
 }
 
-// GetVersionMapping returns a map of specific VMs resp. metalgo e2e context keys
+func (*versionMapper) FilterAvailableVersions(versions []string) []string {
+	availableVersions := []string{}
+	for _, v := range versions {
+		resp, err := binutils.CheckReleaseVersion(logging.NoLog{}, constants.SubnetEVMRepoName, v)
+		if err != nil {
+			continue
+		}
+		availableVersions = append(availableVersions, v)
+		resp.Body.Close()
+	}
+	return availableVersions
+}
+
+// GetVersionMapping returns a map of specific VMs resp. Avalanchego e2e context keys
 // to the actual version which corresponds to that key.
 // This allows the e2e test to know what version to download and run.
 // Returns an error if there was a problem reading the URL compatibility json
@@ -141,7 +172,9 @@ func GetVersionMapping(mapper VersionMapper) (map[string]string, error) {
 		return nil, err
 	}
 
-	// now get the metalgo compatibility object
+	subnetEVMversions = mapper.FilterAvailableVersions(subnetEVMversions)
+
+	// now get the avalanchego compatibility object
 	avagoCompat, err := getAvagoCompatibility(mapper)
 	if err != nil {
 		return nil, err
@@ -232,17 +265,6 @@ func GetVersionMapping(mapper VersionMapper) (map[string]string, error) {
 			break
 		}
 	}
-
-	mapper.GetApp().Log.Debug("mapping:",
-		zap.String("SoloSubnetEVM1", binaryToVersion[SoloSubnetEVMKey1]),
-		zap.String("SoloSubnetEVM2", binaryToVersion[SoloSubnetEVMKey2]),
-		zap.String("SoloAvago", binaryToVersion[SoloAvagoKey]),
-		zap.String("MultiAvago1", binaryToVersion[MultiAvago1Key]),
-		zap.String("MultiAvago2", binaryToVersion[MultiAvago2Key]),
-		zap.String("MultiAvagoSubnetEVM", binaryToVersion[MultiAvagoSubnetEVMKey]),
-		zap.String("LatestEVM2Avago", binaryToVersion[LatestEVM2AvagoKey]),
-		zap.String("LatestAvago2EVM", binaryToVersion[LatestAvago2EVMKey]),
-	)
 
 	return binaryToVersion, nil
 }
