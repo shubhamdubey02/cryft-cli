@@ -14,6 +14,7 @@ import (
 
 	"golang.org/x/exp/slices"
 
+	coreth_params "github.com/MetalBlockchain/coreth/params"
 	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/key"
@@ -26,7 +27,6 @@ import (
 	"github.com/MetalBlockchain/metalgo/utils/formatting"
 	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/metalgo/vms/platformvm/signer"
-	coreth_params "github.com/MetalBlockchain/coreth/params"
 	"golang.org/x/exp/maps"
 )
 

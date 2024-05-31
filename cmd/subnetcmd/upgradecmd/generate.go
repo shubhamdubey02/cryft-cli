@@ -9,9 +9,9 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/MetalBlockchain/coreth/ethclient"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metalgo/utils/units"
-	"github.com/MetalBlockchain/coreth/ethclient"
 	"go.uber.org/zap"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
