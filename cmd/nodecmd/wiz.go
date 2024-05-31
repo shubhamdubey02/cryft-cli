@@ -489,14 +489,6 @@ func setAWMRelayerHost(host *models.Host) error {
 	return app.CreateNodeCloudConfigFile(cloudID, &nodeConfig)
 }
 
-func updateAWMRelayerHostConfig(host *models.Host, subnetName string, clusterName string) error {
-	ux.Logger.PrintToUser("setting AWM Relayer on host %s to relay subnet %s", host.GetCloudID(), subnetName)
-	if err := ssh.RunSSHUploadNodeAWMRelayerConfig(host, app.GetNodeInstanceDirPath(host.GetCloudID())); err != nil {
-		return err
-	}
-	return ssh.RunSSHStartAWMRelayerService(host)
-}
-
 func chooseAWMRelayerHost(clusterName string) (*models.Host, error) {
 	// first look up for separate monitoring host
 	monitoringInventoryFile := app.GetMonitoringInventoryDir(clusterName)

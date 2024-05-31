@@ -3,7 +3,6 @@
 package subnetcmd
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"sort"
@@ -271,27 +270,6 @@ func createSubnetConfig(cmd *cobra.Command, args []string) error {
 	}
 	ux.Logger.GreenCheckmarkToUser("Successfully created subnet configuration")
 	return nil
-}
-
-func addSubnetEVMGenesisPrefundedAddress(genesisBytes []byte, address string, balance string) ([]byte, error) {
-	var genesisMap map[string]interface{}
-	if err := json.Unmarshal(genesisBytes, &genesisMap); err != nil {
-		return nil, err
-	}
-	allocI, ok := genesisMap["alloc"]
-	if !ok {
-		return nil, fmt.Errorf("alloc field not found on genesis")
-	}
-	alloc, ok := allocI.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("expected genesis alloc field to be map[string]interface, found %T", allocI)
-	}
-	trimmedAddress := strings.TrimPrefix(address, "0x")
-	alloc[trimmedAddress] = map[string]interface{}{
-		"balance": balance,
-	}
-	genesisMap["alloc"] = alloc
-	return json.MarshalIndent(genesisMap, "", "  ")
 }
 
 func sendMetrics(cmd *cobra.Command, repoName, subnetName string) error {
