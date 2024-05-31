@@ -33,7 +33,7 @@ func CheckReleaseVersion(
 	switch goos {
 	case "linux":
 		downloadURL = fmt.Sprintf(
-			"https://github.com/ava-labs/%s/releases/download/%s/%s_%s_linux_%s.tar.gz",
+			"https://github.com/MetalBlockchain/%s/releases/download/%s/%s_%s_linux_%s.tar.gz",
 			repo,
 			version,
 			repo,
@@ -42,7 +42,7 @@ func CheckReleaseVersion(
 		)
 	case "darwin":
 		downloadURL = fmt.Sprintf(
-			"https://github.com/ava-labs/%s/releases/download/%s/%s_%s_darwin_%s.tar.gz",
+			"https://github.com/MetalBlockchain/%s/releases/download/%s/%s_%s_darwin_%s.tar.gz",
 			repo,
 			version,
 			repo,

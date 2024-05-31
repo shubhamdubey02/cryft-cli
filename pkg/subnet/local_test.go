@@ -101,7 +101,7 @@ func TestDeployToLocal(t *testing.T) {
 	require.NoError(err)
 
 	// create a dummy avalanchego file, deploy will check it exists
-	f, err := os.Create(filepath.Join(binDir, "avalanchego"))
+	f, err := os.Create(filepath.Join(binDir, "metalgo"))
 	require.NoError(err)
 	defer func() {
 		_ = f.Close()

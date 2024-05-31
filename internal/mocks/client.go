@@ -53,23 +53,23 @@ func (_m *Client) AddNode(ctx context.Context, name string, execPath string, opt
 }
 
 // AddPermissionlessDelegator provides a mock function with given fields: ctx, validatorSpec
-func (_m *Client) AddPermissionlessDelegator(ctx context.Context, validatorSpec []*rpcpb.PermissionlessStakerSpec) (*rpcpb.AddPermissionlessDelegatorResponse, error) {
+func (_m *Client) AddPermissionlessDelegator(ctx context.Context, validatorSpec []*rpcpb.ValidatorSpec) (*rpcpb.AddDelegatorResponse, error) {
 	ret := _m.Called(ctx, validatorSpec)
 
-	var r0 *rpcpb.AddPermissionlessDelegatorResponse
+	var r0 *rpcpb.AddDelegatorResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.PermissionlessStakerSpec) (*rpcpb.AddPermissionlessDelegatorResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.ValidatorSpec) (*rpcpb.AddDelegatorResponse, error)); ok {
 		return rf(ctx, validatorSpec)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.PermissionlessStakerSpec) *rpcpb.AddPermissionlessDelegatorResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.ValidatorSpec) *rpcpb.AddDelegatorResponse); ok {
 		r0 = rf(ctx, validatorSpec)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*rpcpb.AddPermissionlessDelegatorResponse)
+			r0 = ret.Get(0).(*rpcpb.AddDelegatorResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, []*rpcpb.PermissionlessStakerSpec) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, []*rpcpb.ValidatorSpec) error); ok {
 		r1 = rf(ctx, validatorSpec)
 	} else {
 		r1 = ret.Error(1)
@@ -79,23 +79,23 @@ func (_m *Client) AddPermissionlessDelegator(ctx context.Context, validatorSpec 
 }
 
 // AddPermissionlessValidator provides a mock function with given fields: ctx, validatorSpec
-func (_m *Client) AddPermissionlessValidator(ctx context.Context, validatorSpec []*rpcpb.PermissionlessStakerSpec) (*rpcpb.AddPermissionlessValidatorResponse, error) {
+func (_m *Client) AddPermissionlessValidator(ctx context.Context, validatorSpec []*rpcpb.ValidatorSpec) (*rpcpb.AddValidatorResponse, error) {
 	ret := _m.Called(ctx, validatorSpec)
 
-	var r0 *rpcpb.AddPermissionlessValidatorResponse
+	var r0 *rpcpb.AddValidatorResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.PermissionlessStakerSpec) (*rpcpb.AddPermissionlessValidatorResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.ValidatorSpec) (*rpcpb.AddValidatorResponse, error)); ok {
 		return rf(ctx, validatorSpec)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.PermissionlessStakerSpec) *rpcpb.AddPermissionlessValidatorResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, []*rpcpb.ValidatorSpec) *rpcpb.AddValidatorResponse); ok {
 		r0 = rf(ctx, validatorSpec)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*rpcpb.AddPermissionlessValidatorResponse)
+			r0 = ret.Get(0).(*rpcpb.AddValidatorResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, []*rpcpb.PermissionlessStakerSpec) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, []*rpcpb.ValidatorSpec) error); ok {
 		r1 = rf(ctx, validatorSpec)
 	} else {
 		r1 = ret.Error(1)
@@ -301,19 +301,19 @@ func (_m *Client) ListBlockchains(ctx context.Context) ([]*rpcpb.CustomChainInfo
 }
 
 // ListRpcs provides a mock function with given fields: ctx
-func (_m *Client) ListRpcs(ctx context.Context) ([]*rpcpb.BlockchainRpcs, error) {
+func (_m *Client) ListRpcs(ctx context.Context) ([]*rpcpb.ChainEndpoints, error) {
 	ret := _m.Called(ctx)
 
-	var r0 []*rpcpb.BlockchainRpcs
+	var r0 []*rpcpb.ChainEndpoints
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]*rpcpb.BlockchainRpcs, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) ([]*rpcpb.ChainEndpoints, error)); ok {
 		return rf(ctx)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []*rpcpb.BlockchainRpcs); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []*rpcpb.ChainEndpoints); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*rpcpb.BlockchainRpcs)
+			r0 = ret.Get(0).([]*rpcpb.ChainEndpoints)
 		}
 	}
 

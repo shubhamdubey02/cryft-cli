@@ -13,7 +13,7 @@ const (
 
 	UbuntuVersionLTS = "20.04"
 
-	BaseDirName = ".avalanche-cli"
+	BaseDirName = ".metal-cli"
 	LogDir      = "logs"
 
 	ServerRunFile      = "gRPCserver.run"
@@ -88,7 +88,7 @@ const (
 	// but let's add some more entropy
 	SnapshotsDirName = "snapshots"
 
-	DefaultSnapshotName = "default-1654102509"
+	DefaultSnapshotName = "default-1654102510"
 
 	Cortina17Version = "v1.10.17"
 
@@ -121,7 +121,7 @@ const (
 	ExtraLocalNetworkDataFilename     = "extra-local-network-data.json"
 	ExtraLocalNetworkDataSnapshotsDir = "extra-local-network-data"
 
-	CliInstallationURL         = "https://raw.githubusercontent.com/ava-labs/avalanche-cli/main/scripts/install.sh"
+	CliInstallationURL         = "https://raw.githubusercontent.com/MetalBlockchain/metal-cli/main/scripts/install.sh"
 	ExpectedCliInstallErr      = "resource temporarily unavailable"
 	EIPLimitErr                = "AddressLimitExceeded"
 	ErrCreatingAWSNode         = "failed to create AWS Node"
@@ -149,7 +149,7 @@ const (
 	PrimaryNetworkValidatingStartLeadTimeNodeCmd = 20 * time.Second
 	PrimaryNetworkValidatingStartLeadTime        = 1 * time.Minute
 	AWSCloudServerRunningState                   = "running"
-	AvalancheCLISuffix                           = "-avalanche-cli"
+	AvalancheCLISuffix                           = "-metal-cli"
 	AWSDefaultCredential                         = "default"
 	GCPDefaultImageProvider                      = "ubuntu-os-cloud"
 	GCPImageFilter                               = "family=ubuntu-2004* AND architecture=x86_64"
@@ -190,9 +190,9 @@ const (
 	ConfigMetricsEnabledKey       = "MetricsEnabled"
 	ConfigAuthorizeCloudAccessKey = "AuthorizeCloudAccess"
 	ConfigSingleNodeEnabledKey    = "SingleNodeEnabled"
-	OldConfigFileName             = ".avalanche-cli.json"
-	OldMetricsConfigFileName      = ".avalanche-cli/config"
-	DefaultConfigFileName         = ".avalanche-cli/config.json"
+	OldConfigFileName             = ".metal-cli.json"
+	OldMetricsConfigFileName      = ".metal-cli/config"
+	DefaultConfigFileName         = ".metal-cli/config.json"
 	DefaultNodeType               = "default"
 	AWSCloudService               = "Amazon Web Services"
 	GCPCloudService               = "Google Cloud Platform"
@@ -204,20 +204,20 @@ const (
 	CustomVMDir                   = "vms"
 	ClusterYAMLFileName           = "clusterInfo.yaml"
 	GCPStaticIPPrefix             = "static-ip"
-	AvaLabsOrg                    = "ava-labs"
-	AvalancheGoRepoName           = "avalanchego"
+	AvaLabsOrg                    = "MetalBlockchain"
+	AvalancheGoRepoName           = "metalgo"
 	SubnetEVMRepoName             = "subnet-evm"
-	CliRepoName                   = "avalanche-cli"
+	CliRepoName                   = "metal-cli"
 	TeleporterRepoName            = "teleporter"
 	AWMRelayerRepoName            = "awm-relayer"
 	SubnetEVMReleaseURL           = "https://github.com/MetalBlockchain/subnet-evm/releases/download/%s/%s"
 	SubnetEVMArchive              = "subnet-evm_%s_linux_amd64.tar.gz"
-	CloudNodeConfigBasePath       = "/home/ubuntu/.avalanchego/"
-	CloudNodeSubnetEvmBinaryPath  = "/home/ubuntu/.avalanchego/plugins/%s"
-	CloudNodeStakingPath          = "/home/ubuntu/.avalanchego/staking/"
-	CloudNodeConfigPath           = "/home/ubuntu/.avalanchego/configs/"
+	CloudNodeConfigBasePath       = "/home/ubuntu/.metalgo/"
+	CloudNodeSubnetEvmBinaryPath  = "/home/ubuntu/.metalgo/plugins/%s"
+	CloudNodeStakingPath          = "/home/ubuntu/.metalgo/staking/"
+	CloudNodeConfigPath           = "/home/ubuntu/.metalgo/configs/"
 	CloudNodePrometheusConfigPath = "/etc/prometheus/prometheus.yml"
-	CloudNodeCLIConfigBasePath    = "/home/ubuntu/.avalanche-cli/"
+	CloudNodeCLIConfigBasePath    = "/home/ubuntu/.metal-cli/"
 	AvalanchegoMonitoringPort     = 9090
 	AvalanchegoMachineMetricsPort = 9100
 	MonitoringDir                 = "monitoring"
@@ -225,7 +225,7 @@ const (
 	DashboardsDir                 = "dashboards"
 	NodeConfigJSONFile            = "node.json"
 	IPAddressSuffix               = "/32"
-	AvalancheGoInstallDir         = "avalanchego"
+	AvalancheGoInstallDir         = "metalgo"
 	SubnetEVMInstallDir           = "subnet-evm"
 	AWMRelayerInstallDir          = "awm-relayer"
 	TeleporterInstallDir          = "teleporter"
@@ -248,11 +248,11 @@ const (
 
 	APMDir                = ".apm"
 	APMLogName            = "apm.log"
-	DefaultAvaLabsPackage = "ava-labs/avalanche-plugins-core"
+	DefaultAvaLabsPackage = "MetalBlockchain/metal-plugins-core"
 	APMPluginDir          = "apm_plugins"
 
 	// #nosec G101
-	GithubAPITokenEnvVarName = "AVALANCHE_CLI_GITHUB_TOKEN"
+	GithubAPITokenEnvVarName = "METAL_CLI_GITHUB_TOKEN"
 
 	ReposDir                   = "repos"
 	SubnetDir                  = "subnets"
@@ -282,8 +282,8 @@ const (
 
 	AvalancheGoVersionUnknown            = "n/a"
 	AvalancheGoCompatibilityVersionAdded = "v1.9.2"
-	AvalancheGoCompatibilityURL          = "https://raw.githubusercontent.com/ava-labs/avalanchego/master/version/compatibility.json"
-	SubnetEVMRPCCompatibilityURL         = "https://raw.githubusercontent.com/ava-labs/subnet-evm/master/compatibility.json"
+	AvalancheGoCompatibilityURL          = "https://raw.githubusercontent.com/MetalBlockchain/metalgo/master/version/compatibility.json"
+	SubnetEVMRPCCompatibilityURL         = "https://raw.githubusercontent.com/MetalBlockchain/subnet-evm/master/compatibility.json"
 
 	YesLabel = "Yes"
 	NoLabel  = "No"

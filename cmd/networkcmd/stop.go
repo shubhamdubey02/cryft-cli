@@ -12,7 +12,6 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metal-network-runner/local"
 	"github.com/MetalBlockchain/metal-network-runner/server"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -95,11 +94,7 @@ func saveNetwork() error {
 			ux.Logger.PrintToUser("Network already stopped.")
 			return nil
 		}
-		// it we try to stop a network with a new snapshot name, remove snapshot
-		// will fail, so we cover here that expected case
-		if !server.IsServerError(err, local.ErrSnapshotNotFound) {
-			return fmt.Errorf("failed stop network with a snapshot: %w", err)
-		}
+		return fmt.Errorf("failed stop network with a snapshot: %w", err)
 	}
 
 	_, err = cli.SaveSnapshot(ctx, snapshotName)

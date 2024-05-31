@@ -579,7 +579,7 @@ func createNodes(cmd *cobra.Command, args []string) error {
 		}
 		return fmt.Errorf("failed to provision node(s) %s", failedHosts.GetNodeList())
 	}
-	ux.Logger.PrintToUser("Installing AvalancheGo and Avalanche-CLI and starting bootstrap process on the newly created Avalanche node(s)...")
+	ux.Logger.PrintToUser("Installing MetalGo and Metal-CLI and starting bootstrap process on the newly created Metal node(s)...")
 	wg := sync.WaitGroup{}
 	wgResults := models.NodeResults{}
 	spinSession := ux.NewUserSpinner()

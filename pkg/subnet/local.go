@@ -660,7 +660,7 @@ func (d *LocalDeployer) SetupLocalEnv() (bool, string, error) {
 		if err != nil {
 			return false, "", fmt.Errorf("failed setting up local environment: %w", err)
 		}
-		avalancheGoBinPath = filepath.Join(avagoDir, "avalanchego")
+		avalancheGoBinPath = filepath.Join(avagoDir, "metalgo")
 	}
 
 	configSingleNodeEnabled := d.app.Conf.GetConfigBoolValue(constants.ConfigSingleNodeEnabledKey)

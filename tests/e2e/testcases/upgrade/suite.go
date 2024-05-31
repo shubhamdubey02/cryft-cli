@@ -112,7 +112,7 @@ var _ = ginkgo.Describe("[Upgrade public network]", ginkgo.Ordered, func() {
 
 		blockchainID := ids.GenerateTestID()
 		sc.Networks = make(map[string]models.NetworkData)
-		sc.Networks[models.Fuji.String()] = models.NetworkData{
+		sc.Networks[models.Tahoe.String()] = models.NetworkData{
 			SubnetID:     ids.GenerateTestID(),
 			BlockchainID: blockchainID,
 		}
