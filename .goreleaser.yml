@@ -35,14 +35,14 @@ builds:
           - CC=o64-clang
 dockers:
   - image_templates:
-    - 'MetalBlockchain/metal-cli:{{ .Tag }}-amd64'
+    - 'metalblockchain/metal-cli:{{ .Tag }}-amd64'
     dockerfile: "{{ .Env.DOCKERFILE }}"
     use: buildx
     build_flag_templates:
     - "--pull"
     - "--platform=linux/amd64"
   - image_templates:
-    - 'MetalBlockchain/metal-cli:{{ .Tag }}-arm64'
+    - 'metalblockchain/metal-cli:{{ .Tag }}-arm64'
     dockerfile: "{{ .Env.DOCKERFILE }}"
     use: buildx
     build_flag_templates:
@@ -50,10 +50,10 @@ dockers:
     - "--platform=linux/arm64"
     goarch: arm64
 docker_manifests:
-  - name_template: 'MetalBlockchain/metal-cli:{{ .Tag }}'
+  - name_template: 'metalblockchain/metal-cli:{{ .Tag }}'
     image_templates:
-    - 'MetalBlockchain/metal-cli:{{ .Tag }}-amd64'
-    - 'MetalBlockchain/metal-cli:{{ .Tag }}-arm64'
+    - 'metalblockchain/metal-cli:{{ .Tag }}-amd64'
+    - 'metalblockchain/metal-cli:{{ .Tag }}-arm64'
 release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL or empty if its private hosted.
