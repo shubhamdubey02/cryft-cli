@@ -2,8 +2,6 @@ module github.com/MetalBlockchain/metal-cli
 
 go 1.21
 
-toolchain go1.22.2
-
 require (
 	github.com/MetalBlockchain/apm v0.0.4
 	github.com/MetalBlockchain/coreth v0.13.2-rc.3
