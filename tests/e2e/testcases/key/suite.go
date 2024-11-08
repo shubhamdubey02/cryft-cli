@@ -11,8 +11,8 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/tests/e2e/commands"
 	"github.com/MetalBlockchain/metal-cli/tests/e2e/utils"
-	"github.com/MetalBlockchain/metalgo/genesis"
-	"github.com/MetalBlockchain/metalgo/utils/units"
+	"github.com/cryft-labs/cryftgo/genesis"
+	"github.com/cryft-labs/cryftgo/utils/units"
 	ginkgo "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
 )

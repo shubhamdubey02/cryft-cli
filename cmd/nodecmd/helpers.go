@@ -13,7 +13,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/api/info"
+	"github.com/cryft-labs/cryftgo/api/info"
 )
 
 // NumNodes is a struct to hold number of nodes with and without stake

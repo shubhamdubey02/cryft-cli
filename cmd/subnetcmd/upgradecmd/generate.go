@@ -11,7 +11,7 @@ import (
 
 	"github.com/MetalBlockchain/coreth/ethclient"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metalgo/utils/units"
+	"github.com/cryft-labs/cryftgo/utils/units"
 	"go.uber.org/zap"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
@@ -19,7 +19,6 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/subnet-evm/commontype"
 	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/deployerallowlist"
@@ -28,6 +27,7 @@ import (
 	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/rewardmanager"
 	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
 	subnetevmutils "github.com/MetalBlockchain/subnet-evm/utils"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/spf13/cobra"

@@ -15,9 +15,9 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/genesis"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/vms/secp256k1fx"
+	"github.com/cryft-labs/cryftgo/genesis"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/vms/secp256k1fx"
 	"github.com/spf13/cobra"
 )
 

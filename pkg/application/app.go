@@ -15,9 +15,9 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/monitoring"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/subnet-evm/core"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 
 	"golang.org/x/exp/maps"
 )

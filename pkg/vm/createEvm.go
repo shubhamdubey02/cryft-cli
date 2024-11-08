@@ -17,11 +17,11 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/statemachine"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/snow"
 	"github.com/MetalBlockchain/subnet-evm/core"
 	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
 	"github.com/MetalBlockchain/subnet-evm/utils"
+	"github.com/cryft-labs/cryftgo/snow"
 	"github.com/ethereum/go-ethereum/common"
 )
 

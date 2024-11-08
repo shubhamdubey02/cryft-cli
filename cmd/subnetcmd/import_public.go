@@ -14,11 +14,11 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
-	"github.com/MetalBlockchain/metalgo/api/info"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/rpc"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/txs"
+	"github.com/cryft-labs/cryftgo/api/info"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/utils/rpc"
+	"github.com/cryft-labs/cryftgo/vms/platformvm"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/txs"
 	"github.com/spf13/cobra"
 )
 

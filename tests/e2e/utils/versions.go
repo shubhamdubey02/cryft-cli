@@ -15,7 +15,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"golang.org/x/mod/semver"
 )
 

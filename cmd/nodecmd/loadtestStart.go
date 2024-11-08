@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 
 	"golang.org/x/exp/slices"
 
@@ -21,7 +21,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"
 	"gopkg.in/yaml.v3"

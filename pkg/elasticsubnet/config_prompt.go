@@ -12,7 +12,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/reward"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/reward"
 )
 
 // default elastic config parameter values are from

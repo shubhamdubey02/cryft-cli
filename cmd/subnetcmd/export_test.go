@@ -16,7 +16,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/MetalBlockchain/metal-cli/tests/e2e/utils"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

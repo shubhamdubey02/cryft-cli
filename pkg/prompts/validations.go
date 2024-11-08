@@ -15,14 +15,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MetalBlockchain/metalgo/genesis"
+	"github.com/cryft-labs/cryftgo/genesis"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/ids"
-	avagoconstants "github.com/MetalBlockchain/metalgo/utils/constants"
-	"github.com/MetalBlockchain/metalgo/utils/formatting/address"
+	"github.com/cryft-labs/cryftgo/ids"
+	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
+	"github.com/cryft-labs/cryftgo/utils/formatting/address"
 	"github.com/ethereum/go-ethereum/common"
 )
 

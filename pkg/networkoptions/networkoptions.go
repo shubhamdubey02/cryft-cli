@@ -13,7 +13,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/api/info"
+	"github.com/cryft-labs/cryftgo/api/info"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
 )

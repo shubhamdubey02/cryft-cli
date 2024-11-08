@@ -9,8 +9,8 @@ import (
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/stretchr/testify/require"
 )
 

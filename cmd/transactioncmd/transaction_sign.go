@@ -13,7 +13,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/spf13/cobra"
 )
 

@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/MetalBlockchain/metal-cli/internal/mocks"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/vms/platformvm"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

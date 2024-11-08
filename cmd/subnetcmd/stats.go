@@ -14,9 +14,9 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/api/info"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm"
+	"github.com/cryft-labs/cryftgo/api/info"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/vms/platformvm"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )

@@ -14,7 +14,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-network-runner/utils"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )

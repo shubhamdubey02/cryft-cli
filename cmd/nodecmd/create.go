@@ -27,9 +27,9 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/vm"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/staking"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/staking"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 

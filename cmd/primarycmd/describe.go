@@ -14,8 +14,8 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/MetalBlockchain/metalgo/utils/units"
+	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/units"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"

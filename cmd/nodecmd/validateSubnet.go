@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/status"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/status"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
 	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
@@ -19,7 +19,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"
 )

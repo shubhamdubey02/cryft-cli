@@ -10,7 +10,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/MetalBlockchain/metal-cli/pkg/config"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/stretchr/testify/require"
 )
 

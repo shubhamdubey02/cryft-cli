@@ -9,7 +9,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/internal/mocks"
 	"github.com/MetalBlockchain/metal-cli/internal/testutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

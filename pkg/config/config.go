@@ -9,7 +9,7 @@ import (
 
 	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

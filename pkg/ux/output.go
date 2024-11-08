@@ -14,7 +14,7 @@ import (
 
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-network-runner/rpcpb"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 )

@@ -14,7 +14,7 @@ import (
 
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/mod/semver"
 )

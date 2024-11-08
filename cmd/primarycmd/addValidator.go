@@ -12,7 +12,7 @@ import (
 	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
 	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
 	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 
 	"github.com/MetalBlockchain/metal-cli/pkg/application"
 

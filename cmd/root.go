@@ -31,8 +31,8 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/MetalBlockchain/metalgo/utils/perms"
+	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/perms"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

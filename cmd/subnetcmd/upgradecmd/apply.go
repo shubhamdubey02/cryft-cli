@@ -21,9 +21,9 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	ANRclient "github.com/MetalBlockchain/metal-network-runner/client"
 	"github.com/MetalBlockchain/metal-network-runner/server"
-	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

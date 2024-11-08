@@ -16,9 +16,9 @@ import (
 	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
 	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metalgo/ids"
-	avagoconstants "github.com/MetalBlockchain/metalgo/utils/constants"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm"
+	"github.com/cryft-labs/cryftgo/ids"
+	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
+	"github.com/cryft-labs/cryftgo/vms/platformvm"
 	"github.com/spf13/cobra"
 )
 
