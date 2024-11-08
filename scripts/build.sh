@@ -32,4 +32,4 @@ then
 	extra_build_args="-tags ledger_zemu"
 fi
 
-go build -v -ldflags="-X 'github.com/MetalBlockchain/metal-cli/cmd.Version=$VERSION' -X github.com/MetalBlockchain/metal-cli/pkg/utils.telemetryToken=$TELEMETRY_TOKEN" $extra_build_args -o $BIN
+go build -v -ldflags="-X 'github.com/shubhamdubey02/cryft-cli/cmd.Version=$VERSION' -X github.com/shubhamdubey02/cryft-cli/pkg/utils.telemetryToken=$TELEMETRY_TOKEN" $extra_build_args -o $BIN

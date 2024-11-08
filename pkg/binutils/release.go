@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"go.uber.org/zap"
 	"golang.org/x/mod/semver"
 )

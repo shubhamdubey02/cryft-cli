@@ -6,14 +6,14 @@ import (
 	"context"
 	"fmt"
 
-	awsAPI "github.com/MetalBlockchain/metal-cli/pkg/cloud/aws"
-	gcpAPI "github.com/MetalBlockchain/metal-cli/pkg/cloud/gcp"
+	awsAPI "github.com/shubhamdubey02/cryft-cli/pkg/cloud/aws"
+	gcpAPI "github.com/shubhamdubey02/cryft-cli/pkg/cloud/gcp"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 )
 
 func getNodesWithDynamicIP(clusterNodes []string) ([]models.NodeConfig, error) {

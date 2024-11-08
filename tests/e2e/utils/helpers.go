@@ -20,12 +20,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/key"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/MetalBlockchain/metal-network-runner/client"
 	"github.com/MetalBlockchain/subnet-evm/ethclient"
 	"github.com/cryft-labs/cryftgo/api/info"
@@ -41,6 +35,12 @@ import (
 	"github.com/cryft-labs/cryftgo/wallet/subnet/primary"
 	ginkgo "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
+	"github.com/shubhamdubey02/cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/key"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/subnet"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
 )
 
 const (

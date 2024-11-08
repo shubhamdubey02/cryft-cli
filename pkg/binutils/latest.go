@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/cryft-labs/cryftgo/utils/perms"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
 	"go.uber.org/zap"
 )
 

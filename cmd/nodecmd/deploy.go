@@ -5,11 +5,11 @@ package nodecmd
 import (
 	"fmt"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

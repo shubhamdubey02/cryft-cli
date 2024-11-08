@@ -12,17 +12,17 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/compute/v1"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
 
-	gcpAPI "github.com/MetalBlockchain/metal-cli/pkg/cloud/gcp"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	gcpAPI "github.com/shubhamdubey02/cryft-cli/pkg/cloud/gcp"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 )
 
 func getServiceAccountKeyFilepath() (string, error) {

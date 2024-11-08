@@ -9,11 +9,11 @@ import (
 	"testing"
 
 	"github.com/MetalBlockchain/apm/types"
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
 	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/cryft-labs/cryftgo/version"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
 	"github.com/stretchr/testify/require"
 )
 

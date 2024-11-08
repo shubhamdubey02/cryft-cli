@@ -14,15 +14,15 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/MetalBlockchain/apm/types"
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
-	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/version"
+	"github.com/shubhamdubey02/cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/cryft-cli/pkg/subnet"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"gopkg.in/yaml.v3"
 )
 

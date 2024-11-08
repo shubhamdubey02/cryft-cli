@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"

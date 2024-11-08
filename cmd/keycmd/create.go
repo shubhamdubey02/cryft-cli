@@ -6,9 +6,9 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/key"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/key"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

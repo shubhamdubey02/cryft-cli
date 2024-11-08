@@ -10,12 +10,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

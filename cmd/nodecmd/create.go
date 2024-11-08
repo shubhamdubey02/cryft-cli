@@ -17,26 +17,26 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 
-	awsAPI "github.com/MetalBlockchain/metal-cli/pkg/cloud/aws"
+	awsAPI "github.com/shubhamdubey02/cryft-cli/pkg/cloud/aws"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/flags"
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/staking"
 	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/shubhamdubey02/cryft-cli/cmd/flags"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ssh"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/vm"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 	"golang.org/x/mod/semver"
 )

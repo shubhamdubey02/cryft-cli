@@ -13,12 +13,6 @@ import (
 	"github.com/cryft-labs/cryftgo/vms/components/avax"
 	"github.com/cryft-labs/cryftgo/vms/components/verify"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/keychain"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	anrutils "github.com/MetalBlockchain/metal-network-runner/utils"
 	"github.com/cryft-labs/cryftgo/ids"
 	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
@@ -31,6 +25,12 @@ import (
 	"github.com/cryft-labs/cryftgo/vms/secp256k1fx"
 	"github.com/cryft-labs/cryftgo/wallet/subnet/primary"
 	"github.com/cryft-labs/cryftgo/wallet/subnet/primary/common"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/keychain"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/txutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 )
 
 var ErrNoSubnetAuthKeysInWallet = errors.New("auth wallet does not contain subnet auth keys")

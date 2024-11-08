@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
 	"github.com/stretchr/testify/require"
 )
 

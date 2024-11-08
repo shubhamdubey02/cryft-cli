@@ -3,8 +3,8 @@
 package nodecmd
 
 import (
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
-	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ssh"
 	"github.com/spf13/cobra"
 )
 

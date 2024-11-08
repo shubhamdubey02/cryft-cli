@@ -9,19 +9,19 @@ import (
 	"math"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
 	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/subnet"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/nodecmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/keychain"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/cmd/nodecmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/keychain"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

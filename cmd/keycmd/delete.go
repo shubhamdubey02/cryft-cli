@@ -6,7 +6,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

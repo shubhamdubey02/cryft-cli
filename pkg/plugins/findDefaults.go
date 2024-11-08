@@ -9,12 +9,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/config"
 	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/kardianos/osext"
 	"github.com/shirou/gopsutil/process"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 )
 
 var (

@@ -7,15 +7,15 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ssh"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

@@ -7,12 +7,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/key"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
-	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/ids"
 	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
 	"github.com/cryft-labs/cryftgo/utils/crypto/keychain"
@@ -26,6 +20,12 @@ import (
 	"github.com/cryft-labs/cryftgo/vms/secp256k1fx"
 	"github.com/cryft-labs/cryftgo/wallet/subnet/primary"
 	"github.com/cryft-labs/cryftgo/wallet/subnet/primary/common"
+	"github.com/shubhamdubey02/cryft-cli/pkg/key"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/cryft-cli/pkg/subnet"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

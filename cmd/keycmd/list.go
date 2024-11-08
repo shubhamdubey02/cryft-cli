@@ -10,12 +10,6 @@ import (
 	"strings"
 
 	"github.com/MetalBlockchain/coreth/ethclient"
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/key"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	"github.com/cryft-labs/cryftgo/ids"
 	ledger "github.com/cryft-labs/cryftgo/utils/crypto/ledger"
 	"github.com/cryft-labs/cryftgo/utils/formatting/address"
@@ -24,6 +18,12 @@ import (
 	"github.com/cryft-labs/cryftgo/vms/platformvm"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/olekukonko/tablewriter"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/key"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
 	"github.com/spf13/cobra"
 )
 

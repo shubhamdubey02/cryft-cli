@@ -10,13 +10,13 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/flags"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/metrics"
+	"github.com/shubhamdubey02/cryft-cli/cmd/flags"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/metrics"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metal-cli/pkg/vm"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/vm"
 	"github.com/spf13/cobra"
 	"golang.org/x/mod/semver"
 )

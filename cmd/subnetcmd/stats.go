@@ -10,14 +10,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/api/info"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/vms/platformvm"
 	"github.com/olekukonko/tablewriter"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

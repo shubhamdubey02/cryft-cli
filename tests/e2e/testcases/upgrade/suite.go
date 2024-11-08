@@ -12,19 +12,19 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd/upgradecmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/tests/e2e/commands"
-	"github.com/MetalBlockchain/metal-cli/tests/e2e/utils"
 	anr_utils "github.com/MetalBlockchain/metal-network-runner/utils"
 	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/utils/logging"
 	ginkgo "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd/upgradecmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/tests/e2e/commands"
+	"github.com/shubhamdubey02/cryft-cli/tests/e2e/utils"
 )
 
 const (

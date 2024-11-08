@@ -6,14 +6,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/subnetcmd"
-	"github.com/MetalBlockchain/metal-cli/pkg/keychain"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
-	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
-	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/shubhamdubey02/cryft-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/cryft-cli/pkg/keychain"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/cryft-cli/pkg/subnet"
+	"github.com/shubhamdubey02/cryft-cli/pkg/txutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

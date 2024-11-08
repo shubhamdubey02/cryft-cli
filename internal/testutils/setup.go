@@ -7,10 +7,10 @@ import (
 	"io"
 	"testing"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/config"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/config"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/stretchr/testify/require"
 )
 

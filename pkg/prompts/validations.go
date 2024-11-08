@@ -17,13 +17,13 @@ import (
 
 	"github.com/cryft-labs/cryftgo/genesis"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/ids"
 	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
 	"github.com/cryft-labs/cryftgo/utils/formatting/address"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 )
 
 func validateEmail(input string) error {

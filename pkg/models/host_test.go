@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
 	oos "github.com/okteto/remote/pkg/os"
 	ossh "github.com/okteto/remote/pkg/ssh"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/crypto/ssh"
 )

@@ -12,7 +12,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/utils/cb58"
 	"github.com/cryft-labs/cryftgo/utils/crypto/secp256k1"
@@ -20,6 +19,7 @@ import (
 	"github.com/cryft-labs/cryftgo/vms/components/avax"
 	"github.com/cryft-labs/cryftgo/vms/platformvm/txs"
 	"github.com/cryft-labs/cryftgo/vms/secp256k1fx"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 
 	eth_crypto "github.com/ethereum/go-ethereum/crypto"
 	"go.uber.org/zap"

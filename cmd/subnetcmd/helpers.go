@@ -5,11 +5,11 @@ package subnetcmd
 import (
 	"fmt"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/keychain"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/networkoptions"
-	"github.com/MetalBlockchain/metal-cli/pkg/txutils"
 	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/shubhamdubey02/cryft-cli/pkg/keychain"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/networkoptions"
+	"github.com/shubhamdubey02/cryft-cli/pkg/txutils"
 	"github.com/spf13/cobra"
 )
 

@@ -10,9 +10,9 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/onsi/gomega"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
 )
 
 func DeleteE2EInventory() {

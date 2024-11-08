@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/cryft-labs/cryftgo/genesis"
 	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 )
 
 type NetworkKind int64

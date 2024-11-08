@@ -8,8 +8,8 @@ builds:
     # windows is ignored by default, as the `goos` field by default only
     # contains linux and darwin
     ldflags:
-      - -X 'github.com/MetalBlockchain/metal-cli/cmd.Version={{.Version}}'
-      - -X 'github.com/MetalBlockchain/metal-cli/pkg/utils.telemetryToken={{ .Env.TELEMETRY_TOKEN }}'
+      - -X 'github.com/shubhamdubey02/cryft-cli/cmd.Version={{.Version}}'
+      - -X 'github.com/shubhamdubey02/cryft-cli/pkg/utils.telemetryToken={{ .Env.TELEMETRY_TOKEN }}'
     goos:
       - linux
       - darwin

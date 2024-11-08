@@ -7,13 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/internal/mocks"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/cryft-labs/cryftgo/api/info"
 	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/cryft-labs/cryftgo/vms/platformvm"
 	"github.com/olekukonko/tablewriter"
+	"github.com/shubhamdubey02/cryft-cli/internal/mocks"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

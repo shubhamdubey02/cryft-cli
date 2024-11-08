@@ -8,18 +8,18 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
 
 	"golang.org/x/exp/maps"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/ansible"
-	"github.com/MetalBlockchain/metal-cli/pkg/ssh"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ansible"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ssh"
 
-	awsAPI "github.com/MetalBlockchain/metal-cli/pkg/cloud/aws"
-	gcpAPI "github.com/MetalBlockchain/metal-cli/pkg/cloud/gcp"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
+	awsAPI "github.com/shubhamdubey02/cryft-cli/pkg/cloud/aws"
+	gcpAPI "github.com/shubhamdubey02/cryft-cli/pkg/cloud/gcp"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

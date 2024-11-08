@@ -10,15 +10,10 @@ import (
 	"time"
 
 	"github.com/MetalBlockchain/coreth/ethclient"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
 	"github.com/cryft-labs/cryftgo/utils/units"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
 	"go.uber.org/zap"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/prompts"
-	"github.com/MetalBlockchain/metal-cli/pkg/utils"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
-	"github.com/MetalBlockchain/metal-cli/pkg/vm"
 	"github.com/MetalBlockchain/subnet-evm/commontype"
 	"github.com/MetalBlockchain/subnet-evm/params"
 	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/deployerallowlist"
@@ -30,6 +25,11 @@ import (
 	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/cryft-cli/pkg/vm"
 	"github.com/spf13/cobra"
 )
 

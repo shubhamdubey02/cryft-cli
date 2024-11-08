@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/cryft-labs/cryftgo/config"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 	"github.com/stretchr/testify/require"
 )
 

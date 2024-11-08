@@ -6,10 +6,10 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/MetalBlockchain/metal-cli/cmd/flags"
-	"github.com/MetalBlockchain/metal-cli/internal/mocks"
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
 	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/shubhamdubey02/cryft-cli/cmd/flags"
+	"github.com/shubhamdubey02/cryft-cli/internal/mocks"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

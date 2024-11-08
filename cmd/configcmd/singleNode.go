@@ -5,7 +5,7 @@ package configcmd
 import (
 	"errors"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 	"github.com/spf13/cobra"
 )
 

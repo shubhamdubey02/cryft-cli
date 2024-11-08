@@ -6,8 +6,8 @@ package commands
 import (
 	"os/exec"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
 	"github.com/onsi/gomega"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
 )
 
 func GetVersion() string {

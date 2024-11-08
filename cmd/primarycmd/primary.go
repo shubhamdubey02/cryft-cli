@@ -5,7 +5,7 @@ package primarycmd
 import (
 	"fmt"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
 	"github.com/spf13/cobra"
 )
 

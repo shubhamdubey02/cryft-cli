@@ -19,10 +19,10 @@ import (
 	"github.com/cryft-labs/cryftgo/vms/rpcchainvm/runtime"
 	"github.com/cryft-labs/cryftgo/vms/rpcchainvm/runtime/subprocess"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/application"
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
 	"golang.org/x/mod/semver"
 )
 

@@ -7,14 +7,14 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/elasticsubnet"
+	"github.com/shubhamdubey02/cryft-cli/pkg/elasticsubnet"
 
-	"github.com/MetalBlockchain/metal-cli/pkg/binutils"
-	"github.com/MetalBlockchain/metal-cli/pkg/constants"
-	"github.com/MetalBlockchain/metal-cli/pkg/models"
-	"github.com/MetalBlockchain/metal-cli/pkg/subnet"
-	"github.com/MetalBlockchain/metal-cli/pkg/ux"
 	"github.com/shirou/gopsutil/process"
+	"github.com/shubhamdubey02/cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/cryft-cli/pkg/subnet"
+	"github.com/shubhamdubey02/cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
