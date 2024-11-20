@@ -131,6 +131,6 @@ jobs:
           name: cli-logs-${{ matrix.os }}
           path: |
             ~/.Cryft-cli/
-            !~/.Cryft-cli/bin/
+            !~/.Cryft-cli/build/
             !~/.Cryft-cli/snapshots
           retention-days: 5
