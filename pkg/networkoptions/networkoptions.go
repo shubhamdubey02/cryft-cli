@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MetalBlockchain/metalgo/api/info"
+	"github.com/cryft-labs/cryftgo/api/info"
 	"github.com/shubhamdubey02/Cryft-cli/cmd/flags"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"

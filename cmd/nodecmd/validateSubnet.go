@@ -8,12 +8,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/status"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/status"
 
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ansible"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ssh"
 
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	subnetcmd "github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/keychain"

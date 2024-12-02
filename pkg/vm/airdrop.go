@@ -7,7 +7,6 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/MetalBlockchain/subnet-evm/core"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/key"
@@ -15,6 +14,7 @@ import (
 	"github.com/shubhamdubey02/Cryft-cli/pkg/statemachine"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/utils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/subnet-evm/core"
 )
 
 const (

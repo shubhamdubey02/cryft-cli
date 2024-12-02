@@ -19,9 +19,9 @@ import (
 
 	awsAPI "github.com/shubhamdubey02/Cryft-cli/pkg/cloud/aws"
 
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/staking"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/staking"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/cmd/flags"
 	"github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ansible"

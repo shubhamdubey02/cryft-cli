@@ -13,9 +13,9 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/MetalBlockchain/apm/types"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/version"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/version"
+	"github.com/ixAnkit/apm/types"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"

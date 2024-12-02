@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/internal/testutils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"

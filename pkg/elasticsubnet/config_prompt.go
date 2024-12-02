@@ -8,7 +8,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/reward"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/reward"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"

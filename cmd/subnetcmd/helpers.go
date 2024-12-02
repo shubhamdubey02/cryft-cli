@@ -5,7 +5,7 @@ package subnetcmd
 import (
 	"fmt"
 
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/keychain"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/networkoptions"

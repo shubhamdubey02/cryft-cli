@@ -8,9 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/status"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/status"
 	"github.com/olekukonko/tablewriter"
 	"github.com/pborman/ansi"
 	"github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd"

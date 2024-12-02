@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MetalBlockchain/metalgo/genesis"
-	avagoconstants "github.com/MetalBlockchain/metalgo/utils/constants"
+	"github.com/cryft-labs/cryftgo/genesis"
+	avagoconstants "github.com/cryft-labs/cryftgo/utils/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 )
 

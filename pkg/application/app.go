@@ -8,16 +8,16 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/MetalBlockchain/apm/apm"
-	"github.com/MetalBlockchain/metalgo/ids"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/MetalBlockchain/subnet-evm/core"
+	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/ixAnkit/apm/apm"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/config"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/monitoring"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/utils"
+	"github.com/shubhamdubey02/subnet-evm/core"
 
 	"golang.org/x/exp/maps"
 )

@@ -7,12 +7,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ssh"
 
 	"golang.org/x/exp/slices"
 
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ansible"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	awsAPI "github.com/shubhamdubey02/Cryft-cli/pkg/cloud/aws"

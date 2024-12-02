@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/MetalBlockchain/metal-network-runner/utils"
-	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/cryft-labs/cryftgo/ids"
 	"github.com/olekukonko/tablewriter"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"

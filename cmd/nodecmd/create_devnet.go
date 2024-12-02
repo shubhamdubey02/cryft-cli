@@ -14,12 +14,12 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	coreth_params "github.com/MetalBlockchain/coreth/params"
-	"github.com/MetalBlockchain/metalgo/config"
-	"github.com/MetalBlockchain/metalgo/utils/crypto/bls"
-	"github.com/MetalBlockchain/metalgo/utils/formatting"
-	"github.com/MetalBlockchain/metalgo/utils/logging"
-	"github.com/MetalBlockchain/metalgo/vms/platformvm/signer"
+	coreth_params "github.com/cryft-labs/coreth/params"
+	"github.com/cryft-labs/cryftgo/config"
+	"github.com/cryft-labs/cryftgo/utils/crypto/bls"
+	"github.com/cryft-labs/cryftgo/utils/formatting"
+	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/cryft-labs/cryftgo/vms/platformvm/signer"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ansible"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/key"

@@ -8,7 +8,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/MetalBlockchain/metalgo/api/info"
+	"github.com/cryft-labs/cryftgo/api/info"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 )
 
