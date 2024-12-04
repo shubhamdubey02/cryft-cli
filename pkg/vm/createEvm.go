@@ -11,7 +11,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/cryft-labs/cryftgo/snow"
+	"github.com/MetalBlockchain/metalgo/snow"
+	"github.com/MetalBlockchain/subnet-evm/core"
+	"github.com/MetalBlockchain/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
+	"github.com/MetalBlockchain/subnet-evm/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
@@ -19,10 +23,6 @@ import (
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/statemachine"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
-	"github.com/shubhamdubey02/subnet-evm/core"
-	"github.com/shubhamdubey02/subnet-evm/params"
-	"github.com/shubhamdubey02/subnet-evm/precompile/contracts/txallowlist"
-	"github.com/shubhamdubey02/subnet-evm/utils"
 )
 
 var versionComments = map[string]string{

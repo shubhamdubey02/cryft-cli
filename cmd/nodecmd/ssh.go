@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ansible"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"

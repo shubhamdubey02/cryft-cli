@@ -121,7 +121,7 @@ const (
 	ExtraLocalNetworkDataFilename     = "extra-local-network-data.json"
 	ExtraLocalNetworkDataSnapshotsDir = "extra-local-network-data"
 
-	CliInstallationURL         = "https://raw.githubusercontent.com/MetalBlockchain/Cryft-cli/main/scripts/install.sh"
+	CliInstallationURL         = "https://raw.githubusercontent.com/shubhamdubey02/Cryft-cli/main/scripts/install.sh"
 	ExpectedCliInstallErr      = "resource temporarily unavailable"
 	EIPLimitErr                = "AddressLimitExceeded"
 	ErrCreatingAWSNode         = "failed to create AWS Node"
@@ -210,7 +210,7 @@ const (
 	CliRepoName                   = "Cryft-cli"
 	TeleporterRepoName            = "teleporter"
 	AWMRelayerRepoName            = "awm-relayer"
-	SubnetEVMReleaseURL           = "https://github.com/shubhamdubey02/subnet-evm/releases/download/%s/%s"
+	SubnetEVMReleaseURL           = "https://github.com/MetalBlockchain/subnet-evm/releases/download/%s/%s"
 	SubnetEVMArchive              = "subnet-evm_%s_linux_amd64.tar.gz"
 	CloudNodeConfigBasePath       = "/home/ubuntu/.metalgo/"
 	CloudNodeSubnetEvmBinaryPath  = "/home/ubuntu/.metalgo/plugins/%s"
@@ -248,7 +248,7 @@ const (
 
 	APMDir                = ".apm"
 	APMLogName            = "apm.log"
-	DefaultAvaLabsPackage = "MetalBlockchain/metal-plugins-core"
+	DefaultAvaLabsPackage = "shubhamdubey02/Cryft-plugins-core"
 	APMPluginDir          = "apm_plugins"
 
 	// #nosec G101

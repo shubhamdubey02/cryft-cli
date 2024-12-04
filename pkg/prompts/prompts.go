@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/manifoldco/promptui"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"

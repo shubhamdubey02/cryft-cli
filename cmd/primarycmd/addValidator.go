@@ -9,7 +9,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/networkoptions"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/subnet"

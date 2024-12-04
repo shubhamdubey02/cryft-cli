@@ -8,8 +8,8 @@ import (
 	"math/big"
 	"os"
 
-	"github.com/cryft-labs/cryftgo/utils/logging"
-	"github.com/cryft-labs/cryftgo/utils/units"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/utils/units"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/evm"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/key"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"

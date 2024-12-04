@@ -7,9 +7,9 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/MetalBlockchain/subnet-evm/core"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/shubhamdubey02/Cryft-cli/internal/testutils"
-	"github.com/shubhamdubey02/subnet-evm/core"
 	"github.com/stretchr/testify/require"
 )
 

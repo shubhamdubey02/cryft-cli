@@ -13,9 +13,9 @@ import (
 
 	"github.com/MetalBlockchain/metal-network-runner/client"
 	"github.com/MetalBlockchain/metal-network-runner/rpcpb"
-	"github.com/cryft-labs/cryftgo/ids"
-	"github.com/cryft-labs/cryftgo/utils/logging"
-	"github.com/cryft-labs/cryftgo/utils/perms"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/utils/perms"
 	"github.com/shubhamdubey02/Cryft-cli/internal/mocks"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"

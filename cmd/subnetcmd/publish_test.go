@@ -10,9 +10,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/cryft-labs/cryftgo/ids"
-	"github.com/cryft-labs/cryftgo/utils/logging"
-	"github.com/cryft-labs/cryftgo/version"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/version"
 	"github.com/go-git/go-git/v5"
 	"github.com/shubhamdubey02/Cryft-cli/internal/mocks"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"

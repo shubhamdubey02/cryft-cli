@@ -39,7 +39,7 @@ var _ = ginkgo.Describe("[APM]", func() {
 		if err != nil {
 			fmt.Println("Delete config error:", err)
 		}
-		gomega.Expect(err).Should(gomega.BeNil())
+		gomega.Expect(err).Should(gomega.BeNil())t
 		utils.DeleteAPMBin(vmid1)
 		utils.DeleteAPMBin(vmid2)
 		// TODO same as above
@@ -48,7 +48,7 @@ var _ = ginkgo.Describe("[APM]", func() {
 
 	ginkgo.It("can import from metal-core", func() {
 		ginkgo.Skip("TODO")
-		repo := "MetalBlockchain/metal-plugins-core"
+		repo := "shubhamdubey02/Cryft-plugins-core"
 		commands.ImportSubnetConfig(repo, subnet1)
 	})
 

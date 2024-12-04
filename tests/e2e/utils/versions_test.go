@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/stretchr/testify/require"

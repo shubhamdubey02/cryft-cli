@@ -4,7 +4,7 @@ set -e
 usage() {
   this=$1
   cat <<EOF
-$this: download go binaries for MetalBlockchain/Cryft-cli
+$this: download go binaries for shubhamdubey02/Cryft-cli
 
 Usage: $this [-b] bindir [-d] [tag] [-c]
   -b sets bindir or installation directory, Defaults to ~/bin

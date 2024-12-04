@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ansible"
 	awsAPI "github.com/shubhamdubey02/Cryft-cli/pkg/cloud/aws"
@@ -20,9 +20,9 @@ import (
 	"github.com/shubhamdubey02/Cryft-cli/pkg/utils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 
-	"github.com/cryft-labs/cryftgo/ids"
-	"github.com/cryft-labs/cryftgo/utils/set"
-	"github.com/cryft-labs/cryftgo/vms/platformvm/status"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/metalgo/utils/set"
+	"github.com/MetalBlockchain/metalgo/vms/platformvm/status"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
 )

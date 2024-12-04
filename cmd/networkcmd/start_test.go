@@ -6,7 +6,7 @@ package networkcmd
 import (
 	"testing"
 
-	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/MetalBlockchain/metalgo/ids"
 	"github.com/shubhamdubey02/Cryft-cli/internal/mocks"
 	"github.com/shubhamdubey02/Cryft-cli/internal/testutils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"

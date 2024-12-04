@@ -15,15 +15,15 @@ import (
 
 	ANRclient "github.com/MetalBlockchain/metal-network-runner/client"
 	"github.com/MetalBlockchain/metal-network-runner/server"
-	"github.com/cryft-labs/cryftgo/ids"
+	"github.com/MetalBlockchain/metalgo/ids"
+	"github.com/MetalBlockchain/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/precompile/contracts/txallowlist"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/subnet"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/utils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
-	"github.com/shubhamdubey02/subnet-evm/params"
-	"github.com/shubhamdubey02/subnet-evm/precompile/contracts/txallowlist"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

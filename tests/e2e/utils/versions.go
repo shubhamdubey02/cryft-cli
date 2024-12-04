@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/cryft-labs/cryftgo/utils/logging"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"

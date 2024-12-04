@@ -7,10 +7,10 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/MetalBlockchain/subnet-evm/params"
+	"github.com/MetalBlockchain/subnet-evm/rpc"
 	"github.com/onsi/gomega"
 	"github.com/shubhamdubey02/Cryft-cli/pkg/utils"
-	"github.com/shubhamdubey02/subnet-evm/params"
-	"github.com/shubhamdubey02/subnet-evm/rpc"
 )
 
 const chainConfigAPI = "eth_getChainConfig"
