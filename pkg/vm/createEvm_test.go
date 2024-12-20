@@ -9,7 +9,7 @@ import (
 
 	"github.com/ava-labs/subnet-evm/core"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/shubhamdubey02/Cryft-cli/internal/testutils"
+	"github.com/shubhamdubey02/metal-cli/internal/testutils"
 	"github.com/stretchr/testify/require"
 )
 

@@ -8,10 +8,10 @@ import (
 	"regexp"
 
 	"github.com/shirou/gopsutil/process"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/subnet"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/subnet"
+	"github.com/shubhamdubey02/metal-cli/pkg/ux"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

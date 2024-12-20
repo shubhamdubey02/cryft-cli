@@ -2,7 +2,7 @@
 // See the file LICENSE for licensing terms.
 package models
 
-import "github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+import "github.com/shubhamdubey02/metal-cli/pkg/constants"
 
 type VMType string
 

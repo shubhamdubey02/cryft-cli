@@ -1,4 +1,4 @@
-module github.com/shubhamdubey02/Cryft-cli
+module github.com/shubhamdubey02/metal-cli
 
 go 1.18
 

@@ -12,11 +12,11 @@ import (
 	"github.com/ava-labs/avalanchego/ids"
 	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
 	"github.com/ava-labs/avalanchego/vms/platformvm"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/subnet"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/metal-cli/pkg/prompts"
+	"github.com/shubhamdubey02/metal-cli/pkg/subnet"
+	"github.com/shubhamdubey02/metal-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

@@ -11,12 +11,12 @@ import (
 
 	"github.com/ava-labs/spacesvm/chain"
 	"github.com/ava-labs/subnet-evm/core"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/statemachine"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/metal-cli/pkg/application"
+	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/metal-cli/pkg/statemachine"
+	"github.com/shubhamdubey02/metal-cli/pkg/ux"
 )
 
 const (

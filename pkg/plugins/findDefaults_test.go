@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/ava-labs/avalanchego/config"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
 	"github.com/stretchr/testify/require"
 )
 

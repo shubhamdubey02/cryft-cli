@@ -11,11 +11,11 @@ import (
 	"sync"
 
 	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/vm"
+	"github.com/shubhamdubey02/metal-cli/pkg/application"
+	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/metal-cli/pkg/vm"
 	"go.uber.org/zap"
 	"golang.org/x/mod/semver"
 )

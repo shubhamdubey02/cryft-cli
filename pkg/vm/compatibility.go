@@ -8,10 +8,10 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/metal-cli/pkg/application"
+	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/models"
 	"golang.org/x/mod/semver"
 )
 

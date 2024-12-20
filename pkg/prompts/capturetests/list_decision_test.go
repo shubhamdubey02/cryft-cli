@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/shubhamdubey02/Cryft-cli/internal/mocks"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/metal-cli/internal/mocks"
+	"github.com/shubhamdubey02/metal-cli/pkg/prompts"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

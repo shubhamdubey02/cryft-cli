@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	avago_constants "github.com/ava-labs/avalanchego/utils/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
 )
 
 type Network int64

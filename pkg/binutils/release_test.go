@@ -9,12 +9,12 @@ import (
 	"testing"
 
 	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/shubhamdubey02/Cryft-cli/internal/mocks"
-	"github.com/shubhamdubey02/Cryft-cli/internal/testutils"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/config"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/metal-cli/internal/mocks"
+	"github.com/shubhamdubey02/metal-cli/internal/testutils"
+	"github.com/shubhamdubey02/metal-cli/pkg/application"
+	"github.com/shubhamdubey02/metal-cli/pkg/config"
+	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/metal-cli/pkg/prompts"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

@@ -6,12 +6,12 @@ import (
 	"errors"
 
 	"github.com/ava-labs/avalanchego/ids"
-	"github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/subnet"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/txutils"
-	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/metal-cli/cmd/subnetcmd"
+	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/metal-cli/pkg/prompts"
+	"github.com/shubhamdubey02/metal-cli/pkg/subnet"
+	"github.com/shubhamdubey02/metal-cli/pkg/txutils"
+	"github.com/shubhamdubey02/metal-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 
