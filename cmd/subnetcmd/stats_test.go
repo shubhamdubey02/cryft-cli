@@ -14,8 +14,8 @@ import (
 	"github.com/ava-labs/avalanchego/vms/platformvm"
 	"github.com/ava-labs/avalanchego/vms/platformvm/api"
 	"github.com/olekukonko/tablewriter"
-	"github.com/shubhamdubey02/metal-cli/internal/mocks"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/internal/mocks"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

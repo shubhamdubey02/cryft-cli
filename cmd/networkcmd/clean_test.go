@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/ava-labs/avalanchego/utils/logging"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 	"github.com/stretchr/testify/require"
 )
 

@@ -11,7 +11,7 @@ import (
 	"github.com/ava-labs/subnet-evm/params"
 	"github.com/ava-labs/subnet-evm/rpc"
 	"github.com/onsi/gomega"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 )
 
 const chainConfigAPI = "eth_getChainConfig"

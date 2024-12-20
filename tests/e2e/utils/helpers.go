@@ -33,10 +33,10 @@ import (
 	spacesvmclient "github.com/ava-labs/spacesvm/client"
 	"github.com/ava-labs/subnet-evm/ethclient"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/pkg/key"
-	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/key"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 )
 
 const (

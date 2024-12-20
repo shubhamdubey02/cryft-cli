@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/shubhamdubey02/metal-cli/pkg/application"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 )
 
 // Up to version 1.0.0 the sidecar and genesis files were stored at

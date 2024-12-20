@@ -8,7 +8,7 @@ import (
 	"os/exec"
 
 	"github.com/onsi/gomega"
-	"github.com/shubhamdubey02/metal-cli/tests/e2e/utils"
+	"github.com/shubhamdubey02/Cryft-cli/tests/e2e/utils"
 )
 
 /* #nosec G204 */

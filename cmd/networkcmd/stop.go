@@ -7,9 +7,9 @@ import (
 
 	"github.com/ava-labs/avalanche-network-runner/local"
 	"github.com/ava-labs/avalanche-network-runner/server"
-	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/ava-labs/avalanchego/api/info"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 )
 
 type StatusChecker interface {

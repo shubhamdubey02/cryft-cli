@@ -12,11 +12,11 @@ import (
 	"github.com/ava-labs/subnet-evm/core"
 	"github.com/ava-labs/subnet-evm/params"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/shubhamdubey02/metal-cli/pkg/application"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/pkg/models"
-	"github.com/shubhamdubey02/metal-cli/pkg/statemachine"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/statemachine"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 )
 
 func CreateEvmSubnetConfig(app *application.Avalanche, subnetName string, genesisPath string, subnetEVMVersion string) ([]byte, *models.Sidecar, error) {

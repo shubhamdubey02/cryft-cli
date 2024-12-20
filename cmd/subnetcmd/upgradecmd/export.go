@@ -5,8 +5,8 @@ package upgradecmd
 import (
 	"os"
 
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

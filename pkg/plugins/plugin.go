@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/ava-labs/avalanche-network-runner/utils"
-	"github.com/shubhamdubey02/metal-cli/pkg/application"
-	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
-	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 )
 
 func SanitizePath(path string) (string, error) {

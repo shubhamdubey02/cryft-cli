@@ -16,9 +16,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ginkgo "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/tests/e2e/commands"
-	"github.com/shubhamdubey02/metal-cli/tests/e2e/utils"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/tests/e2e/commands"
+	"github.com/shubhamdubey02/Cryft-cli/tests/e2e/utils"
 )
 
 const (

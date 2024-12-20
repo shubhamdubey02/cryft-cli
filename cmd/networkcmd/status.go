@@ -4,8 +4,8 @@ package networkcmd
 
 import (
 	"github.com/ava-labs/avalanche-network-runner/server"
-	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

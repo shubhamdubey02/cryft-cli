@@ -15,10 +15,10 @@ import (
 	"github.com/ava-labs/subnet-evm/precompile"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/pkg/prompts"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
-	"github.com/shubhamdubey02/metal-cli/pkg/vm"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/vm"
 	"github.com/spf13/cobra"
 )
 

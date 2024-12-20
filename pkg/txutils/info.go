@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/ava-labs/avalanchego/vms/platformvm/txs"
-	"github.com/shubhamdubey02/metal-cli/pkg/models"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
 )
 
 // get network model associated to tx

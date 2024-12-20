@@ -19,10 +19,10 @@ import (
 	"github.com/ava-labs/coreth/ethclient"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/olekukonko/tablewriter"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
-	"github.com/shubhamdubey02/metal-cli/pkg/key"
-	"github.com/shubhamdubey02/metal-cli/pkg/models"
-	"github.com/shubhamdubey02/metal-cli/pkg/ux"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/key"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/ux"
 	"github.com/spf13/cobra"
 )
 

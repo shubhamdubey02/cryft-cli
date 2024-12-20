@@ -12,7 +12,7 @@ import (
 
 	"github.com/ava-labs/avalanchego/utils/logging"
 	"github.com/ava-labs/avalanchego/utils/perms"
-	"github.com/shubhamdubey02/metal-cli/pkg/constants"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/constants"
 	"go.uber.org/zap"
 )
 

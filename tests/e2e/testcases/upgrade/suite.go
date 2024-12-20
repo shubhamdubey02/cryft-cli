@@ -18,12 +18,12 @@ import (
 	"github.com/ava-labs/subnet-evm/params"
 	ginkgo "github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
-	"github.com/shubhamdubey02/metal-cli/cmd/subnetcmd/upgradecmd"
-	"github.com/shubhamdubey02/metal-cli/pkg/application"
-	"github.com/shubhamdubey02/metal-cli/pkg/binutils"
-	"github.com/shubhamdubey02/metal-cli/pkg/models"
-	"github.com/shubhamdubey02/metal-cli/tests/e2e/commands"
-	"github.com/shubhamdubey02/metal-cli/tests/e2e/utils"
+	"github.com/shubhamdubey02/Cryft-cli/cmd/subnetcmd/upgradecmd"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/binutils"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/models"
+	"github.com/shubhamdubey02/Cryft-cli/tests/e2e/commands"
+	"github.com/shubhamdubey02/Cryft-cli/tests/e2e/utils"
 )
 
 const (

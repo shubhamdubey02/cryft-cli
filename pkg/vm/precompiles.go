@@ -10,9 +10,9 @@ import (
 	"github.com/ava-labs/subnet-evm/params"
 	"github.com/ava-labs/subnet-evm/precompile"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/shubhamdubey02/metal-cli/pkg/application"
-	"github.com/shubhamdubey02/metal-cli/pkg/prompts"
-	"github.com/shubhamdubey02/metal-cli/pkg/statemachine"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/application"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/prompts"
+	"github.com/shubhamdubey02/Cryft-cli/pkg/statemachine"
 )
 
 type Precompile string
