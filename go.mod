@@ -4,6 +4,7 @@ go 1.22.10
 
 require (
 	github.com/ava-labs/apm v1.0.0
+	github.com/ava-labs/avalanche-cli v1.8.4
 	github.com/ava-labs/avalanche-network-runner v1.8.4-0.20241130135139-a0946c5366be
 	github.com/ava-labs/avalanchego v1.12.1-0.20241210172525-c7ebd8fbae88
 	github.com/ava-labs/coreth v0.13.9-rc.1
@@ -42,7 +43,6 @@ require (
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
 	github.com/VictoriaMetrics/fastcache v1.12.1 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
-	github.com/ava-labs/avalanche-cli v1.8.4 // indirect
 	github.com/ava-labs/icm-contracts v1.0.9-0.20241210181701-a4bd5c92b056 // indirect
 	github.com/ava-labs/icm-services v1.4.1-0.20241210192415-fbb658863e67 // indirect
 	github.com/ava-labs/ledger-avalanche/go v0.0.0-20241009183145-e6f90a8a1a60 // indirect
@@ -247,4 +247,3 @@ require (
 	gotest.tools/v3 v3.3.0 // indirect
 	rsc.io/tmplfunc v0.0.3 // indirect
 )
-
