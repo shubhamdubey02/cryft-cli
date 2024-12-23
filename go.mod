@@ -1,15 +1,15 @@
 module github.com/shubhamdubey02/Cryft-cli
 
-go 1.18
+go 1.22.10
 
 require (
-	github.com/ava-labs/apm v0.0.4
-	github.com/ava-labs/avalanche-network-runner v1.3.6-0.20230131185357-8438e423db52
-	github.com/ava-labs/avalanchego v1.9.8
-	github.com/ava-labs/coreth v0.11.7-rc.0
+	github.com/ava-labs/apm v1.0.0
+	github.com/ava-labs/avalanche-network-runner v1.8.4-0.20241130135139-a0946c5366be
+	github.com/ava-labs/avalanchego v1.12.1-0.20241210172525-c7ebd8fbae88
+	github.com/ava-labs/coreth v0.13.9-rc.1
 	github.com/ava-labs/spacesvm v0.0.16-0.20230203183930-edab6c380a0c
-	github.com/ava-labs/subnet-evm v0.4.8
-	github.com/docker/docker v23.0.0+incompatible
+	github.com/ava-labs/subnet-evm v0.6.13-0.20241205165027-6c98da796f35
+	github.com/docker/docker v27.4.0+incompatible
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/go-git/go-git/v5 v5.5.2
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
